@@ -11,40 +11,34 @@ const short YOU_SHALL_NOT_PASS = -1;
 //----------------------------------------------//
 
 MonsterParent::MonsterParent() {
-	_position = FPoint(0,0);
-	_speed = FPoint(0, 0);
+	_position = FPoint(0, 0);
 	_modSpeed = 0;
+	_map = nullptr;
+	_curWayDistance = 0;
+	_moveTimer = 0;
 	_hp = 0;
 	_maxHp = _hp;
-	_moveTimer = 0;
-	_curWayDistance = 0;
-	_damaged = false ;
-	_map = nullptr;
-	_skin = nullptr;
+	_damaged = false;
+	_dead = false;
+	_dying = false;
+	_finish = false;
+	_runAnimAngles = RUN_ANGLES;
+	_idleAnimAngles = MOB_IDL_ANGLES;
+	_dieAnimAngles = DIE_ANGLES;
+	_runAnim = nullptr;
+	_idleAnim = nullptr;
+	_dieAnim = nullptr;
+	_lastAngle = 20;
+	_damage = 1;
+	_meat = nullptr;
+	_meatCont = 0;
+	_dieSound = "Die";
 	_curWaySplineX.Clear();
 	_curWaySplineY.Clear();
-	_dead = false;
-	_finish = false;
 };
 
 MonsterParent::MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * map, Render::TexturePtr skin) {
 	_position = position;
-	/*
-	float sX = math::random(-modSpeed, modSpeed);
-	float sY;
-	if (math::random(-1, 1) < 0) {
-		sY = -1;
-
-	}
-	else {
-		sY = 1;
-	};
-
-	sY *= sqrt(modSpeed*modSpeed - sX*sX);
-
-	
-	_speed = FPoint(sX, sY);
-	*/
 	_modSpeed = modSpeed;
 	_map = map;
 	_curCell = map->PosCell(_position);
@@ -84,6 +78,7 @@ MonsterParent::MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * m
 	_dead = false;
 	_finish = false;
 };
+
 MonsterParent::~MonsterParent() {};
 
 void MonsterParent::Draw() {
@@ -205,7 +200,6 @@ void MonsterParent::Draw() {
 	}
 };
 
-
 void MonsterParent::DrawMeat() {
 	if (_dying && !_dead) {
 		IPoint pos = IPoint(_position.x - 64, _position.y - 40);
@@ -218,8 +212,6 @@ void MonsterParent::DrawMeat() {
 	}
 	
 };
-
-
 
 void MonsterParent::Update(float dt) {
 	//Таймер замедления
@@ -544,7 +536,6 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 	
 }
 
-
 bool MonsterParent::FindAWay() {
 
 	//Разметка карты проходимости
@@ -687,9 +678,6 @@ std::vector<IPoint> MonsterParent::FillAround(std::vector<IPoint> lastWaveFilled
 	return result;
 };
 
-
-
-
 bool MonsterParent::Dead() {
 	return _dead;
 };
@@ -697,6 +685,7 @@ bool MonsterParent::Dead() {
 bool MonsterParent::Dying() {
 	return _dying;
 };
+
 bool MonsterParent::EndDeadAnim() {
 	if (_dieAnim) {
 		return _dieAnim->IsFinished();
@@ -710,11 +699,9 @@ bool MonsterParent::Finish() {
 	return _finish;
 };
 
-
 float MonsterParent::WayDistance() {
 	return _curWayDistance;
 };
-
 
 FPoint MonsterParent::Position() {
 	return _position;
@@ -765,24 +752,10 @@ void MonsterParent::SetPosition(FPoint pos,FieldMap *map) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-
-NormalMonster::NormalMonster() {
-	_position = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_hp = 0;
-	_maxHp = _hp;
-	_moveTimer = 0;
-	_curWayDistance = 0;
-	_damaged = false;
-	_map = nullptr;
-	_skin = nullptr;
-	_curWaySplineX.Clear();
-	_curWaySplineY.Clear();
-	_dead = false;
-	_dying = false;
-	_finish = false;
+NormalMonster::NormalMonster() : MonsterParent() {
+	
 };
+
 NormalMonster::NormalMonster(NormalMonster& proto) {
 	*this = proto;
 	if (proto._idleAnim)
@@ -792,44 +765,23 @@ NormalMonster::NormalMonster(NormalMonster& proto) {
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
 };
-NormalMonster::NormalMonster(NormMInfo inf) {
+
+NormalMonster::NormalMonster(NormMInfo inf) : MonsterParent() {
 	_position =inf._position;
 	_modSpeed = inf._modSpeed;
-	
 	_map = inf._map;
-	
-	_curWayDistance = 0;
-	_moveTimer = 0;
 	_hp = inf._hp;
 	_maxHp = _hp;
-	_damaged = false;
-
-	
-	_dead = false;
-	_finish = false;
-	_runAnimAngles = RUN_ANGLES;
-	_idleAnimAngles = MOB_IDL_ANGLES;
-	_dieAnimAngles = DIE_ANGLES;
 	_runAnim = inf._runAnim;
 	_idleAnim = inf._idleAnim;
 	_dieAnim = inf._dieAnim;
-	_dying = false;
-	_lastAngle = 20;
 	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
-	_damage = 1;
-	if (inf._dieSound == "") {
-		_dieSound == "Die";
-	}
-	else {
-		_dieSound = inf._dieSound;
-	}
+	_dieSound = inf._dieSound;
 	_meatCont = inf._meat;
-	
 };
+
 NormalMonster::~NormalMonster() {
 };
-
-
 
 void NormalMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	if (effType == TowerType::SLOW)
@@ -855,24 +807,8 @@ void NormalMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-BossMonster::BossMonster() {
-	_position = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_hp = 0;
-	_maxHp = _hp;
-	_moveTimer = 0;
-	_curWayDistance = 0;
-	_damaged = false;
-	_map = nullptr;
-	_skin = nullptr;
-	_curWaySplineX.Clear();
-	_curWaySplineY.Clear();
-	_dead = false;
+BossMonster::BossMonster() : MonsterParent(){
 	_reduceDamage = 0;
-	_finish = false;
-	_dying = false;
-	_lastAngle = 20;
 };
 
 BossMonster::BossMonster(BossMonster& proto) {
@@ -884,42 +820,25 @@ BossMonster::BossMonster(BossMonster& proto) {
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
 };
-BossMonster::BossMonster(BossMInfo inf) {
+
+BossMonster::BossMonster(BossMInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
-	_curWayDistance = 0;
-	_moveTimer = 0;
 	_hp = inf._hp;
 	_maxHp = _hp;
-	_damaged = false;
-
-	
-	_dead = false;
 	_reduceDamage = inf._reduceDamage;
-	_finish = false;
-
-	_runAnimAngles = RUN_ANGLES;
-	_idleAnimAngles = MOB_IDL_ANGLES;
-	_dieAnimAngles = DIE_ANGLES;
 	_runAnim = inf._runAnim;
 	_idleAnim = inf._idleAnim;
 	_dieAnim = inf._dieAnim;
-	_dying = false;
-	_lastAngle = 20;
 	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
 	_damage = 5;
-	if (inf._dieSound == "") {
-		_dieSound == "Die";
-	}
-	else {
-		_dieSound = inf._dieSound;
-	}
+	_dieSound = inf._dieSound;
 	_meatCont = inf._meat;
 };
+
 BossMonster::~BossMonster() {
 };
-
 
 void BossMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	
@@ -941,34 +860,15 @@ void BossMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 
 };
 
-
-
-
-
-
-
 //----------------------------------------------//
 //----------------------------------------------//
 //					Имунный		   				//
 //----------------------------------------------//
 //----------------------------------------------//
-ImmuneMonster::ImmuneMonster() {
-	_position = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_hp = 0;
-	_maxHp = _hp;
-	_moveTimer = 0;
-	_curWayDistance = 0;
-	_damaged = false;
-	_map = nullptr;
-	_skin = nullptr;
-	_curWaySplineX.Clear();
-	_curWaySplineY.Clear();
-	_dead = false;
-	_finish = false;
-	_dying = false;
+ImmuneMonster::ImmuneMonster() : MonsterParent() {
+	
 };
+
 ImmuneMonster::ImmuneMonster(ImmuneMonster& proto) {
 	*this = proto;
 	if (proto._idleAnim)
@@ -979,39 +879,22 @@ ImmuneMonster::ImmuneMonster(ImmuneMonster& proto) {
 		this->_dieAnim = proto._dieAnim->Clone();
 };
 
-ImmuneMonster::ImmuneMonster(ImmMInfo inf) {
+ImmuneMonster::ImmuneMonster(ImmMInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
-	_curWayDistance = 0;
-	_moveTimer = 0;
 	_hp = inf._hp;
 	_maxHp = _hp;
-	_damaged = false;
-	_dead = false;
-	_finish = false;
-	_runAnimAngles = RUN_ANGLES;
-	_idleAnimAngles = MOB_IDL_ANGLES;
-	_dieAnimAngles = DIE_ANGLES;
 	_runAnim = inf._runAnim;
 	_idleAnim = inf._idleAnim;
 	_dieAnim = inf._dieAnim;
-	_dying = false;
-	_lastAngle = 20;
 	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
-	_damage = 1;
-	if (inf._dieSound == "") {
-		_dieSound == "Die";
-	}
-	else {
-		_dieSound = inf._dieSound;
-	}
+	_dieSound = inf._dieSound;
 	_meatCont = inf._meat;
 };
+
 ImmuneMonster::~ImmuneMonster() {
 };
-
-
 
 void ImmuneMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	
@@ -1041,23 +924,10 @@ void ImmuneMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-HealingMonster::HealingMonster() {
-	_position = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_hp = 0;
-	_maxHp = _hp;
-	_moveTimer = 0;
-	_curWayDistance = 0;
-	_damaged = false;
-	_map = nullptr;
-	_skin = nullptr;
-	_curWaySplineX.Clear();
-	_curWaySplineY.Clear();
-	_dead = false;
+HealingMonster::HealingMonster() : MonsterParent() {
 	_healPerSecond = 0;
-	_dying = false;
 };
+
 HealingMonster::HealingMonster(HealingMonster& proto) {
 	*this = proto;
 	if (proto._idleAnim)
@@ -1067,40 +937,25 @@ HealingMonster::HealingMonster(HealingMonster& proto) {
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
 };
-HealingMonster::HealingMonster(HealMInfo inf) {
+
+HealingMonster::HealingMonster(HealMInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
-	_curWayDistance = 0;
-	_moveTimer = 0;
 	_hp = inf._hp;
 	_maxHp = _hp;
-	_damaged = false;
-	_dead = false;
 	_healPerSecond = inf._healPerSecond;
-	_finish = false;
-	_runAnimAngles = RUN_ANGLES;
-	_idleAnimAngles = MOB_IDL_ANGLES;
-	_dieAnimAngles = DIE_ANGLES;
 	_runAnim = inf._runAnim;
 	_idleAnim = inf._idleAnim;
 	_dieAnim = inf._dieAnim;
-	_dying = false;
-	_lastAngle = 20;
 	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
 	_damage = 1;
-	if (inf._dieSound == "") {
-		_dieSound == "Die";
-	}
-	else {
-		_dieSound = inf._dieSound;
-	}
+	_dieSound = inf._dieSound;
 	_meatCont = inf._meat;
 };
+
 HealingMonster::~HealingMonster() {
 };
-
-
 
 void HealingMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	if (effType == TowerType::SLOW) {
