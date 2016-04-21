@@ -12,16 +12,17 @@ using namespace rapidxml;
 //----------------------------------------------//
 
 TowerParent::TowerParent() {
-	//_towerType = "name";
-	_position= FPoint(0,0);
+	_position = FPoint(0, 0);
 	_cell = IPoint(0, 0);
 	_target = nullptr;
-	_reloadTime=0;
-	_reloadTimer=0;
-	_range=0;
-	_missileSpeed=0;
+	_reloadTime = 0;
+	_reloadTimer = 0;
+	_range = 0;
+	_missileSpeed = 0;
 	_missiles.clear();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
+	_damage = IPoint(0, 0);
+	_showUpgradeButton = false;
 };
 
 TowerParent::TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
@@ -68,14 +69,6 @@ void TowerParent::Draw() {
 		}
 	}
 	
-	//else if (_tex) {
-	//	IRect r = IRect(_position.x - 64, _position.y - 40, 128, 128);
-	//	FRect tmp = FRect(0, 1 / 32.0, 0.125, 0.250);
-	//	Render::device.SetTexturing(true);
-	//	//_tex->TranslateUV(r, tmp);
-	//	_tex->Draw(r, tmp);
-	//	Render::device.SetTexturing(false);
-	//}
 	else {
 		IRect cRect = IRect(_position.x - 5, _position.y - 5, 11, 11);
 		//Render::device.SetTexturing(false);
@@ -273,7 +266,6 @@ void TowerParent::UpdateAnimAngle(MonsterParent * target) {
 	}
 }
 
-
 std::vector<FireParent::Ptr> & TowerParent::GetMissiles() {
 	return _missiles;
 };
@@ -375,29 +367,14 @@ void TowerParent::SetHint(IPoint pos) {
 };
 
 
-
-
-
-
 //----------------------------------------------//
 //----------------------------------------------//
 //				Обычная башня	 				//
 //----------------------------------------------//
 //----------------------------------------------//
 
-NormalTower::NormalTower() {
+NormalTower::NormalTower() : TowerParent() {
 	_towerType = TowerType::NORMAL;
-	_position = FPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_reloadTime = 0;
-	_reloadTimer = 0;
-	_range = 0;
-	_missileSpeed = 0;
-	_missiles.clear();
-	_texHint = nullptr;
-	_damage = IPoint(0, 0);
-	_showUpgradeButton = false;
 };
 
 NormalTower::NormalTower(NormalTower& proto) {
@@ -408,62 +385,20 @@ NormalTower::NormalTower(NormalTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-NormalTower::NormalTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
+NormalTower::NormalTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
 	_towerType = TowerType::NORMAL;
 	_position = position;
 	_cell = cell;
-	_target = nullptr;
 	_reloadTime = rTime;
 	_reloadTimer = rTimer;
 	_range = range;
 	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_damage = dmg;
-	_showUpgradeButton = false;
-	
-	
 };
 
 NormalTower::~NormalTower() {
 };
-/*
-void NormalTower::Update(float dt) {
-	if (_reloadTimer > 0)
-		_reloadTimer -= dt;
-	if (_reloadTimer < 0)
-		_reloadTimer = 0;
 
-	for (int i = 0; i < _missiles.size(); i++) {
-		_missiles[i]->Update(dt);
-	}
-	for (std::vector<FireParent::Ptr>::iterator it = _missiles.begin(); it != _missiles.end();) {
-		if ((*it)->Hit()) {
-			it = _missiles.erase(it);
-		}
-		else {
-			it++;
-		}
-
-	}
-
-};
-*/
-/*
-bool NormalTower::Shoot() {
-	if (_reloadTimer == 0 && _target) {
-		_missilesPrototypes[_lvl]._position=_position;
-		_missilesPrototypes[_lvl]._target = _target;
-		FireParent::Ptr mis = new NormalMissile(_missilesPrototypes[_lvl]);
-		_missiles.push_back(mis);
-		_reloadTimer = _reloadTime;
-		return true;
-	}
-	else {
-		return false;
-	}
-};
-*/
 void NormalTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 	
 	if (_reloadTimer == 0) {
@@ -483,6 +418,7 @@ void NormalTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 	
 
 }
+
 void NormalTower::LoadFromXml(std::string filename) {
 	_lvl = 0;
 	_towerType = TowerType::NORMAL;
@@ -559,6 +495,7 @@ void NormalTower::LoadFromXml(std::string filename) {
 
 
 };
+
 void NormalTower::SetPosition(FPoint pos) {
 	_position = pos;
 	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
@@ -566,6 +503,7 @@ void NormalTower::SetPosition(FPoint pos) {
 	}
 	SetUButtonPosition();
 };
+
 int  NormalTower::UpgradePrice() {
 	if (_lvl < _lvlCount - 1) {
 		return _missilesPrototypes[_lvl + 1]._price;
@@ -574,6 +512,7 @@ int  NormalTower::UpgradePrice() {
 		return -1;
 	}
 };
+
 void NormalTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("arial");
@@ -593,22 +532,10 @@ void NormalTower::DrawHintText(IRect rect) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-SlowTower::SlowTower() {
+SlowTower::SlowTower() : TowerParent() {
 	_towerType = TowerType::SLOW;
-	_position = FPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_reloadTime = 0;
-	_reloadTimer = 0;
-	_range = 0;
-	_missileSpeed = 0;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_splashRange = 0;
 	_slow = FPoint(0, 0);
-	_damage = IPoint(0, 0);
-	//_targets = nullptr;
-	_showUpgradeButton = false;
 };
 
 SlowTower::SlowTower(SlowTower& proto) {
@@ -619,30 +546,21 @@ SlowTower::SlowTower(SlowTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-SlowTower::SlowTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, FPoint sFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
+SlowTower::SlowTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, FPoint sFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
 	_towerType = TowerType::SLOW;
 	_position = position;
 	_cell = cell;
-	_target = nullptr;
 	_reloadTime = rTime;
 	_reloadTimer = rTimer;
 	_range = range;
 	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_splashRange = sRange;
 	_slow = sFactor;
 	_damage = dmg;
-	_targets = targets;
-	_showUpgradeButton = false;
-	
+	_targets = targets;	
 };
 
-
-
-
 SlowTower::~SlowTower() {};
-
 
 void SlowTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
@@ -744,10 +662,6 @@ void SlowTower::LoadFromXml(std::string filename) {
 
 };
 
-
-
-
-
 void SlowTower::SetPosition(FPoint pos) {
 	_position = pos;
 	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
@@ -787,21 +701,12 @@ void SlowTower::DrawHintText(IRect rect) {
 //				Отравляющая башня	 			//
 //----------------------------------------------//
 //----------------------------------------------//
-DecayTower::DecayTower() {
+
+DecayTower::DecayTower() : TowerParent() {
 	_towerType = TowerType::DECAY;
-	_position = FPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_reloadTime = 0;
-	_reloadTimer = 0;
-	_range = 0;
-	_missileSpeed = 0;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_decay = FPoint(0, 0);
-	_damage = IPoint(0, 0);
-	_showUpgradeButton = false;
 };
+
 DecayTower::DecayTower(DecayTower& proto) {
 	*this = proto;
 	if (proto._idleAnim)
@@ -810,25 +715,19 @@ DecayTower::DecayTower(DecayTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-DecayTower::DecayTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint dFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
+DecayTower::DecayTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint dFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
 	_towerType = TowerType::DECAY;
 	_position = position;
 	_cell = cell;
-	_target = nullptr;
 	_reloadTime = rTime;
 	_reloadTimer = rTimer;
 	_range = range;
 	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_decay = dFactor;
 	_damage = dmg;
-	_showUpgradeButton = false;
-	
 };
 
 DecayTower::~DecayTower() {};
-
 
 void DecayTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
@@ -936,7 +835,6 @@ void DecayTower::SetPosition(FPoint pos) {
 	SetUButtonPosition();
 };
 
-
 int  DecayTower::UpgradePrice() {
 	if (_lvl < _lvlCount - 1) {
 		return _missilesPrototypes[_lvl + 1]._price;
@@ -945,7 +843,6 @@ int  DecayTower::UpgradePrice() {
 		return -1;
 	}
 };
-
 
 void DecayTower::DrawHintText(IRect rect) {
 
@@ -969,20 +866,9 @@ void DecayTower::DrawHintText(IRect rect) {
 //				Оглушающая башня	 			//
 //----------------------------------------------//
 //----------------------------------------------//
-BashTower::BashTower() {
+BashTower::BashTower() : TowerParent() {
 	_towerType = TowerType::BASH;
-	_position = FPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_reloadTime = 0;
-	_reloadTimer = 0;
-	_range = 0;
-	_missileSpeed = 0;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_bash = FPoint(0, 0);
-	_damage = IPoint(0, 0);
-	_showUpgradeButton = false;
 };
 
 BashTower::BashTower(BashTower& proto) {
@@ -993,27 +879,19 @@ BashTower::BashTower(BashTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-BashTower::BashTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint bash, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
+BashTower::BashTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint bash, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
 	_towerType = TowerType::BASH;
 	_position = position;
 	_cell = cell;
-	_target = nullptr;
 	_reloadTime = rTime;
 	_reloadTimer = rTimer;
 	_range = range;
 	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_bash = bash;
 	_damage = dmg;
-	_showUpgradeButton = false;
-	_upEff = _upCont.AddEffect("Up");
-	_upEff->Reset();
 };
 
 BashTower::~BashTower() {};
-
-
 
 void BashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
@@ -1112,7 +990,6 @@ void BashTower::LoadFromXml(std::string filename) {
 
 };
 
-
 void BashTower::SetPosition(FPoint pos) {
 	_position = pos;
 	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
@@ -1120,7 +997,6 @@ void BashTower::SetPosition(FPoint pos) {
 	}
 	SetUButtonPosition();
 };
-
 
 int  BashTower::UpgradePrice() {
 	if (_lvl < _lvlCount - 1) {
@@ -1130,6 +1006,7 @@ int  BashTower::UpgradePrice() {
 		return -1;
 	}
 };
+
 void BashTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("arial");
@@ -1153,21 +1030,9 @@ void BashTower::DrawHintText(IRect rect) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-SplashTower::SplashTower() {
+SplashTower::SplashTower() : TowerParent() {
 	_towerType = TowerType::SPLASH;
-	_position = FPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_reloadTime = 0;
-	_reloadTimer = 0;
-	_range = 0;
-	_missileSpeed = 0;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_splashRange = 0;
-	//_targets = nullptr;
-	_damage = IPoint(0,0);
-	_showUpgradeButton = false;
 };
 
 SplashTower::SplashTower(SplashTower& proto) {
@@ -1178,26 +1043,21 @@ SplashTower::SplashTower(SplashTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-SplashTower::SplashTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
+SplashTower::SplashTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
 	_towerType = TowerType::SPLASH;
 	_position = position;
 	_cell = cell;
-	_target = nullptr;
 	_reloadTime = rTime;
 	_reloadTimer = rTimer;
 	_range = range;
 	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_splashRange = sRange;
 	_targets = targets;
 	_damage = dmg;
-	_showUpgradeButton = false;
 	
 };
 
 SplashTower::~SplashTower() {};
-
 
 void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
@@ -1216,9 +1076,6 @@ void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 
 }
-
-
-
 
 void SplashTower::LoadFromXml(std::string filename) {
 

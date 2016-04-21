@@ -18,30 +18,22 @@ public:
 	TowerParent();
 	TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~TowerParent();
-
-
-	virtual void Draw();
+	void Draw();
 	void UpgradeDraw();
-	virtual void Update(float dt);
+	void Update(float dt);
 	void TowerParent::UpdateAnimAngle(MonsterParent * _target);
-	
-	
 	virtual Ptr clone() = 0;
-
-
 	std::vector<FireParent::Ptr> & GetMissiles();
 	FPoint Position();
 	IPoint Cell();
 	virtual void SetPosition(FPoint);
 	void TowerParent::SetUButtonPosition();
 	void SetCell(IPoint);
-
 	void SetUpgradeButton(bool);
 	bool UpgradeButtonActive();
 	IRect UpgradeIRect();
 	void Upgrade();
 	virtual int UpgradePrice() = 0 ;
-	
 	virtual void TryShoot(std::vector<MonsterParent::Ptr> & monsters) = 0;
 	friend void intrusive_ptr_add_ref(TowerParent*);
 	friend void intrusive_ptr_release(TowerParent*);
