@@ -242,18 +242,6 @@ FieldMap::~FieldMap() {
 	}
 	_cells.clear();
 };
-/*
-FieldMap::FieldMap(const FieldMap& map) {
-	_size = map._size;
-	_cells = map._cells;
-};
-FieldMap& FieldMap::operator = (const FieldMap& map) {
-	if (this == &map) return *this;
-	_size = map._size;
-	_cells = map._cells;
-	return *this;
-};
-*/
 
 void FieldMap::Init() {
 	for (int row = 0; row < _size.x; row++) {

@@ -550,11 +550,11 @@ bool MonsterParent::FindAWay() {
 	//Разметка карты проходимости
 	std::vector<std::vector<int>> intMap;
 	intMap.resize(_map->Size().x);
-	for (int i = 0; i < intMap.size(); i++) {
+	for ( unsigned int i = 0; i < intMap.size(); i++) {
 		intMap[i].resize(_map->Size().y);
 	}
-	for (int i = 0; i < intMap.size(); i++) {
-		for (int j = 0; j < intMap.size(); j++) {
+	for (unsigned int i = 0; i < intMap.size(); i++) {
+		for (unsigned int j = 0; j < intMap.size(); j++) {
 			intMap[i][j] = -1;
 			switch (_map->Cells()[i][j]->Type())
 			{
@@ -630,8 +630,8 @@ bool MonsterParent::FindAWay() {
 		
 	} 
 
-	for (int i = 0; i < intMap.size(); i++) {
-		for (int j = 0; j < intMap[i].size(); j++) {
+	for (unsigned int i = 0; i < intMap.size(); i++) {
+		for (unsigned int j = 0; j < intMap[i].size(); j++) {
 			if (intMap[i][j]!= YOU_SHALL_NOT_PASS && intMap[i][j]!= YOU_PASSED) {
 				intMap[i][j] = YOU_SHALL_PASS;
 			}
@@ -736,7 +736,7 @@ void MonsterParent::SetPosition(FPoint pos,FieldMap *map) {
 	if (FindAWay()) {
 		_curWaySplineX.addKey(timer, _position.x);
 		_curWaySplineY.addKey(timer, _position.y);
-		for (int i = 1; i < _currentWay.size(); i++) {
+		for (unsigned int i = 1; i < _currentWay.size(); i++) {
 			FPoint newCell = FPoint(_currentWay[i].x * _map->CellSize().x + _map->CellSize().x / 2, _currentWay[i].y * _map->CellSize().y + _map->CellSize().y / 2);
 			FPoint oldCell = FPoint(_currentWay[i - 1].x * _map->CellSize().x + _map->CellSize().x / 2, _currentWay[i - 1].y * _map->CellSize().y + _map->CellSize().y / 2);
 			float distance = sqrt((newCell.x - oldCell.x)*(newCell.x - oldCell.x) + (newCell.y - oldCell.y)*(newCell.y - oldCell.y));

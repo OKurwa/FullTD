@@ -44,7 +44,7 @@ TowerParent::~TowerParent() {
 void TowerParent::Draw() {
 
 
-	for (int i = 0; i < _missiles.size(); i++) {
+	for (unsigned int i = 0; i < _missiles.size(); i++) {
 		_missiles[i]->Draw();
 	}
 
@@ -181,7 +181,7 @@ void TowerParent::Update(float dt) {
 	if (_reloadTimer < 0)
 		_reloadTimer = 0;
 
-	for (int i = 0; i < _missiles.size(); i++) {
+	for (unsigned int i = 0; i < _missiles.size(); i++) {
 		_missiles[i]->Update(dt);
 	}
 	for (std::vector<FireParent::Ptr>::iterator it = _missiles.begin(); it != _missiles.end();) {

@@ -14,6 +14,7 @@ Button::Button() {
 	_pressed = false;
 
 };
+
 Button::Button(ButtonInfo info) {
 	_tex = info._tex;
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
@@ -82,6 +83,7 @@ void Button::Draw() {
 	}
 	
 };
+
 void Button::DrawHint() {
 	if (_hint && _texHint) {
 		IRect rect = IRect(_rect.x - 240, _rect.y - 32, 240, 128);
@@ -169,6 +171,7 @@ TowerType Button::Press(IPoint mPos) {
 	
 	
 };
+
 void Button::Reset() {
 	_pressed = false;
 	_light = false;
@@ -179,6 +182,7 @@ void Button::SetCurGold(int g) {
 };
 
 Menu::Menu() {};
+
 Menu::Menu(MenuInfo info, std::vector<TowerParent::Ptr> & towers) {
 
 	_rect=info._rect;
@@ -219,7 +223,9 @@ Menu::Menu(MenuInfo info, std::vector<TowerParent::Ptr> & towers) {
 		k++;
 	}
 };
+
 Menu::~Menu() {};
+
 TowerType Menu::Press(IPoint mPos, TowerType cur) {
 	TowerType tmp = cur;
 	bool allEmpty = true;
@@ -263,7 +269,6 @@ void Menu::Draw() {
 	}
 };
 
-
 void Menu::Update(float dt) {
 	for (unsigned int i = 0; i < _buttons.size(); i++) {
 		for (unsigned int j = 0; j < _buttons[i].size(); j++) {
@@ -281,6 +286,7 @@ void Menu::SetLighter(IPoint pos) {
 		}
 	}
 };
+
 void Menu::Reset() {
 	for (unsigned int i = 0; i < _buttons.size(); i++) {
 		for (unsigned int j = 0; j < _buttons[i].size(); j++) {
@@ -289,6 +295,7 @@ void Menu::Reset() {
 		}
 	}
 };
+
 void Menu::SetCurGold(int g) {
 	for (unsigned int i = 0; i < _buttons.size(); i++) {
 		for (unsigned int j = 0; j < _buttons[i].size(); j++) {

@@ -238,7 +238,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 				if (_fieldMap.DestroyTower(pos1)) {
 					int destrIndex = 0;
 					bool found = false;
-					for (int i = 0; i < _towers.size(); i++) {
+					for (unsigned int i = 0; i < _towers.size(); i++) {
 						if (_towers[i]->Cell() == pos1) {
 							found = true;
 							destrIndex = i;
@@ -277,7 +277,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 
 
 					if (!_fieldMap.Cells()[pos1.x][pos1.y]->Empty()) {
-						for (int i = 0; i < _towers.size(); i++) {
+						for (unsigned int i = 0; i < _towers.size(); i++) {
 							if (_towers[i]->Cell() == pos1 && _towers[i]->UpgradePrice()>0) {
 
 								_selectedTower = _towers[i];
@@ -290,7 +290,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 					}
 					else {
 
-						for (int i = 0; i < _towers.size(); i++) {
+						for (unsigned int i = 0; i < _towers.size(); i++) {
 
 							_towers[i]->SetUpgradeButton(false);
 						}
@@ -304,7 +304,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 				}
 				else {
 					///_selectedTower = nullptr;
-					for (int i = 0; i < _towers.size(); i++) {
+					for (unsigned int i = 0; i < _towers.size(); i++) {
 						_towers[i]->SetUpgradeButton(false);
 					}
 				}
@@ -476,7 +476,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 void TestWidget::MouseMove(const IPoint &mouse_pos)
 {
 	_tryMenu->SetLighter(mouse_pos);
-	for (int i = 0; i < _towers.size(); i++) {
+	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->SetHint(mouse_pos);
 	}
 	_buildCursorPos = mouse_pos;

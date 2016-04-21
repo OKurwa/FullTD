@@ -18,29 +18,42 @@ class FireParent {
 public:
 	typedef boost::intrusive_ptr<FireParent> Ptr;
 	FireParent();
+
 	FireParent(FPoint position,FPoint tPosition, int mSpeed, float fTime, float mFlyTimer, TowerType mType, IPoint dmg, Render::TexturePtr tex);
+	
 	~FireParent() {};
 	
-	virtual void Draw();
-	virtual void Update(float dt) = 0;
+	void Draw();
+
+	void Update(float dt);
+
+	virtual void DealDamage();
+
 	virtual Ptr clone() = 0;
 	
-
 	FPoint Position();
+
 	FPoint TargetPosition();
+
 	void SetPosition(FPoint);
+
 	TowerType Type();
+
 	bool Fly();
+
 	bool Hit();
+
 	void MakePath();
 
 	virtual MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
 
 	friend void intrusive_ptr_add_ref(FireParent*);
 	friend void intrusive_ptr_release(FireParent*);
+
 	void AddRef() {
 		++ref_cnt_;
 	}
+
 	void Release() {
 		if (--ref_cnt_ == 0) {
 			delete this;
@@ -91,19 +104,19 @@ public:
 	};
 
 	NormalMissile();
-	//NormalMissile(FPoint position, MonsterParent * target, int mSpeed, float fTime, float mFlyTimer, IPoint dmg, Render::TexturePtr tex);
+	
 	NormalMissile(NMissInfo);
 	
 	~NormalMissile();
 	
+	void DealDamage() override;
 	
-	void Update(float dt);
 	NormalMissile::Ptr clone() {
 		return new NormalMissile(*this);
 	}
 	
 	void SetTarget(MonsterParent * target);
-	//MonsterParent::Ptr  NormalMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
+	
 private:
 	
 };
@@ -128,17 +141,18 @@ public:
 
 
 	SlowMissile();
-	//SlowMissile(FPoint position, FPoint tPosition, std::vector<MonsterParent::Ptr> & targets, int mSpeed, float fTime, float mFlyTimer, FPoint sFactor, int sRange, IPoint dmg, Render::TexturePtr tex);
+	
 	SlowMissile(SlMissInfo, std::vector<MonsterParent::Ptr> & targets);
+
 	~SlowMissile();
 
+	void DealDamage() override;
 	
-	void Update(float dt);
 	FireParent::Ptr clone() {
 		return new SlowMissile(*this);
 	}
 	
-	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
+	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
 private:
 	FPoint _slow;
 	int _splashRange;
@@ -163,12 +177,13 @@ public:
 		int _price;
 	};
 	DecayMissile();
-	//DecayMissile(FPoint position, MonsterParent * target, int mSpeed, float fTime, float mFlyTimer, FPoint decay, IPoint dmg, Render::TexturePtr tex);
+	
 	DecayMissile(DMissInfo);
+
 	~DecayMissile();
 
+	void DealDamage() override;
 	
-	void Update(float dt);
 	FireParent::Ptr clone() {
 		return new DecayMissile(*this);
 	}
@@ -195,12 +210,13 @@ public:
 		int _price;
 	};
 	BashMissile();
-	//BashMissile(FPoint position, MonsterParent * target, int mSpeed, float fTime, float mFlyTimer, FPoint bash, IPoint dmg, Render::TexturePtr tex);
+	
 	BashMissile(BMissInfo);
+
 	~BashMissile();
 
+	void DealDamage() override;
 	
-	void Update(float dt);
 	FireParent::Ptr clone() {
 		return new BashMissile(*this);
 	}
@@ -227,17 +243,18 @@ public:
 		int _price;
 	};
 	SplashMissile();
-	//SplashMissile(FPoint position, FPoint tPosition, std::vector<MonsterParent::Ptr> & targets, int mSpeed, float fTime, float mFlyTimer, int sRange, IPoint dmg, Render::TexturePtr tex);
+	
 	SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & targets);
+
 	~SplashMissile();
 
+	void DealDamage() override;
 	
-	void Update(float dt);
 	FireParent::Ptr clone() {
 		return new SplashMissile(*this);
 	}
 	
-	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
+	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
 private:
 	int _splashRange;
 	std::vector<MonsterParent::Ptr> _targets;

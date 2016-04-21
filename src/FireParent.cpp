@@ -59,24 +59,45 @@ void FireParent::Draw() {
 };
 
 void FireParent::Update(float dt) {
-	//_missileTimer += dt;
 	if (_missileTimer >= _flyTime && !_hit) {
 		_hit = true;
 		_fly = false;
+		//
+		DealDamage();
+		//
+		_misEff->Finish();
+		if (_hitEff)
+			_hitEff->Continue();
+
+		_missileTimer = _flyTime;
 	}
 	else {
-		_missileTimer += dt;
+		if (!_hit)
+			_missileTimer += dt;
+
+
 		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
 		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
+		_misEff->posX = _position.x;
+		_misEff->posY = _position.y;
 	}
+	if (_hitEff) {
+		_hitEff->posX = _position.x;
+		_hitEff->posY = _position.y;
+	}
+	_misEffCont.Update(dt);
 };
+
+void FireParent::DealDamage() {
+};
+
 FPoint FireParent::Position() { 
 	return _position; 
 };
+
 FPoint FireParent::TargetPosition() {
 	return _targetPosition;
 };
-
 
 void FireParent::SetPosition(FPoint pos) {
 	_position = pos;
@@ -217,80 +238,38 @@ MonsterParent::Ptr  FireParent::TakeAim(std::vector<MonsterParent::Ptr> & monste
 //				Обычный снаряд					//
 //----------------------------------------------//
 //----------------------------------------------//
-NormalMissile::NormalMissile() {
+NormalMissile::NormalMissile() : FireParent() {
 	_missileType = TowerType::NORMAL;
-	_position = FPoint(0, 0);
-	_targetPosition = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_flyTime = 0;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
-	_tex = nullptr;
 	_target = nullptr;
-	_damage = IPoint(0, 0);
 };
 
-
-
-NormalMissile::NormalMissile(NMissInfo inf) {
+NormalMissile::NormalMissile(NMissInfo inf) : FireParent() {
 	_missileType = TowerType::NORMAL;
 	_position = inf._position;
-	_speed = FPoint(0, 0);
+	
 	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_tex = nullptr;
 	_damage = inf._damage;
 	_target = inf._target;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
-	
-	
 	_misEff = _misEffCont.AddEffect("IskraViol");
 	_misEff->Pause();
 	_misEff->Reset();
 	_misEff->SetScale(0.5);
 	MakePath();
-	
 };
 
 NormalMissile::~NormalMissile() {
 
 };
 
-
-
-void NormalMissile::Update(float dt) {
-	if (_missileTimer >= _flyTime && !_hit) {
-		_hit = true;
-		_fly = false;
-		_target->TakeDamage(_missileType, FPoint(0,0), math::random(_damage.x, _damage.y));
-		_misEff->Finish();
-		_missileTimer = _flyTime;
-	}
-	else {
-		if(!_hit)
-			_missileTimer += dt;
-		
-		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
-		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
-		_misEff->posX = _position.x;
-		_misEff->posY = _position.y;
-	}
-	_misEffCont.Update(dt);
-};
-
-
+void NormalMissile::DealDamage()
+{
+	_target->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+}
 
 void NormalMissile::SetTarget(MonsterParent * target) {
 	_target = target;
@@ -311,30 +290,17 @@ void NormalMissile::SetTarget(MonsterParent * target) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-SlowMissile::SlowMissile() {
+SlowMissile::SlowMissile() : FireParent() {
 	_missileType = TowerType::SLOW;
-	_position = FPoint(0, 0);
-	_targetPosition = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_flyTime = 0;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
-	_tex = nullptr;
 	_slow = FPoint(0,0);
 	_splashRange = 0;
-	_damage = IPoint(0, 0);
 	
 };
 
-
-SlowMissile::SlowMissile(SlMissInfo inf, std::vector<MonsterParent::Ptr> & targets) {
+SlowMissile::SlowMissile(SlMissInfo inf, std::vector<MonsterParent::Ptr> & targets) : FireParent() {
 	_missileType = TowerType::SLOW;
 	_position = inf._position;
-	_speed = FPoint(0, 0);
+	
 	_modSpeed = inf._modSpeed;
 	float d = _position.GetDistanceTo(inf._tPosition);
 	_flyTime = d / _modSpeed;
@@ -353,7 +319,6 @@ SlowMissile::SlowMissile(SlMissInfo inf, std::vector<MonsterParent::Ptr> & targe
 	
 	
 	_hitEff = _misEffCont.AddEffect("RingCold");
-	
 	_hitEff->Pause();
 	_hitEff->Reset();
 	_hitEff->SetScale(1.3);
@@ -365,51 +330,21 @@ SlowMissile::SlowMissile(SlMissInfo inf, std::vector<MonsterParent::Ptr> & targe
 	_misEff->Pause();
 	_misEff->SetScale(0.5);
 	MakePath();
-	
 };
-
 
 SlowMissile::~SlowMissile() {
 };
 
-
-
-void SlowMissile::Update(float dt) {
-	if (_missileTimer >= _flyTime && !_hit) {
-		_hit = true;
-		_fly = false;
-		for (unsigned int i = 0; i < _targets.size(); i++) {
-			FPoint tPos = _targets[i]->Position();
-			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
-			if (d < _splashRange) {
-				_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
-			}
+void SlowMissile::DealDamage()
+{
+	for (unsigned int i = 0; i < _targets.size(); i++) {
+		FPoint tPos = _targets[i]->Position();
+		float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
+		if (d < _splashRange) {
+			_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
 		}
-		_misEff->Finish();
-		if (_hitEff)
-			_hitEff->Continue();
-		_missileTimer = _flyTime;
 	}
-	else {
-		if (!_hit)
-			_missileTimer += dt;
-
-		
-		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
-		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
-		
-	}
-	_misEff->posX = _position.x;
-	_misEff->posY = _position.y;
-	if (_hitEff) {
-		_hitEff->posX = _position.x;
-		_hitEff->posY = _position.y;
-	}
-	
-	_misEffCont.Update(dt);
-};
-
-
+}
 
 MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
 	MonsterParent::Ptr resTarget = nullptr;
@@ -472,41 +407,26 @@ MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monst
 //----------------------------------------------//
 //----------------------------------------------//
 
-DecayMissile::DecayMissile() {
+DecayMissile::DecayMissile() : FireParent() {
 	_missileType = TowerType::DECAY;
-	_position = FPoint(0, 0);
-	_targetPosition = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_flyTime = 0;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
 	_decay = FPoint(0,0);
-	_tex = nullptr;
 	_target = nullptr;
-	_damage = IPoint(0, 0);
+	
 };
-DecayMissile::DecayMissile(DMissInfo inf) {
+
+DecayMissile::DecayMissile(DMissInfo inf) : FireParent() {
 	_missileType = TowerType::DECAY;
 	_position = inf._position;
-	_speed = FPoint(0, 0);
 	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
 	_decay = inf._decay;
 	_target = inf._target;
 	_damage = inf._damage;
-	
-	
+
 	_misEff = _misEffCont.AddEffect("IskraGreen");
 	_misEff->posX = _position.x;
 	_misEff->posY = _position.y;
@@ -517,32 +437,13 @@ DecayMissile::DecayMissile(DMissInfo inf) {
 	
 }
 
-DecayMissile::~DecayMissile() {};
-
-
-void DecayMissile::Update(float dt) {
-	if (_missileTimer >= _flyTime && !_hit) {
-		
-		_hit = true;
-		_fly = false;
-		_target->TakeDamage(_missileType, _decay, math::random(_damage.x, _damage.y));
-		_misEff->Finish();
-		_missileTimer = _flyTime;
-	}
-	else {
-		if (!_hit)
-			_missileTimer += dt;
-
-		
-		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
-		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
-		_misEff->posX = _position.x;
-		_misEff->posY = _position.y;
-	}
-	_misEffCont.Update(dt);
+DecayMissile::~DecayMissile() {
 };
 
-
+void DecayMissile::DealDamage()
+{
+	_target->TakeDamage(_missileType, _decay, math::random(_damage.x, _damage.y));
+}
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -550,44 +451,25 @@ void DecayMissile::Update(float dt) {
 //----------------------------------------------//
 //----------------------------------------------//
 
-BashMissile::BashMissile() {
+BashMissile::BashMissile() : FireParent() {
 	_missileType = TowerType::BASH;
-	_position = FPoint(0, 0);
-	_targetPosition = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_flyTime = 0;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
 	_bash = FPoint(0,0);
-	_tex = nullptr;
 	_target = nullptr;
-	_damage = IPoint(0, 0);
 };
 
-BashMissile::BashMissile(BMissInfo inf) {
+BashMissile::BashMissile(BMissInfo inf) : FireParent() {
 	_missileType = TowerType::BASH;
 	_position = inf._position;
-	_speed = FPoint(0, 0);
 	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
 	_bash = inf._bash;
 	_target = inf._target;
 	_damage = inf._damage;
-	
-	
 	_misEff = _misEffCont.AddEffect("Iskra1");
-	
 	_misEff->Pause();
 	_misEff->Reset();
 	_misEff->SetScale(0.5);
@@ -595,30 +477,13 @@ BashMissile::BashMissile(BMissInfo inf) {
 	
 };
 
-
-BashMissile::~BashMissile() {};
-
-
-void BashMissile::Update(float dt) {
-	if (_missileTimer >= _flyTime && !_hit) {
-		_hit = true;
-		_fly = false;
-		_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
-		_misEff->Finish();
-		_missileTimer = _flyTime;
-	}
-	else {
-		if (!_hit)
-			_missileTimer += dt;
-
-		
-		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
-		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
-		_misEff->posX = _position.x;
-		_misEff->posY = _position.y;
-	}
-	_misEffCont.Update(dt);
+BashMissile::~BashMissile() {
 };
+
+void BashMissile::DealDamage()
+{
+	_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
+}
 
 
 
@@ -628,49 +493,26 @@ void BashMissile::Update(float dt) {
 //				Разрывной снаряд				//
 //----------------------------------------------//
 //----------------------------------------------//
-SplashMissile::SplashMissile() {
+SplashMissile::SplashMissile() : FireParent() {
 	_missileType = TowerType::SPLASH;
-	_position = FPoint(0, 0);
-	_targetPosition = FPoint(0, 0);
-	_speed = FPoint(0, 0);
-	_modSpeed = 0;
-	_flyTime = 0;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
-	_tex = nullptr;
 	_splashRange = 0;
-	_damage = IPoint(0, 0);
-	
-	
 };
-SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & targets) {
+
+SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & targets): FireParent() {
 	_missileType = TowerType::SPLASH;
 	_position = inf._position;
-	_speed = FPoint(0, 0);
 	_modSpeed = inf._modSpeed;
 	float d = _position.GetDistanceTo(inf._tPosition);
 	_flyTime = d / _modSpeed;
 	_targetPosition = inf._tPosition;
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_tex = nullptr;
 	_damage = inf._damage;
 	//_targets = targets;
 	_splashRange = inf._sRange;
-	_missilePathX.Clear();
-	_missilePathY.Clear();
-	
-	
 	_hitEff = _misEffCont.AddEffect("Ring");
 	_hitEff->Pause();
 	_hitEff->Reset();
 	_hitEff->SetScale(1.3);
-	
-	
+		
 	_misEff = _misEffCont.AddEffect("Iskra");
 	_misEff->Pause();
 	_misEff->Reset();
@@ -678,45 +520,21 @@ SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & t
 	MakePath();
 	
 };
-SplashMissile::~SplashMissile() {};
 
-
-void SplashMissile::Update(float dt) {
-	if (_missileTimer >= _flyTime && !_hit) {
-		_hit = true;
-		_fly = false;
-		for (unsigned int i = 0; i < _targets.size(); i++) {
-			FPoint tPos = _targets[i]->Position();
-			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
-			if (d < _splashRange) {
-				_targets[i]->TakeDamage(_missileType, FPoint(0,0),math::random(_damage.x, _damage.y));
-			}
-			
-		}
-		_misEff->Finish();
-		if (_hitEff)
-			_hitEff->Continue();
-			
-		_missileTimer = _flyTime;
-	}
-	else {
-		if (!_hit)
-			_missileTimer += dt;
-
-		
-		_position.x = _missilePathX.getGlobalFrame(_missileTimer);
-		_position.y = _missilePathY.getGlobalFrame(_missileTimer);
-		_misEff->posX = _position.x;
-		_misEff->posY = _position.y;
-	}
-	if (_hitEff) {
-		_hitEff->posX = _position.x;
-		_hitEff->posY = _position.y;
-	}
-	_misEffCont.Update(dt);
+SplashMissile::~SplashMissile() {
 };
 
+void SplashMissile::DealDamage()
+{
+	for (unsigned int i = 0; i < _targets.size(); i++) {
+		FPoint tPos = _targets[i]->Position();
+		float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
+		if (d < _splashRange) {
+			_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+		}
 
+	}
+}
 
 MonsterParent::Ptr  SplashMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
 	MonsterParent::Ptr resTarget = nullptr;
