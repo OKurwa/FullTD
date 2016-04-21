@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<Resources>
+	<FreeTypeFonts group="TestGroup" upload="false">
+		<font name="arial" family="arial" size="12" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
+	</FreeTypeFonts>
+	<Textures>
+		<texture id="TestGrass" path="textures/grass/grass0062.png"/>
+		<texture id="TestGrassIso" path="textures/grass/landIso.png"/>
+		<texture id="Land" path="textures/grass/1x1.png"/>
+		<texture id="MenuBG" path="textures/menu.png"/>
+		<texture id="Towers" path="textures/towers.png"/>
+		<texture id="Slot" path="textures/ironplate.png"/>
+		<texture id="StartWindow" path="textures/start_w.png"/>
+		<texture id="LoseWindow" path="textures/lose_w.png"/>
+		<texture id="WinWindow" path="textures/win_w.png"/>
+		<texture id="Up" path="textures/up.png"/>
+		<texture id="Hint" path="textures/hint_w.png"/>
+		<texture id="Meat" path="textures/Cutlet.png"/>
+		
+	<!-- Текстуры башен-->
+		<texture id="Ant" path="textures/towers/black_ant_light.png"/>
+		<texture id="IceAnt" path="textures/towers/ice_ant.png"/>
+		<texture id="FireAnt" path="textures/towers/fire_ant.png"/>
+		<texture id="PoisonAnt" path="textures/towers/poison_ant.png"/>
+		<texture id="StunAnt" path="textures/towers/stun_ant.png"/>
+		<texture id="Ghost" path="textures/towers/1.png"/>
+	
+	<!-- Текстуры мобов-->
+		<texture id="Orc" path="textures/mobs/orc_norm.png"/>
+		<texture id="OrcArcher" path="textures/mobs/orc_archer.png"/>
+		<texture id="OrcHeavy" path="textures/mobs/orc_heavy.png"/>
+		<texture id="OrcElite" path="textures/mobs/orc_elite.png"/>
+		<texture id="Spider" path="textures/mobs/spider_giant.png"/>
+		<texture id="Zombie" path="textures/mobs/zombie.png"/>
+		<texture id="Werebear" path="textures/mobs/werebear_white_armor.png"/>
+		<texture id="Skeleton" path="textures/mobs/skeleton_knight.png"/>
+		<texture id="Goblin" path="textures/mobs/goblin_shaman.png"/>
+		<texture id="Horse" path="textures/mobs/horse.png"/>
+		<texture id="Troll" path="textures/mobs/troll.png"/>
+		<texture id="SkeletonMage" path="textures/mobs/skeleton_mage_high.png"/>
+	</Textures>
+	
+	
+	<Animations>
+	
+	<!-- Анимации башен-->
+		<animation id="AntAttackAnimation" texture="Ant" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="204" last="207"/>
+			<playback fps="24" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="AntIdleAnimation" texture="Ant" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="192" last="195"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="IceAttackAnimation" texture="IceAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="204" last="207"/>
+			<playback fps="24" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="IceIdleAnimation" texture="IceAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="192" last="195"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="FireAttackAnimation" texture="FireAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="204" last="207"/>
+			<playback fps="24" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="FireIdleAnimation" texture="FireAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="192" last="195"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="PoisonAttackAnimation" texture="PoisonAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="204" last="207"/>
+			<playback fps="24" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="PoisonIdleAnimation" texture="PoisonAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="192" last="195"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="StunAttackAnimation" texture="StunAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="204" last="207"/>
+			<playback fps="24" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="StunIdleAnimation" texture="StunAnt" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="256" first="192" last="195"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		
+	<!-- Анимации мобов-->
+		<animation id="OrcRunAnimation" texture="Orc" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcIdleAnimation" texture="Orc" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcDieAnimation" texture="Orc" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="OrcARunAnimation" texture="OrcArcher" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcAIdleAnimation" texture="OrcArcher" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcADieAnimation" texture="OrcArcher" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="OrcHRunAnimation" texture="OrcHeavy" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcHIdleAnimation" texture="OrcHeavy" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcHDieAnimation" texture="OrcHeavy" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="OrcERunAnimation" texture="OrcElite" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcEIdleAnimation" texture="OrcElite" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="OrcEDieAnimation" texture="OrcElite" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="SpiderRunAnimation" texture="Spider" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SpiderIdleAnimation" texture="Spider" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SpiderDieAnimation" texture="Spider" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="WerebearRunAnimation" texture="Werebear" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="WerebearIdleAnimation" texture="Werebear" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="WerebearDieAnimation" texture="Werebear" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		
+		<animation id="ZombieRunAnimation" texture="Zombie" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="ZombieIdleAnimation" texture="Zombie" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="ZombieDieAnimation" texture="Zombie" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="SkeletonRunAnimation" texture="Skeleton" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SkeletonIdleAnimation" texture="Skeleton" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SkeletonDieAnimation" texture="Skeleton" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="SkeletonMageRunAnimation" texture="SkeletonMage" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SkeletonMageIdleAnimation" texture="SkeletonMage" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="SkeletonMageDieAnimation" texture="SkeletonMage" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="GoblinRunAnimation" texture="Goblin" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="GoblinIdleAnimation" texture="Goblin" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="GoblinDieAnimation" texture="Goblin" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="TrollRunAnimation" texture="Troll" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="TrollIdleAnimation" texture="Troll" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="TrollDieAnimation" texture="Troll" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+		
+		<animation id="HorseRunAnimation" texture="Horse" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="4" last="11"/>
+			<playback fps="24" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="HorseIdleAnimation" texture="Horse" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="0" last="3"/>
+			<playback fps="6" play="1" loop="1" forward="1" pingpong="0"/> 
+		</animation>
+		<animation id="HorseDieAnimation" texture="Horse" group="TestGroup" upload="false">
+			<frames width="128" height="128" count="160" first="16" last="23"/>
+			<playback fps="8" play="1" loop="0" forward="1" pingpong="0"/> 
+		</animation>
+
+	</Animations>
+	<Sounds group="TDSound"> 
+		<!-- задаём список звуков, каждому звуку в этом списка назначаем группу GardenSound-->
+		<sample id="Die" path="sound/die.ogg" mode="stream+cache" mix="3" volumeFactor="0.7" pan="0"/>
+		<sample id="Shoot" path="sound/shoot.ogg" mode="stream+cache" mix="4" volumeFactor="0.4" pan="0"/>
+		<sample id="Up" path="sound/up.ogg" mode="stream+cache" mix="3" volumeFactor="0.7" pan="0"/>
+		<sample id="Denied" path="sound/denied.ogg" mode="stream+cache" mix="4" volumeFactor="0.7" pan="0"/>
+		<sample id="ZombieSound" path="sound/zombie.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+		<sample id="HorseSound" path="sound/horse.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+		<sample id="BonesSound" path="sound/bones.ogg" mode="stream+cache" mix="4" volumeFactor="0.7" pan="0"/>
+		<sample id="BearSound" path="sound/bear.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+		<sample id="GoblinSound" path="sound/goblin.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+		<sample id="TrollSound" path="sound/troll.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+		<sample id="SpiderSound" path="sound/spider.ogg" mode="stream+cache" mix="4" volumeFactor="1.0" pan="0"/>
+	</Sounds>
+</Resources>

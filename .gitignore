@@ -1,0 +1,9 @@
+Test.VC.opendb
+engine/
+ipch/
+libs/
+obj/
+Test.sdf
+Test.sln
+Test.vcxproj
+Test.vcxproj.filters

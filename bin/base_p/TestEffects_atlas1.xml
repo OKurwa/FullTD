@@ -1,0 +1,12 @@
+<Frames count="9" path="textures/particles/" group="Particles">
+	<frame x="1" y="1" width="41" height="38" innerX="9" innerY="9" frameWidth="58" frameHeight="58" path="smoke"/>
+	<frame x="44" y="1" width="5" height="5" innerX="0" innerY="0" frameWidth="5" frameHeight="5" path="../../Project/Test2015_2/bin/base_p/textures/Particles/green"/>
+	<frame x="51" y="1" width="128" height="128" innerX="0" innerY="0" frameWidth="128" frameHeight="128" path="Sun_ring"/>
+	<frame x="181" y="1" width="7" height="3" innerX="1" innerY="3" frameWidth="10" frameHeight="10" path="water"/>
+	<frame x="190" y="1" width="29" height="29" innerX="0" innerY="0" frameWidth="29" frameHeight="29" path="glow2"/>
+	<frame x="221" y="1" width="137" height="136" innerX="3" innerY="4" frameWidth="140" frameHeight="140" path="Bomb_boom"/>
+	<frame x="360" y="1" width="61" height="61" innerX="0" innerY="0" frameWidth="61" frameHeight="61" path="Bomb_rays"/>
+	<frame x="360" y="64" width="128" height="128" innerX="0" innerY="0" frameWidth="128" frameHeight="128" path="Bomb_ring"/>
+	<frame x="423" y="1" width="11" height="11" innerX="0" innerY="0" frameWidth="11" frameHeight="11" path="fire"/>
+</Frames>
+

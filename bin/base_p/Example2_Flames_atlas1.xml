@@ -1,0 +1,8 @@
+<Frames count="5" path="textures/particles/" group="Particles">
+	<frame x="1" y="1" width="21" height="21" innerX="0" innerY="0" frameWidth="21" frameHeight="21" path="fire"/>
+	<frame x="24" y="1" width="46" height="46" innerX="2" innerY="2" frameWidth="49" frameHeight="49" path="adot"/>
+	<frame x="72" y="1" width="32" height="32" innerX="16" innerY="16" frameWidth="64" frameHeight="64" path="star2"/>
+	<frame x="106" y="1" width="61" height="61" innerX="0" innerY="0" frameWidth="61" frameHeight="61" path="Bomb_ring"/>
+	<frame x="169" y="1" width="49" height="45" innerX="10" innerY="10" frameWidth="68" frameHeight="68" path="smoke"/>
+</Frames>
+
