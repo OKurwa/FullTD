@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "FireParent.h"
-//#include "MonsterParent.h"
 #include "TowerParent.h"
 using namespace std;
 using namespace rapidxml;
@@ -369,28 +368,72 @@ void TowerParent::SetHint(IPoint pos) {
 }
 
 void TowerParent::LoadTowerFormXML(xml_node<>* towerNode){
-	string value = towerNode->first_attribute("texture")->value();
+	string value_t = towerNode->first_attribute("texture")->value();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-	value = towerNode->first_attribute("price")->value();
-	_price = utils::lexical_cast<int>(value);
-	value = towerNode->first_attribute("reload")->value();
-	_reloadTime = utils::lexical_cast<float>(value);
+	value_t = towerNode->first_attribute("price")->value();
+	_price = utils::lexical_cast<int>(value_t);
+	value_t = towerNode->first_attribute("reload")->value();
+	_reloadTime = utils::lexical_cast<float>(value_t);
 	_reloadTimer = 0;
-	value = towerNode->first_attribute("range")->value();
-	_range = utils::lexical_cast<int>(value);
-	value = towerNode->first_attribute("lvlCount")->value();
-	_lvlCount = utils::lexical_cast<int>(value);
+	value_t = towerNode->first_attribute("range")->value();
+	_range = utils::lexical_cast<int>(value_t);
+	value_t = towerNode->first_attribute("lvlCount")->value();
+	_lvlCount = utils::lexical_cast<int>(value_t);
 
-	value = towerNode->first_attribute("idleAnimation")->value();
-	_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
+	value_t = towerNode->first_attribute("idleAnimation")->value();
+	_idleAnim = Core::resourceManager.Get<Render::Animation>(value_t)->Clone();
 
 	_idleAnimAngles = IDL_ANGLES;
 
-	value = towerNode->first_attribute("atkAnimation")->value();
-	_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
+	value_t = towerNode->first_attribute("atkAnimation")->value();
+	_atkAnim = Core::resourceManager.Get<Render::Animation>(value_t)->Clone();
 	_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
 
 	_attackAnimAngles = ATK_ANGLES;
+
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		string id = missile->first_attribute("id")->value();
+		FireParent::MissInfo info;
+		//Общие параметры
+		info._target = nullptr;
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		
+		//Эффекты атак
+		//--Slow
+		value = Xml::GetStringAttributeOrDef(missile, "slow", "0");
+		info._sFactor.x = utils::lexical_cast<float>(value);
+		value = Xml::GetStringAttributeOrDef(missile, "slowLenght", "0");
+		info._sFactor.y = utils::lexical_cast<float>(value);
+
+		//--Decay
+		value = Xml::GetStringAttributeOrDef(missile, "decay", "0");
+		info._decay.x = utils::lexical_cast<int>(value);
+		value = Xml::GetStringAttributeOrDef(missile, "decayLenght", "0");
+		info._decay.y = utils::lexical_cast<float>(value);
+
+		//--Bash
+		value = Xml::GetStringAttributeOrDef(missile, "bashChance", "0");
+		info._bash.x = utils::lexical_cast<float>(value);
+		value = Xml::GetStringAttributeOrDef(missile, "bashLenght", "0");
+		info._bash.y = utils::lexical_cast<float>(value);
+
+
+		//Радиус поражения
+		value = Xml::GetStringAttributeOrDef(missile, "splashRange", "0");
+		info._sRange = utils::lexical_cast<int>(value);
+		
+		
+		_missilesPrototypes.push_back(info);
+
+	}
+	_price = _missilesPrototypes[0]._price;
 }
 
 
@@ -481,24 +524,7 @@ void NormalTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
-void NormalTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
-	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-		string id = missile->first_attribute("id")->value();
-		NormalMissile::NMissInfo info;
-		info._target = nullptr;
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
-		_missilesPrototypes.push_back(info);
 
-	}
-	_price = _missilesPrototypes[0]._price;
-};
 //----------------------------------------------//
 //----------------------------------------------//
 //				Замедляющая башня	 			//
@@ -586,30 +612,6 @@ void SlowTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
-void SlowTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
-	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-		SlowMissile::SlMissInfo info;
-		string id = missile->first_attribute("id")->value();
-
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-
-		value = missile->first_attribute("splashRange")->value();
-		info._sRange = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("slow")->value();
-		info._sFactor.x = utils::lexical_cast<float>(value);
-		value = missile->first_attribute("slowLenght")->value();
-		info._sFactor.y = utils::lexical_cast<float>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
-		_missilesPrototypes.push_back(info);
-	}
-	_price = _missilesPrototypes[0]._price;
-};
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -695,29 +697,7 @@ void DecayTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
-void DecayTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
-	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-		DecayMissile::DMissInfo info;
-		info._target = nullptr;
-		string id = missile->first_attribute("id")->value();
 
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-
-		value = missile->first_attribute("decay")->value();
-		info._decay.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("decayLenght")->value();
-		info._decay.y = utils::lexical_cast<float>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
-		_missilesPrototypes.push_back(info);
-	}
-	_price = _missilesPrototypes[0]._price;
-};
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -803,28 +783,7 @@ void BashTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
-void BashTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
-	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-		BashMissile::BMissInfo info;
-		info._target = nullptr;
-		string id = missile->first_attribute("id")->value();
 
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("bashChance")->value();
-		info._bash.x = utils::lexical_cast<float>(value);
-		value = missile->first_attribute("bashLenght")->value();
-		info._bash.y = utils::lexical_cast<float>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
-		_missilesPrototypes.push_back(info);
-	}
-	_price = _missilesPrototypes[0]._price;
-};
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -913,26 +872,7 @@ void SplashTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
-void SplashTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
-	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-		SplashMissile::SpMissInfo info;
-		string id = missile->first_attribute("id")->value();
 
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-
-		value = missile->first_attribute("splashRange")->value();
-		info._sRange = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
-		_missilesPrototypes.push_back(info);
-	}
-	_price = _missilesPrototypes[0]._price;
-};
 
 
 //----------------------------------------------//
@@ -949,7 +889,6 @@ TowerPrototypeFactory::TowerPrototypeFactory() {
 		_Dloaded = false;
 		
 }
-
 
 void TowerPrototypeFactory::Init(std::string xmlfilename) {
 	
@@ -969,23 +908,23 @@ void TowerPrototypeFactory::Init(std::string xmlfilename) {
 			
 			if (id == "NormalTower") {
 				_nPrototype.LoadTowerFormXML(tower);
-				_nPrototype.LoadMissilesFormXML(tower);
+				//_nPrototype.LoadMissilesFormXML(tower);
 			} 
 			else if (id == "SplashTower") {
 				_spPrototype.LoadTowerFormXML(tower);
-				_spPrototype.LoadMissilesFormXML(tower);
+				//_spPrototype.LoadMissilesFormXML(tower);
 			}
 			else if (id == "SlowTower") {
 				_slPrototype.LoadTowerFormXML(tower);
-				_slPrototype.LoadMissilesFormXML(tower);
+				//_slPrototype.LoadMissilesFormXML(tower);
 			}
 			else if (id == "DecayTower") {
 				_dPrototype.LoadTowerFormXML(tower);
-				_dPrototype.LoadMissilesFormXML(tower);
+				//_dPrototype.LoadMissilesFormXML(tower);
 			}
 			else if (id == "BashTower") {
 				_bPrototype.LoadTowerFormXML(tower);
-				_bPrototype.LoadMissilesFormXML(tower);
+				//_bPrototype.LoadMissilesFormXML(tower);
 			}
 				
 		}

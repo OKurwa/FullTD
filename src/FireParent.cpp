@@ -243,7 +243,7 @@ NormalMissile::NormalMissile() : FireParent() {
 	_target = nullptr;
 };
 
-NormalMissile::NormalMissile(NMissInfo inf) : FireParent() {
+NormalMissile::NormalMissile(MissInfo inf) : FireParent() {
 	_missileType = TowerType::NORMAL;
 	_position = inf._position;
 	
@@ -297,7 +297,7 @@ SlowMissile::SlowMissile() : FireParent() {
 	
 };
 
-SlowMissile::SlowMissile(SlMissInfo inf, std::vector<MonsterParent::Ptr> & targets) : FireParent() {
+SlowMissile::SlowMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets) : FireParent() {
 	_missileType = TowerType::SLOW;
 	_position = inf._position;
 	
@@ -414,7 +414,7 @@ DecayMissile::DecayMissile() : FireParent() {
 	
 };
 
-DecayMissile::DecayMissile(DMissInfo inf) : FireParent() {
+DecayMissile::DecayMissile(MissInfo inf) : FireParent() {
 	_missileType = TowerType::DECAY;
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
@@ -457,7 +457,7 @@ BashMissile::BashMissile() : FireParent() {
 	_target = nullptr;
 };
 
-BashMissile::BashMissile(BMissInfo inf) : FireParent() {
+BashMissile::BashMissile(MissInfo inf) : FireParent() {
 	_missileType = TowerType::BASH;
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
@@ -498,7 +498,7 @@ SplashMissile::SplashMissile() : FireParent() {
 	_splashRange = 0;
 };
 
-SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & targets): FireParent() {
+SplashMissile::SplashMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets): FireParent() {
 	_missileType = TowerType::SPLASH;
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;

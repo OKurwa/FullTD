@@ -176,33 +176,33 @@
 
 	<Attacks delay="10">
 		<Attack id="0" name="Orc" type="Normal" count="10" hp="500" speed="100" goldPM="5" goldAA="100" runAnimation = "OrcRunAnimation" idleAnimation = "OrcIdleAnimation" dieAnimation = "OrcDieAnimation"/>
-		<Attack id="1" name="Orc Archer" type="Immune" count="10" hp="1000" speed="100" goldPM="7" goldAA="100" runAnimation = "OrcARunAnimation" idleAnimation = "OrcAIdleAnimation" dieAnimation = "OrcADieAnimation"/>
-		<Attack id="2" name="Heavy Orc" type="Healing" count="10" hp="2600" speed="100" goldPM="10" goldAA="100"  runAnimation = "OrcHRunAnimation" idleAnimation = "OrcHIdleAnimation" dieAnimation = "OrcHDieAnimation"/>
+		<Attack id="1" name="Orc Archer" type="Immune" count="10" hp="1500" speed="100" goldPM="7" goldAA="100" runAnimation = "OrcARunAnimation" idleAnimation = "OrcAIdleAnimation" dieAnimation = "OrcADieAnimation"/>
+		<Attack id="2" name="Heavy Orc" type="Healing" count="10" hp="3000" speed="100" goldPM="10" goldAA="100"  runAnimation = "OrcHRunAnimation" idleAnimation = "OrcHIdleAnimation" dieAnimation = "OrcHDieAnimation"/>
 		<Attack id="3" name="Elite Orc" type="Boss" count="2" hp="18000" speed="100" goldPM="100" goldAA="100" runAnimation = "OrcERunAnimation" idleAnimation = "OrcEIdleAnimation" dieAnimation = "OrcEDieAnimation"/>
-		<Attack id="4" name="Spider" type="Normal" count="10" hp="4500" speed="100" goldPM="12" goldAA="100" runAnimation = "SpiderRunAnimation" idleAnimation = "SpiderIdleAnimation" dieAnimation = "SpiderDieAnimation" dieSound = "SpiderSound"/>
-		<Attack id="5" name="Zombie" type="Immune" count="10" hp="4700" speed="100" goldPM="15" goldAA="100" runAnimation = "ZombieRunAnimation" idleAnimation = "ZombieIdleAnimation" dieAnimation = "ZombieDieAnimation" dieSound = "ZombieSound"/>
-		<Attack id="6" name="Werebear" type="Healing" count="10" hp="14600" speed="100" goldPM="20" goldAA="100"  runAnimation = "WerebearRunAnimation" idleAnimation = "WerebearIdleAnimation" dieAnimation = "WerebearDieAnimation" dieSound = "BearSound"/>
-		<Attack id="7" name="Skeleton Knight" type="Boss" count="2" hp="43000" speed="100" goldPM="200" goldAA="100" runAnimation = "SkeletonRunAnimation" idleAnimation = "SkeletonIdleAnimation" dieAnimation = "SkeletonDieAnimation" dieSound = "BonesSound"/>
-		<Attack id="8" name="Goblin" type="Normal" count="10" hp="14500" speed="100" goldPM="23" goldAA="100" runAnimation = "GoblinRunAnimation" idleAnimation = "GoblinIdleAnimation" dieAnimation = "GoblinDieAnimation" dieSound = "GoblinSound"/>
-		<Attack id="9" name="Horse" type="Immune" count="10" hp="14700" speed="100" goldPM="26" goldAA="100" runAnimation = "HorseRunAnimation" idleAnimation = "HorseIdleAnimation" dieAnimation = "HorseDieAnimation" dieSound = "HorseSound"/>
-		<Attack id="10" name="Troll" type="Healing" count="10" hp="24600" speed="100" goldPM="29" goldAA="100"  runAnimation = "TrollRunAnimation" idleAnimation = "TrollIdleAnimation" dieAnimation = "TrollDieAnimation" dieSound = "TrollSound"/>
-		<Attack id="11" name="Skeleton Mage" type="Boss" count="2" hp="83000" speed="100" goldPM="500" goldAA="100" runAnimation = "SkeletonMageRunAnimation" idleAnimation = "SkeletonMageIdleAnimation" dieAnimation = "SkeletonMageDieAnimation" dieSound = "BonesSound"/>
+		<Attack id="4" name="Spider" type="Normal" count="10" hp="5500" speed="100" goldPM="12" goldAA="100" runAnimation = "SpiderRunAnimation" idleAnimation = "SpiderIdleAnimation" dieAnimation = "SpiderDieAnimation" dieSound = "SpiderSound"/>
+		<Attack id="5" name="Zombie" type="Immune" count="10" hp="6700" speed="100" goldPM="15" goldAA="100" runAnimation = "ZombieRunAnimation" idleAnimation = "ZombieIdleAnimation" dieAnimation = "ZombieDieAnimation" dieSound = "ZombieSound"/>
+		<Attack id="6" name="Werebear" type="Healing" count="10" hp="16600" speed="100" goldPM="20" goldAA="100"  runAnimation = "WerebearRunAnimation" idleAnimation = "WerebearIdleAnimation" dieAnimation = "WerebearDieAnimation" dieSound = "BearSound"/>
+		<Attack id="7" name="Skeleton Knight" type="Boss" count="2" hp="53000" speed="100" goldPM="200" goldAA="100" runAnimation = "SkeletonRunAnimation" idleAnimation = "SkeletonIdleAnimation" dieAnimation = "SkeletonDieAnimation" dieSound = "BonesSound"/>
+		<Attack id="8" name="Goblin" type="Normal" count="10" hp="17500" speed="100" goldPM="23" goldAA="100" runAnimation = "GoblinRunAnimation" idleAnimation = "GoblinIdleAnimation" dieAnimation = "GoblinDieAnimation" dieSound = "GoblinSound"/>
+		<Attack id="9" name="Horse" type="Immune" count="10" hp="16700" speed="100" goldPM="26" goldAA="100" runAnimation = "HorseRunAnimation" idleAnimation = "HorseIdleAnimation" dieAnimation = "HorseDieAnimation" dieSound = "HorseSound"/>
+		<Attack id="10" name="Troll" type="Healing" count="10" hp="27600" speed="100" goldPM="29" goldAA="100"  runAnimation = "TrollRunAnimation" idleAnimation = "TrollIdleAnimation" dieAnimation = "TrollDieAnimation" dieSound = "TrollSound"/>
+		<Attack id="11" name="Skeleton Mage" type="Boss" count="2" hp="100000" speed="100" goldPM="500" goldAA="100" runAnimation = "SkeletonMageRunAnimation" idleAnimation = "SkeletonMageIdleAnimation" dieAnimation = "SkeletonMageDieAnimation" dieSound = "BonesSound"/>
 	</Attacks>
 
 	<Towers>
 		<Tower id="NormalTower" texture="Ant" animation="AntAttack" price="10" reload="0.5" range="250" lvlCount="5" idleAnimation = "AntIdleAnimation" atkAnimation = "AntAttackAnimation">
 			<Missile id="0" misSpeed="600" minDMG="50" maxDMG="100" price="10"/>
-			<Missile id="1" misSpeed="600" minDMG="50" maxDMG="150" price="15"/>
-			<Missile id="2" misSpeed="600" minDMG="50" maxDMG="200" price="20"/>
-			<Missile id="3" misSpeed="600" minDMG="50" maxDMG="250" price="30"/>
-			<Missile id="4" misSpeed="600" minDMG="50" maxDMG="350" price="50"/>
+			<Missile id="1" misSpeed="600" minDMG="70" maxDMG="150" price="15"/>
+			<Missile id="2" misSpeed="600" minDMG="100" maxDMG="200" price="20"/>
+			<Missile id="3" misSpeed="600" minDMG="125" maxDMG="250" price="30"/>
+			<Missile id="4" misSpeed="600" minDMG="175" maxDMG="350" price="50"/>
 		</Tower>
 		<Tower id="SplashTower" texture="FireAnt" animation="FireAttack" price="50" reload="0.5" range="192" lvlCount="5" idleAnimation = "FireIdleAnimation" atkAnimation = "FireAttackAnimation">
 			<Missile id="0" reload="0.5" misSpeed="400" minDMG="30" maxDMG="50" range="192" splashRange="40"  price="50"/>
-			<Missile id="1" reload="0.5" misSpeed="400" minDMG="30" maxDMG="100" range="192" splashRange="50" price="50"/>
-			<Missile id="2" reload="0.5" misSpeed="400" minDMG="30" maxDMG="200" range="192" splashRange="60"   price="50"/>
-			<Missile id="3" reload="0.5" misSpeed="400" minDMG="30" maxDMG="300" range="192" splashRange="70"   price="50"/>
-			<Missile id="4" reload="0.5" misSpeed="400" minDMG="30" maxDMG="450" range="192" splashRange="80"   price="50"/>
+			<Missile id="1" reload="0.5" misSpeed="400" minDMG="60" maxDMG="100" range="192" splashRange="50" price="50"/>
+			<Missile id="2" reload="0.5" misSpeed="400" minDMG="120" maxDMG="200" range="192" splashRange="60"   price="50"/>
+			<Missile id="3" reload="0.5" misSpeed="400" minDMG="240" maxDMG="300" range="192" splashRange="70"   price="50"/>
+			<Missile id="4" reload="0.5" misSpeed="400" minDMG="300" maxDMG="450" range="192" splashRange="80"   price="50"/>
 		</Tower>
 		<Tower id="SlowTower" texture="IceAnt" animation="IceAttack" price="25" reload="0.5" range="192" lvlCount="5" idleAnimation = "IceIdleAnimation" atkAnimation = "IceAttackAnimation">
 			<Missile id="0" misSpeed="400" minDMG="5" maxDMG="10" splashRange="40" slow="0.3" slowLenght="3" price="25"/>
@@ -212,11 +212,11 @@
 			<Missile id="4" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" slow="0.5" slowLenght="5" price="70"/>
 		</Tower>
 		<Tower id="DecayTower" texture="PoisonAnt" animation="PoisonAttack" price="15" reload="0.5" range="250" lvlCount="5" idleAnimation = "PoisonIdleAnimation" atkAnimation = "PoisonAttackAnimation">
-			<Missile id="0" misSpeed="300" minDMG="5" maxDMG="10" decay="40" decayLenght="10" price="15"/>
-			<Missile id="1" misSpeed="300" minDMG="5" maxDMG="10" decay="60" decayLenght="10" price="20"/>
-			<Missile id="2" misSpeed="300" minDMG="5" maxDMG="10" decay="180" decayLenght="10" price="30"/>
-			<Missile id="3" misSpeed="300" minDMG="5" maxDMG="10" decay="300" decayLenght="10" price="50"/>
-			<Missile id="4" misSpeed="300" minDMG="5" maxDMG="10" decay="550" decayLenght="10" price="50"/>
+			<Missile id="0" misSpeed="300" minDMG="5" maxDMG="10" decay="40" decayLenght="4" price="15"/>
+			<Missile id="1" misSpeed="300" minDMG="5" maxDMG="10" decay="60" decayLenght="4" price="20"/>
+			<Missile id="2" misSpeed="300" minDMG="5" maxDMG="10" decay="180" decayLenght="4" price="30"/>
+			<Missile id="3" misSpeed="300" minDMG="5" maxDMG="10" decay="300" decayLenght="4" price="50"/>
+			<Missile id="4" misSpeed="300" minDMG="5" maxDMG="10" decay="550" decayLenght="4" price="50"/>
 		</Tower>
 		<Tower id="BashTower" texture="StunAnt" animation="StunAttack" price="15" reload="0.5" range="250" lvlCount="5" idleAnimation = "StunIdleAnimation" atkAnimation = "StunAttackAnimation">
 			<Missile id="0" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.2" bashLenght="3" price="15"/>

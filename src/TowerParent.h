@@ -52,7 +52,7 @@ public:
 	void SetHint(IPoint);
 	virtual void DrawHintText(IRect) {};
 	void LoadTowerFormXML(rapidxml::xml_node<>* towerNode);
-	virtual void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) = 0;
+	
 protected:
 
 	int ref_cnt_;
@@ -75,7 +75,7 @@ protected:
 	IRect  _upgradeButtonRect;
 	Render::TexturePtr _upTex;
 	std::vector<FireParent::Ptr> _missiles;
-	
+	std::vector<FireParent::MissInfo> _missilesPrototypes;
 	
 	//Визуальная
 	Render::TexturePtr _texHint;
@@ -116,13 +116,11 @@ public:
 	//void Update(float dt);
 	//bool Shoot();
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
-	void LoadFromXml(std::string filename);
+	
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
-	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
-private:
-	std::vector<NormalMissile::NMissInfo> _missilesPrototypes;
+	
 };
 
 
@@ -147,17 +145,17 @@ public:
 	//void Update(float dt);
 	
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
-	void LoadFromXml(std::string filename);
+	
 	
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
-	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
+	
 private:
 	int    _splashRange;
 	FPoint _slow;
 	std::vector<MonsterParent::Ptr> _targets;
-	std::vector<SlowMissile::SlMissInfo> _missilesPrototypes;
+	//std::vector<FireParent::MissInfo> _missilesPrototypes;
 };
 
 
@@ -183,14 +181,14 @@ public:
 
 	
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
-	void LoadFromXml(std::string filename);
+	
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
-	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
+	
 private:
 	FPoint _decay;
-	std::vector<DecayMissile::DMissInfo> _missilesPrototypes;
+	//std::vector<FireParent::MissInfo> _missilesPrototypes;
 };
 
 
@@ -217,14 +215,13 @@ public:
 
 	
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
-	void LoadFromXml(std::string filename);
+	
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
-	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	FPoint _bash;
-	std::vector<BashMissile::BMissInfo> _missilesPrototypes;
+	//std::vector<FireParent::MissInfo> _missilesPrototypes;
 };
 
 
@@ -250,16 +247,15 @@ public:
 
 	
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters) ;
-	void LoadFromXml(std::string filename);
+	
 	
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
-	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	int    _splashRange;
 	std::vector<MonsterParent::Ptr> _targets;
-	std::vector<SplashMissile::SpMissInfo> _missilesPrototypes;
+	//std::vector<FireParent::MissInfo> _missilesPrototypes;
 };
 
 
@@ -271,11 +267,6 @@ class TowerPrototypeFactory
 public:
 	TowerPrototypeFactory();
 	void Init(std::string filename);
-	TowerParent::Ptr createNormal();
-	TowerParent::Ptr createSlow();
-	TowerParent::Ptr createSplash();
-	TowerParent::Ptr createBash();
-	TowerParent::Ptr createDecay();
 	TowerParent::Ptr createTower(TowerType tType);
 
 private:

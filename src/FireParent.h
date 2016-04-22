@@ -17,6 +17,24 @@
 class FireParent {
 public:
 	typedef boost::intrusive_ptr<FireParent> Ptr;
+	struct MissInfo {
+		FPoint _position;
+		IPoint _damage;
+		int	_modSpeed;
+		MonsterParent * _target;
+		FPoint _tPosition;
+		int _price;
+
+		//Эффекты атак
+		FPoint _sFactor;
+		FPoint _decay;
+		FPoint _bash;
+
+		//Радиус поражения
+		int _sRange;
+
+	};
+	
 	FireParent();
 
 	FireParent(FPoint position,FPoint tPosition, int mSpeed, float fTime, float mFlyTimer, TowerType mType, IPoint dmg, Render::TexturePtr tex);
@@ -95,17 +113,10 @@ inline void intrusive_ptr_release(FireParent* e) { e->Release(); }
 
 class NormalMissile : public FireParent {
 public:
-	struct NMissInfo {
-		FPoint _position;
-		int	_modSpeed;
-		IPoint _damage;
-		MonsterParent * _target;
-		int _price;
-	};
-
+	
 	NormalMissile();
 	
-	NormalMissile(NMissInfo);
+	NormalMissile(MissInfo);
 	
 	~NormalMissile();
 	
@@ -129,20 +140,10 @@ private:
 //----------------------------------------------//
 class SlowMissile : public FireParent {
 public:
-	struct SlMissInfo {
-		FPoint _position;
-		FPoint _tPosition;
-		int	_modSpeed;
-		IPoint _damage;
-		FPoint _sFactor;
-		int _sRange;
-		int _price;
-	};
-
-
+	
 	SlowMissile();
 	
-	SlowMissile(SlMissInfo, std::vector<MonsterParent::Ptr> & targets);
+	SlowMissile(MissInfo, std::vector<MonsterParent::Ptr> & targets);
 
 	~SlowMissile();
 
@@ -168,17 +169,10 @@ private:
 //----------------------------------------------//
 class DecayMissile : public FireParent {
 public:
-	struct DMissInfo {
-		FPoint _position;
-		int	_modSpeed;
-		IPoint _damage;
-		MonsterParent * _target;
-		FPoint _decay;
-		int _price;
-	};
+	
 	DecayMissile();
 	
-	DecayMissile(DMissInfo);
+	DecayMissile(MissInfo);
 
 	~DecayMissile();
 
@@ -201,17 +195,10 @@ private:
 //----------------------------------------------//
 class BashMissile : public FireParent {
 public:
-	struct BMissInfo {
-		FPoint _position;
-		int	_modSpeed;
-		IPoint _damage;
-		MonsterParent * _target;
-		FPoint _bash;
-		int _price;
-	};
+	
 	BashMissile();
 	
-	BashMissile(BMissInfo);
+	BashMissile(MissInfo);
 
 	~BashMissile();
 
@@ -234,17 +221,10 @@ private:
 //----------------------------------------------//
 class SplashMissile : public FireParent {
 public:
-	struct SpMissInfo {
-		FPoint _position;
-		FPoint _tPosition;
-		int	_modSpeed;
-		IPoint _damage;
-		int _sRange;
-		int _price;
-	};
+	
 	SplashMissile();
 	
-	SplashMissile::SplashMissile(SpMissInfo inf, std::vector<MonsterParent::Ptr> & targets);
+	SplashMissile::SplashMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets);
 
 	~SplashMissile();
 
@@ -263,66 +243,7 @@ private:
 
 
 
-// Фабрика для создания снарядов
-class MissilePrototypeFactory
-{
-public:
-	MissilePrototypeFactory() {
-		_Nloaded = false;
-		_Slloaded = false;
-		_Sploaded = false;
-		_Bloaded = false;
-		_Dloaded = false;
-	}
-	FireParent::Ptr createNormal() {
-		static NormalMissile prototype;
-		if (!_Nloaded) {
-			//prototype.LoadFromXml("NewMap.xml");
-			_Nloaded = true;
-		}
 
-		return prototype.clone();
-	}
-	FireParent::Ptr createSlow() {
-		static SlowMissile prototype;
-		if (!_Slloaded) {
-			//prototype.LoadFromXml("NewMap.xml");
-			_Slloaded = true;
-		}
-		return prototype.clone();
-	}
-	FireParent::Ptr createSplash() {
-		static SplashMissile prototype;
-		if (!_Sploaded) {
-			//prototype.LoadFromXml("NewMap.xml");
-			_Sploaded = true;
-		}
-		return prototype.clone();
-	}
-	FireParent::Ptr createBash() {
-		static BashMissile prototype;
-		if (!_Bloaded) {
-			//prototype.LoadFromXml("NewMap.xml");
-			_Bloaded = true;
-		}
-		return prototype.clone();
-	}
-	FireParent::Ptr createDecay() {
-		static DecayMissile prototype;
-		if (!_Dloaded) {
-			//prototype.LoadFromXml("NewMap.xml");
-			_Dloaded = true;
-		}
-		return prototype.clone();
-	}
-
-private:
-	bool _Nloaded;
-	bool _Slloaded;
-	bool _Sploaded;
-	bool _Bloaded;
-	bool _Dloaded;
-};
 
 
 
