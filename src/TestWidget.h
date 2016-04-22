@@ -25,8 +25,11 @@ public:
 	bool MouseDown(const IPoint& mouse_pos);
 	void MouseMove(const IPoint& mouse_pos);
 	void MouseUp(const IPoint& mouse_pos);
-	bool LoadMapFromXml(std::string filename);
 	
+	void SwitchTowerType(IPoint);
+	void TryDestroyTower(IPoint);
+	void TryUpgradeTower(IPoint,IPoint);
+	void TryBuildTower(IPoint, IPoint);
 
 private:
 	void Init();

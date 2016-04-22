@@ -210,23 +210,17 @@ void MonsterAttack::LoadFromXml(std::string filename) {
 		for (xml_node<>* attack = attacks->first_node("Attack"); attack; attack = attack->next_sibling("Attack")) {
 			
 			Attack atk;
-			string value = attack->first_attribute("name")->value();
-			atk.SetName(value);
-			value = attack->first_attribute("type")->value();
-			atk.SetType(value);
-			value = attack->first_attribute("count")->value();
-			atk.SetCount(utils::lexical_cast<int>(value));
-			value = attack->first_attribute("hp")->value();
-			atk.SetMaxHp(utils::lexical_cast<int>(value));
-			value = attack->first_attribute("speed")->value();
-			atk.SetSpeed(utils::lexical_cast<int>(value));
-			value = attack->first_attribute("goldPM")->value();
-			atk.SetMGold(utils::lexical_cast<int>(value));
-			value = attack->first_attribute("goldAA")->value();
-			atk.SetWGold(utils::lexical_cast<int>(value));
+			
+			atk.SetName(Xml::GetStringAttributeOrDef(attack, "name", "name"));
+			atk.SetType(Xml::GetStringAttributeOrDef(attack, "type","Normal"));
+			atk.SetCount(Xml::GetIntAttributeOrDef(attack, "count", 0));
+			atk.SetMaxHp(Xml::GetIntAttributeOrDef(attack, "hp", 0));
+			atk.SetSpeed(Xml::GetIntAttributeOrDef(attack, "speed", 0));
+			atk.SetMGold(Xml::GetIntAttributeOrDef(attack, "goldPM", 0));
+			atk.SetWGold(Xml::GetIntAttributeOrDef(attack, "goldAA", 0));
 			
 			MonsterParent::MonsterInfo info;
-
+			string value;
 			info._position = FPoint(0, 0);
 			info._hp = atk.MaxHp();
 			info._modSpeed = atk.Speed();
@@ -241,9 +235,8 @@ void MonsterAttack::LoadFromXml(std::string filename) {
 
 			value = attack->first_attribute("dieAnimation")->value();
 			info._dieAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-
-			value = Xml::GetStringAttributeOrDef(attack, "dieSound", "Die");
-			info._dieSound = value;
+						
+			info._dieSound = Xml::GetStringAttributeOrDef(attack, "dieSound", "Die");
 			
 			if (atk.Type() == "Normal") {
 				_attackPrototypes.push_back(new NormalMonster(info));

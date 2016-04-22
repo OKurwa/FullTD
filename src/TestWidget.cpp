@@ -192,200 +192,29 @@ void TestWidget::Update(float dt)
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
 {	
-	
-
-	
 	IPoint fieldSize = _fieldMap.Size();
 	IPoint cellSize = _fieldMap.CellSize();
 	IPoint pos1 = _fieldMap.PosCell(mouse_pos);
 	_fieldMap.SelectCell(mouse_pos);
-
-	
-	
-
-	
-
-
-
-
-
-	
 	
 	////////////////////////////////////////
 	//			 Создание башни           //
 	////////////////////////////////////////
-	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
-		_curTowerType = _tryMenu->Press(mouse_pos, _curTowerType);
-		if (_curTowerType != EMPTY && _curTowerType != DESTROY) {
-			_enableBuildCursor = true;
-		}
-		else {
-			_enableBuildCursor = false;
-		}
-
-		_fieldMap.ShowGhosts(_curTowerType);
-	}
-	
-
+	SwitchTowerType(mouse_pos);
 	if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START) {
-		
-		
-
 		if (Core::mainInput.GetMouseLeftButton()) {
-
-
 			switch (_curTowerType)
 			{
 			case DESTROY:
-				if (_fieldMap.DestroyTower(pos1)) {
-					int destrIndex = 0;
-					bool found = false;
-					for (unsigned int i = 0; i < _towers.size(); i++) {
-						if (_towers[i]->Cell() == pos1) {
-							found = true;
-							destrIndex = i;
-						}
-					}
-					if (found) {
-						World::Instance().GoldAdd(_towers[destrIndex]->Price()*0.75);
-						_towers.erase(_towers.begin() + destrIndex);
-					}
-				};
+				TryDestroyTower(pos1);
 				break;
-
-
-
 			case EMPTY:
-				////////////////////////////////////////
-				//				Aпгрейд				  //
-				////////////////////////////////////////
-				if (_selectedTower) {
-					if (Core::mainInput.GetMouseLeftButton() && _selectedTower->UpgradeIRect().Contains(mouse_pos)) {
-						if (World::Instance().GoldSpend(_selectedTower->UpgradePrice())) {
-							_selectedTower->Upgrade();
-						}
-						else {
-							MM::manager.PlaySample("Denied");
-						}
-					}
-					_selectedTower->SetUpgradeButton(false);
-					_selectedTower = nullptr;
-				}else
-
-				////////////////////////////////////////
-				//		Выбор башни для апгрейда	  //
-				////////////////////////////////////////
-				if (pos1 != IPoint(-1, -1)) {
-
-
-					if (!_fieldMap.Cells()[pos1.x][pos1.y]->Empty()) {
-						for (unsigned int i = 0; i < _towers.size(); i++) {
-							if (_towers[i]->Cell() == pos1 && _towers[i]->UpgradePrice()>0) {
-
-								_selectedTower = _towers[i];
-								_selectedTower->SetUpgradeButton(true);
-							}
-							else {
-								_towers[i]->SetUpgradeButton(false);
-							}
-						}
-					}
-					else {
-
-						for (unsigned int i = 0; i < _towers.size(); i++) {
-
-							_towers[i]->SetUpgradeButton(false);
-						}
-					}
-
-
-
-
-
-
-				}
-				else {
-					///_selectedTower = nullptr;
-					for (unsigned int i = 0; i < _towers.size(); i++) {
-						_towers[i]->SetUpgradeButton(false);
-					}
-				}
-
-
-
-
-				
-
-
-				
-
+				TryUpgradeTower(pos1, mouse_pos);
 				break;
-			
-			
-			
 			default:
-				if (_fieldMap.AddTower(pos1)) {
-
-					TowerParent::Ptr t;
-					/*
-					switch (_curTowerType)
-					{
-					case NORMAL:
-						t = _towerFactory.createNormal();
-						break;
-					case SPLASH:
-						t = _towerFactory.createSplash();
-						break;
-					case SLOW:
-						t = _towerFactory.createSlow();
-						break;
-					case DECAY:
-						t = _towerFactory.createDecay();
-						break;
-					case BASH:
-						t = _towerFactory.createBash();
-						break;
-					}*/
-					t = _towerFactory.createTower(_curTowerType);
-
-					if (t) {
-						if (World::Instance().GoldSpend(t->Price())) {
-							t->SetCell(pos1);
-							t->SetPosition(FPoint(pos1.x*cellSize.x + cellSize.x / 2, pos1.y*cellSize.y + cellSize.y / 2));
-							_towers.push_back(t);
-
-						}
-						else {
-							MM::manager.PlaySample("Denied");
-							_curTowerType = EMPTY;
-							_tryMenu->Reset();
-							bool b = _fieldMap.DestroyTower(pos1);
-							
-						}
-					}
-					else {
-						_curTowerType = EMPTY;
-						_tryMenu->Reset();
-						bool b = _fieldMap.DestroyTower(pos1);
-						
-					}
-
-
-				}
-				else if (pos1 != IPoint(-1, -1)) {
-					_curTowerType = EMPTY;
-					_tryMenu->Reset();
-					_fieldMap.ShowGhosts(_curTowerType);
-				}
-
-					
-				
-
+				TryBuildTower(pos1, cellSize);
 				break;
 			}
-			
-			
-
 		}
 	}
 
@@ -397,6 +226,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 	return false;
 }
 
+
 void TestWidget::MouseMove(const IPoint &mouse_pos)
 {
 	_tryMenu->SetLighter(mouse_pos);
@@ -406,10 +236,12 @@ void TestWidget::MouseMove(const IPoint &mouse_pos)
 	_buildCursorPos = mouse_pos;
 }
 
+
 void TestWidget::MouseUp(const IPoint &mouse_pos)
 {
 	
 }
+
 
 void TestWidget::AcceptMessage(const Message& message)
 {
@@ -481,48 +313,121 @@ void TestWidget::AcceptMessage(const Message& message)
 			//_fieldMap.SaveToFile("save.txt");
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
-
-
-
-
-
 			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
 		}
 		
 	}
 }
 
-bool TestWidget::LoadMapFromXml(std::string filename) {
 
-	
+void TestWidget::SwitchTowerType(IPoint mPos){
+	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
+		_curTowerType = _tryMenu->Press(mPos, _curTowerType);
+		if (_curTowerType != EMPTY && _curTowerType != DESTROY) {
+			_enableBuildCursor = true;
+		}
+		else {
+			_enableBuildCursor = false;
+		}
+
+		_fieldMap.ShowGhosts(_curTowerType);
+	}
+};
 
 
+void TestWidget::TryDestroyTower(IPoint cellPos) {
+	if (_fieldMap.DestroyTower(cellPos)) {
+		int destrIndex = 0;
+		bool found = false;
+		for (unsigned int i = 0; i < _towers.size(); i++) {
+			if (_towers[i]->Cell() == cellPos) {
+				found = true;
+				destrIndex = i;
+			}
+		}
+		if (found) {
+			World::Instance().GoldAdd(_towers[destrIndex]->Price()*0.75);
+			_towers.erase(_towers.begin() + destrIndex);
+		}
+	};
+};
 
 
-	try {
-		rapidxml::file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
+void TestWidget::TryUpgradeTower(IPoint cellPos, IPoint mPos) {
+	////////////////////////////////////////
+	//				Aпгрейд				  //
+	////////////////////////////////////////
+	if (_selectedTower) {
+		if (Core::mainInput.GetMouseLeftButton() && _selectedTower->UpgradeIRect().Contains(mPos)) {
+			if (World::Instance().GoldSpend(_selectedTower->UpgradePrice())) {
+				_selectedTower->Upgrade();
+			}
+			else {
+				MM::manager.PlaySample("Denied");
+			}
+		}
+		_selectedTower->SetUpgradeButton(false);
+		_selectedTower = nullptr;
+	}
+	////////////////////////////////////////
+	//		Выбор башни для апгрейда	  //
+	////////////////////////////////////////
+	else if (cellPos != IPoint(-1, -1)) {
+		if (!_fieldMap.Cells()[cellPos.x][cellPos.y]->Empty()) {
+			for (unsigned int i = 0; i < _towers.size(); i++) {
+				if (_towers[i]->Cell() == cellPos && _towers[i]->UpgradePrice()>0) {
 
-		rapidxml::xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		rapidxml::xml_node<>* root = doc.first_node();
-		if (!root) { Assert(false); throw std::runtime_error("No root node"); }
-
-		rapidxml::xml_node<>* game = root->first_node("Game");
-		for (; game != NULL; game = game->next_sibling("Game")) {
-			rapidxml::xml_node<>* r = game->first_node();
-			for (; r != NULL; r = r->next_sibling()) {
-				if (utils::equals(r->name(), "Map")) {
-					
+					_selectedTower = _towers[i];
+					_selectedTower->SetUpgradeButton(true);
+				}
+				else {
+					_towers[i]->SetUpgradeButton(false);
 				}
 			}
 		}
+		else {
+			for (unsigned int i = 0; i < _towers.size(); i++) {
+
+				_towers[i]->SetUpgradeButton(false);
+			}
+		}
 	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
+	else {
+		///_selectedTower = nullptr;
+		for (unsigned int i = 0; i < _towers.size(); i++) {
+			_towers[i]->SetUpgradeButton(false);
+		}
 	}
-	return false;
+};
+
+
+void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
+	if (_fieldMap.AddTower(cellPos)) {
+		TowerParent::Ptr t;
+		t = _towerFactory.createTower(_curTowerType);
+
+		if (t) {
+			if (World::Instance().GoldSpend(t->Price())) {
+				t->SetCell(cellPos);
+				t->SetPosition(FPoint(cellPos.x*cSize.x + cSize.x / 2, cellPos.y*cSize.y + cSize.y / 2));
+				_towers.push_back(t);
+			}
+			else {
+				MM::manager.PlaySample("Denied");
+				_curTowerType = EMPTY;
+				_tryMenu->Reset();
+				bool b = _fieldMap.DestroyTower(cellPos);
+			}
+		}
+		else {
+			_curTowerType = EMPTY;
+			_tryMenu->Reset();
+			bool b = _fieldMap.DestroyTower(cellPos);
+		}
+	}
+	else if (cellPos != IPoint(-1, -1)) {
+		_curTowerType = EMPTY;
+		_tryMenu->Reset();
+		_fieldMap.ShowGhosts(_curTowerType);
+	}
 };

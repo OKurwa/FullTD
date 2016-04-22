@@ -370,25 +370,19 @@ void TowerParent::SetHint(IPoint pos) {
 void TowerParent::LoadTowerFormXML(xml_node<>* towerNode){
 	string value_t = towerNode->first_attribute("texture")->value();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-	value_t = towerNode->first_attribute("price")->value();
-	_price = utils::lexical_cast<int>(value_t);
-	value_t = towerNode->first_attribute("reload")->value();
-	_reloadTime = utils::lexical_cast<float>(value_t);
+	_price = Xml::GetIntAttributeOrDef(towerNode, "price", 0);
+	_reloadTime = Xml::GetFloatAttributeOrDef(towerNode,"reload",1);
 	_reloadTimer = 0;
-	value_t = towerNode->first_attribute("range")->value();
-	_range = utils::lexical_cast<int>(value_t);
-	value_t = towerNode->first_attribute("lvlCount")->value();
-	_lvlCount = utils::lexical_cast<int>(value_t);
+	_range = Xml::GetIntAttributeOrDef(towerNode, "range", 0);
+	_lvlCount = Xml::GetIntAttributeOrDef(towerNode, "lvlCount", 1);
 
 	value_t = towerNode->first_attribute("idleAnimation")->value();
 	_idleAnim = Core::resourceManager.Get<Render::Animation>(value_t)->Clone();
-
 	_idleAnimAngles = IDL_ANGLES;
 
 	value_t = towerNode->first_attribute("atkAnimation")->value();
 	_atkAnim = Core::resourceManager.Get<Render::Animation>(value_t)->Clone();
 	_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
 	_attackAnimAngles = ATK_ANGLES;
 
 	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
@@ -396,38 +390,28 @@ void TowerParent::LoadTowerFormXML(xml_node<>* towerNode){
 		FireParent::MissInfo info;
 		//Общие параметры
 		info._target = nullptr;
-		string value = missile->first_attribute("misSpeed")->value();
-		info._modSpeed = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("minDMG")->value();
-		info._damage.x = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("maxDMG")->value();
-		info._damage.y = utils::lexical_cast<int>(value);
-		value = missile->first_attribute("price")->value();
-		info._price = utils::lexical_cast<int>(value);
+		string value;
+		info._modSpeed = Xml::GetIntAttributeOrDef(missile, "misSpeed", 0);
+		info._damage.x = Xml::GetIntAttributeOrDef(missile, "minDMG", 0);
+		info._damage.y = Xml::GetIntAttributeOrDef(missile, "maxDMG", 0);
+		info._price = Xml::GetIntAttributeOrDef(missile, "price", 0);
 		
 		//Эффекты атак
 		//--Slow
-		value = Xml::GetStringAttributeOrDef(missile, "slow", "0");
-		info._sFactor.x = utils::lexical_cast<float>(value);
-		value = Xml::GetStringAttributeOrDef(missile, "slowLenght", "0");
-		info._sFactor.y = utils::lexical_cast<float>(value);
+		info._sFactor.x = Xml::GetFloatAttributeOrDef(missile, "slow", 0);
+		info._sFactor.y = Xml::GetFloatAttributeOrDef(missile, "slowLenght", 0);
 
 		//--Decay
-		value = Xml::GetStringAttributeOrDef(missile, "decay", "0");
-		info._decay.x = utils::lexical_cast<int>(value);
-		value = Xml::GetStringAttributeOrDef(missile, "decayLenght", "0");
-		info._decay.y = utils::lexical_cast<float>(value);
+		info._decay.x = Xml::GetIntAttributeOrDef(missile, "decay", 0);
+		info._decay.y = Xml::GetIntAttributeOrDef(missile, "decayLenght", 0);
 
 		//--Bash
-		value = Xml::GetStringAttributeOrDef(missile, "bashChance", "0");
-		info._bash.x = utils::lexical_cast<float>(value);
-		value = Xml::GetStringAttributeOrDef(missile, "bashLenght", "0");
-		info._bash.y = utils::lexical_cast<float>(value);
+		info._bash.x = Xml::GetFloatAttributeOrDef(missile, "bashChance", 0);
+		info._bash.y = Xml::GetFloatAttributeOrDef(missile, "bashLenght", 0);
 
 
 		//Радиус поражения
-		value = Xml::GetStringAttributeOrDef(missile, "splashRange", "0");
-		info._sRange = utils::lexical_cast<int>(value);
+		info._sRange = Xml::GetFloatAttributeOrDef(missile, "splashRange", 0);
 		
 		
 		_missilesPrototypes.push_back(info);
