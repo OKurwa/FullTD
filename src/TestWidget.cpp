@@ -91,7 +91,8 @@ void TestWidget::Draw()
 	
 	//Render::device.PopMatrix();
 	_menuBG->Draw(IPoint(768, 0));
-	World::Instance().Draw();
+	if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START)
+		World::Instance().Draw();
 	
 	_tryMenu->Draw();
 	//anim->Draw(IPoint(0, 0));
@@ -253,6 +254,26 @@ void TestWidget::AcceptMessage(const Message& message)
 
 			//_fieldMap.TryInit();
 			//_fieldMap.SaveToFile("save.txt");
+
+			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
+			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
+		}
+		
+	}
+	else if (message.getPublisher() == "StartLayer") {
+		if (message.getIntegerParam() == 1) {
+			_fieldMap.Reset();
+			_towers.clear();
+			_monsters.clear();
+			//_monsterAttack.LoadFromFile("loadMob.txt");
+			_monsterAttack.LoadFromXml("NewMap.xml");
+			_spawnTimer = 0;
+			_spawnTime = 0.7;
+			_curMonsterAttack = 0;
+			_curTowerType = EMPTY;
+			_curMonsterCount = 0;
+			_tryMenu->Reset();
+			
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
 			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);

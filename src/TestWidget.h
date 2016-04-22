@@ -85,19 +85,4 @@ private:
 
 
 	Menu::Ptr _tryMenu;
-/*Фейерверк*/
-/*
-	Render::Texture* _back;
-	Render::Texture* _fore;
-	
-
-	std::vector<boost::intrusive_ptr<FireBall>> _fireBalls;
-	FireBall _fireBall;
-
-	int _speed;
-	float _lifeTime;
-	int _stacks;
-	int _childs;
-	float _fireWorkLightTimer;
-*/
 };

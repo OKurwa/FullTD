@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TestAppDelegate.h"
+#include "StartWidget.h"
 #include "TestWidget.h"
 
 enum {
@@ -34,7 +35,9 @@ void TestAppDelegate::RegisterTypes()
 	// Чтобы можно было декларативно использовать виджет в xml по имени,
 	// его необходимо зарегистрировать таким образом.
 	//
+	REGISTER_WIDGET_XML(StartWidget, "StartWidget");
 	REGISTER_WIDGET_XML(TestWidget, "TestWidget");
+	
 }
 
 void TestAppDelegate::LoadResources()

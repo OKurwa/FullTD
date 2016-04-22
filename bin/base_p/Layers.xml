@@ -1,8 +1,15 @@
 <?xml version="1.0"?>
 <GUI>
-	<Layer name="TestLayer">
+	<Layer name="TestLayer" >
 		<Controls>
 			<TestWidget name="TestWidget"/>
 		</Controls>
+		<Script>TestLayerFunc</Script>
 	</Layer>
+  <Layer name="StartLayer">
+    <Controls>
+      <StartWidget name="StartWidget"/>
+    </Controls>
+	<Script>StartLayerFunc</Script>
+  </Layer>
 </GUI>

@@ -1,3 +1,4 @@
+Include("gui.lua")
 --
 -- Так загружаются описания ресурсов: какие текстуры, анимации и т.п.
 -- будут видны в медеджере ресурсов по имени.
@@ -36,3 +37,4 @@ UploadResourceGroup("TestGroup")
 -- и начинают вызываться методы Draw() и Update() в каждом кадре.
 --
 Screen:pushLayer(GUI:getLayer("TestLayer"))
+Screen:pushLayer(GUI:getLayer("StartLayer"))
