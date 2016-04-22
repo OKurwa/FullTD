@@ -51,6 +51,8 @@ public:
 	void SetCurGold(int);
 	void SetHint(IPoint);
 	virtual void DrawHintText(IRect) {};
+	void LoadTowerFormXML(rapidxml::xml_node<>* towerNode);
+	virtual void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) = 0;
 protected:
 
 	int ref_cnt_;
@@ -118,6 +120,7 @@ public:
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
+	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	std::vector<NormalMissile::NMissInfo> _missilesPrototypes;
 };
@@ -149,6 +152,7 @@ public:
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
+	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	int    _splashRange;
 	FPoint _slow;
@@ -183,6 +187,7 @@ public:
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
+	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	FPoint _decay;
 	std::vector<DecayMissile::DMissInfo> _missilesPrototypes;
@@ -216,6 +221,7 @@ public:
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
+	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	FPoint _bash;
 	std::vector<BashMissile::BMissInfo> _missilesPrototypes;
@@ -249,6 +255,7 @@ public:
 	void SetPosition(FPoint);
 	int  UpgradePrice();
 	void DrawHintText(IRect);
+	void LoadMissilesFormXML(rapidxml::xml_node<>* towerNode) override;
 private:
 	int    _splashRange;
 	std::vector<MonsterParent::Ptr> _targets;
@@ -262,54 +269,14 @@ private:
 class TowerPrototypeFactory
 {
 public:
-	TowerPrototypeFactory() {
-		_Nloaded = false;
-		_Slloaded = false;
-		_Sploaded = false;
-		_Bloaded = false;
-		_Dloaded = false;
-	}
-	TowerParent::Ptr createNormal() {
-		static NormalTower prototype;
-		if (!_Nloaded) {
-			prototype.LoadFromXml("NewMap.xml");
-			_Nloaded = true;
-		}
-		
-		return prototype.clone();
-	}
-	TowerParent::Ptr createSlow() {
-		static SlowTower prototype;
-		if (!_Slloaded) {
-			prototype.LoadFromXml("NewMap.xml");
-			_Slloaded = true;
-		}
-		return prototype.clone();
-	}
-	TowerParent::Ptr createSplash() {
-		static SplashTower prototype;
-		if (!_Sploaded) {
-			prototype.LoadFromXml("NewMap.xml");
-			_Sploaded = true;
-		}
-		return prototype.clone();
-	}
-	TowerParent::Ptr createBash() {
-		static BashTower prototype;
-		if (!_Bloaded) {
-			prototype.LoadFromXml("NewMap.xml");
-			_Bloaded = true;
-		}
-		return prototype.clone();
-	}
-	TowerParent::Ptr createDecay() {
-		static DecayTower prototype;
-		if (!_Dloaded) {
-			prototype.LoadFromXml("NewMap.xml");
-			_Dloaded = true;
-		}
-		return prototype.clone();
-	}
+	TowerPrototypeFactory();
+	void Init(std::string filename);
+	TowerParent::Ptr createNormal();
+	TowerParent::Ptr createSlow();
+	TowerParent::Ptr createSplash();
+	TowerParent::Ptr createBash();
+	TowerParent::Ptr createDecay();
+	TowerParent::Ptr createTower(TowerType tType);
 
 private:
 	bool _Nloaded;
@@ -317,6 +284,11 @@ private:
 	bool _Sploaded;
 	bool _Bloaded;
 	bool _Dloaded;
+	NormalTower _nPrototype;
+	SlowTower _slPrototype;
+	SplashTower _spPrototype;
+	BashTower _bPrototype;
+	DecayTower _dPrototype;
 };
 
 

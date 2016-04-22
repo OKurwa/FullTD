@@ -47,11 +47,13 @@ void TestWidget::Init()
 	
 	//TowerParent * t = new TowerParent(FPoint(32, 32), 0, 0, 0, 0, 0, nullptr);
 	//_towers.push_back(t);
-	_towerPs.push_back(_towerFactory.createNormal());
-	_towerPs.push_back(_towerFactory.createSplash());
-	_towerPs.push_back(_towerFactory.createSlow());
-	_towerPs.push_back(_towerFactory.createDecay());
-	_towerPs.push_back(_towerFactory.createBash());
+	
+	_towerFactory.Init("NewMap.xml");
+	_towerPs.push_back(_towerFactory.createTower(NORMAL));
+	_towerPs.push_back(_towerFactory.createTower(SPLASH));
+	_towerPs.push_back(_towerFactory.createTower(SLOW));
+	_towerPs.push_back(_towerFactory.createTower(DECAY));
+	_towerPs.push_back(_towerFactory.createTower(BASH));
 	_tryMenu = new Menu(info, _towerPs);
     //anim = Core::resourceManager.Get<Render::Animation>("FireAntAttackAnimation");
 	_enableBuildCursor = false;
@@ -325,6 +327,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 				if (_fieldMap.AddTower(pos1)) {
 
 					TowerParent::Ptr t;
+					/*
 					switch (_curTowerType)
 					{
 					case NORMAL:
@@ -342,7 +345,9 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 					case BASH:
 						t = _towerFactory.createBash();
 						break;
-					}
+					}*/
+					t = _towerFactory.createTower(_curTowerType);
+
 					if (t) {
 						if (World::Instance().GoldSpend(t->Price())) {
 							t->SetCell(pos1);
@@ -383,87 +388,6 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 
 		}
 	}
-
-
-
-
-
-
-	////////////////////////////////////////
-	//				Aпгрейд				  //
-	////////////////////////////////////////
-/*
-	if (_selectedTower) {
-		if (Core::mainInput.GetMouseLeftButton() && _selectedTower->UpgradeIRect().Contains(mouse_pos)) {
-			if (World::Instance().GoldSpend(_selectedTower->UpgradePrice())) {
-				_selectedTower->Upgrade();
-				_selectedTower->SetUpgradeButton(false);
-				_selectedTower = nullptr;
-			}
-			else {
-				_selectedTower->SetUpgradeButton(false);
-				_selectedTower = nullptr;
-			}
-		}
-	}
-	*/
-
-	
-
-
-
-
-
-	////////////////////////////////////////
-	//		Выбор башни для апгрейда	  //
-	////////////////////////////////////////
-	/*
-	if (Core::mainInput.GetMouseLeftButton()) {
-
-
-		if (pos1 != IPoint(-1, -1) && _curTowerType == EMPTY) {
-
-
-			if (!_fieldMap.Cells()[pos1.x][pos1.y]->Empty()) {
-				for (int i = 0; i < _towers.size(); i++) {
-					if (_towers[i]->Cell() == pos1 && _towers[i]->UpgradePrice()>0) {
-						
-						_selectedTower = _towers[i];
-
-					}
-					else {
-						for (int i = 0; i < _towers.size(); i++) {
-							_towers[i]->SetUpgradeButton(false);
-						}
-					}
-				}
-			}
-
-
-
-
-
-
-		}
-		else {
-			_selectedTower = nullptr;
-			for (int i = 0; i < _towers.size(); i++) {
-				_towers[i]->SetUpgradeButton(false);
-			}
-		}
-		if (_selectedTower) {
-			_selectedTower->SetUpgradeButton(true);
-		}
-		
-		//else if (_curTowerType != EMPTY) {
-		//	_curTowerType = EMPTY;
-		//	_fieldMap.ShowGhosts(_curTowerType);
-		//	_tryMenu->Reset();
-		//}
-
-	}
-
-	*/
 
 
 

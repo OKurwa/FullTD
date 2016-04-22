@@ -11,7 +11,7 @@ using namespace rapidxml;
 //----------------------------------------------//
 //----------------------------------------------//
 
-TowerParent::TowerParent() {
+TowerParent::TowerParent() : ref_cnt_(0) {
 	_position = FPoint(0, 0);
 	_cell = IPoint(0, 0);
 	_target = nullptr;
@@ -22,6 +22,8 @@ TowerParent::TowerParent() {
 	_missiles.clear();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
 	_damage = IPoint(0, 0);
+	_lvl = 0;
+	_curGold = 0;
 	_showUpgradeButton = false;
 };
 
@@ -364,7 +366,36 @@ void TowerParent::SetHint(IPoint pos) {
 	else {
 		_hint = false;
 	}
-};
+}
+
+void TowerParent::LoadTowerFormXML(xml_node<>* towerNode){
+	string value = towerNode->first_attribute("texture")->value();
+	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
+	value = towerNode->first_attribute("price")->value();
+	_price = utils::lexical_cast<int>(value);
+	value = towerNode->first_attribute("reload")->value();
+	_reloadTime = utils::lexical_cast<float>(value);
+	_reloadTimer = 0;
+	value = towerNode->first_attribute("range")->value();
+	_range = utils::lexical_cast<int>(value);
+	value = towerNode->first_attribute("lvlCount")->value();
+	_lvlCount = utils::lexical_cast<int>(value);
+
+	value = towerNode->first_attribute("idleAnimation")->value();
+	_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
+
+	_idleAnimAngles = IDL_ANGLES;
+
+	value = towerNode->first_attribute("atkAnimation")->value();
+	_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
+	_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
+
+	_attackAnimAngles = ATK_ANGLES;
+}
+
+
+
+
 
 
 //----------------------------------------------//
@@ -419,82 +450,6 @@ void NormalTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 }
 
-void NormalTower::LoadFromXml(std::string filename) {
-	_lvl = 0;
-	_towerType = TowerType::NORMAL;
-	_position = IPoint(0,0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_missiles.clear();
-	
-	try {
-		file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
-
-		xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		xml_node<>* game = doc.first_node();
-		if (!game) { Assert(false); throw runtime_error("No root node"); }
-
-		xml_node<>* towers = game->first_node("Towers");
-		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
-			string id = tower->first_attribute("id")->value();
-			if (id == "NormalTower") {
-				
-				string value = tower->first_attribute("texture")->value();
-				//_tex = Core::resourceManager.Get<Render::Texture>(value);
-				_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-				value = tower->first_attribute("price")->value();
-				_price = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("reload")->value();
-				_reloadTime = utils::lexical_cast<float>(value);
-				_reloadTimer = 0;
-				value = tower->first_attribute("range")->value();
-				_range = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("lvlCount")->value();
-				_lvlCount = utils::lexical_cast<int>(value);
-
-				value = tower->first_attribute("idleAnimation")->value();
-				_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				
-				_idleAnimAngles = IDL_ANGLES;
-				
-				value = tower->first_attribute("atkAnimation")->value();
-				_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
-				_attackAnimAngles = ATK_ANGLES;
-				
-				for (xml_node<>* missile = tower->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-					string id = missile->first_attribute("id")->value();
-					NormalMissile::NMissInfo info;
-					info._target = nullptr;
-					string value = missile->first_attribute("misSpeed")->value();
-					info._modSpeed = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("minDMG")->value();
-					info._damage.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("maxDMG")->value();
-					info._damage.y = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("price")->value();
-					info._price = utils::lexical_cast<int>(value);
-					_missilesPrototypes.push_back(info);
-					
-				}
-			}
-		}
-
-		_price = _missilesPrototypes[0]._price;
-	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
-	}
-	
-
-
-};
 
 void NormalTower::SetPosition(FPoint pos) {
 	_position = pos;
@@ -525,6 +480,24 @@ void NormalTower::DrawHintText(IRect rect) {
 		Render::PrintString(FPoint(rect.x + 120, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
+}
+void NormalTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		string id = missile->first_attribute("id")->value();
+		NormalMissile::NMissInfo info;
+		info._target = nullptr;
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		_missilesPrototypes.push_back(info);
+
+	}
+	_price = _missilesPrototypes[0]._price;
 };
 //----------------------------------------------//
 //----------------------------------------------//
@@ -579,88 +552,6 @@ void SlowTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 }
 
-void SlowTower::LoadFromXml(std::string filename) {
-
-	_towerType = TowerType::SLOW;
-	_position = IPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_missiles.clear();
-
-	try {
-		file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
-
-		xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		xml_node<>* game = doc.first_node();
-		if (!game) { Assert(false); throw runtime_error("No root node"); }
-
-		xml_node<>* towers = game->first_node("Towers");
-		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
-			string id = tower->first_attribute("id")->value();
-			if (id == "SlowTower") {
-
-				string value = tower->first_attribute("texture")->value();
-				_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-				value = tower->first_attribute("price")->value();
-				_price = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("reload")->value();
-				_reloadTime = utils::lexical_cast<float>(value);
-				_reloadTimer = 0;
-				value = tower->first_attribute("range")->value();
-				_range = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("lvlCount")->value();
-				_lvlCount = utils::lexical_cast<int>(value);
-
-				value = tower->first_attribute("idleAnimation")->value();
-				_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-
-				_idleAnimAngles = IDL_ANGLES;
-				
-				value = tower->first_attribute("atkAnimation")->value();
-				_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
-				_attackAnimAngles = ATK_ANGLES;
-				
-				for (xml_node<>* missile = tower->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-					SlowMissile::SlMissInfo info;
-					string id = missile->first_attribute("id")->value();
-					
-					value = missile->first_attribute("misSpeed")->value();
-					info._modSpeed = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("minDMG")->value();
-					info._damage.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("maxDMG")->value();
-					info._damage.y = utils::lexical_cast<int>(value);
-					
-					value = missile->first_attribute("splashRange")->value();
-					info._sRange = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("slow")->value();
-					info._sFactor.x = utils::lexical_cast<float>(value);
-					value = missile->first_attribute("slowLenght")->value();
-					info._sFactor.y = utils::lexical_cast<float>(value);
-					value = missile->first_attribute("price")->value();
-					info._price = utils::lexical_cast<int>(value);
-					_missilesPrototypes.push_back(info);
-				}
-				
-			}
-		}
-
-		_price = _missilesPrototypes[0]._price;
-	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
-	}
-
-	
-
-};
 
 void SlowTower::SetPosition(FPoint pos) {
 	_position = pos;
@@ -694,6 +585,30 @@ void SlowTower::DrawHintText(IRect rect) {
 		Render::PrintString(FPoint(rect.x + 120, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
+}
+void SlowTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		SlowMissile::SlMissInfo info;
+		string id = missile->first_attribute("id")->value();
+
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+
+		value = missile->first_attribute("splashRange")->value();
+		info._sRange = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("slow")->value();
+		info._sFactor.x = utils::lexical_cast<float>(value);
+		value = missile->first_attribute("slowLenght")->value();
+		info._sFactor.y = utils::lexical_cast<float>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		_missilesPrototypes.push_back(info);
+	}
+	_price = _missilesPrototypes[0]._price;
 };
 
 //----------------------------------------------//
@@ -746,86 +661,6 @@ void DecayTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 }
 
-void DecayTower::LoadFromXml(std::string filename) {
-
-	_towerType = TowerType::DECAY;
-	_position = IPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_missiles.clear();
-
-	try {
-		file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
-
-		xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		xml_node<>* game = doc.first_node();
-		if (!game) { Assert(false); throw runtime_error("No root node"); }
-
-		xml_node<>* towers = game->first_node("Towers");
-		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
-			string id = tower->first_attribute("id")->value();
-			if (id == "DecayTower") {
-
-				string value = tower->first_attribute("texture")->value();
-				_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-				value = tower->first_attribute("price")->value();
-				_price = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("reload")->value();
-				_reloadTime = utils::lexical_cast<float>(value);
-				_reloadTimer = 0;
-				value = tower->first_attribute("range")->value();
-				_range = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("lvlCount")->value();
-				_lvlCount = utils::lexical_cast<int>(value);
-
-				value = tower->first_attribute("idleAnimation")->value();
-				_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-
-				_idleAnimAngles = IDL_ANGLES;
-				
-				value = tower->first_attribute("atkAnimation")->value();
-				_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
-				_attackAnimAngles = ATK_ANGLES;
-				
-				for (xml_node<>* missile = tower->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-					DecayMissile::DMissInfo info;
-					info._target = nullptr;
-					string id = missile->first_attribute("id")->value();
-
-					value = missile->first_attribute("misSpeed")->value();
-					info._modSpeed = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("minDMG")->value();
-					info._damage.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("maxDMG")->value();
-					info._damage.y = utils::lexical_cast<int>(value);
-
-					value = missile->first_attribute("decay")->value();
-					info._decay.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("decayLenght")->value();
-					info._decay.y = utils::lexical_cast<float>(value);
-					value = missile->first_attribute("price")->value();
-					info._price = utils::lexical_cast<int>(value);
-					_missilesPrototypes.push_back(info);
-				}
-			}
-		}
-
-		_price = _missilesPrototypes[0]._price;
-	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
-	}
-
-	
-
-};
 
 void DecayTower::SetPosition(FPoint pos) {
 	_position = pos;
@@ -859,6 +694,29 @@ void DecayTower::DrawHintText(IRect rect) {
 		Render::PrintString(FPoint(rect.x + 120, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
+}
+void DecayTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		DecayMissile::DMissInfo info;
+		info._target = nullptr;
+		string id = missile->first_attribute("id")->value();
+
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+
+		value = missile->first_attribute("decay")->value();
+		info._decay.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("decayLenght")->value();
+		info._decay.y = utils::lexical_cast<float>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		_missilesPrototypes.push_back(info);
+	}
+	_price = _missilesPrototypes[0]._price;
 };
 
 //----------------------------------------------//
@@ -910,85 +768,7 @@ void BashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 }
 
-void BashTower::LoadFromXml(std::string filename) {
 
-	_towerType = TowerType::BASH;
-	_position = IPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_missiles.clear();
-
-	try {
-		file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
-
-		xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		xml_node<>* game = doc.first_node();
-		if (!game) { Assert(false); throw runtime_error("No root node"); }
-
-		xml_node<>* towers = game->first_node("Towers");
-		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
-			string id = tower->first_attribute("id")->value();
-			if (id == "BashTower") {
-
-				string value = tower->first_attribute("texture")->value();
-				_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-				value = tower->first_attribute("price")->value();
-				_price = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("reload")->value();
-				_reloadTime = utils::lexical_cast<float>(value);
-				_reloadTimer = 0;
-				value = tower->first_attribute("range")->value();
-				_range = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("lvlCount")->value();
-				_lvlCount = utils::lexical_cast<int>(value);
-
-				value = tower->first_attribute("idleAnimation")->value();
-				_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-
-				_idleAnimAngles = IDL_ANGLES;
-				
-				value = tower->first_attribute("atkAnimation")->value();
-				_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
-				_attackAnimAngles = ATK_ANGLES;
-				
-				for (xml_node<>* missile = tower->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-					BashMissile::BMissInfo info;
-					info._target = nullptr;
-					string id = missile->first_attribute("id")->value();
-
-					value = missile->first_attribute("misSpeed")->value();
-					info._modSpeed = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("minDMG")->value();
-					info._damage.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("maxDMG")->value();
-					info._damage.y = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("bashChance")->value();
-					info._bash.x = utils::lexical_cast<float>(value);
-					value = missile->first_attribute("bashLenght")->value();
-					info._bash.y = utils::lexical_cast<float>(value);
-					value = missile->first_attribute("price")->value();
-					info._price = utils::lexical_cast<int>(value);
-					_missilesPrototypes.push_back(info);
-				}
-			}
-		}
-
-		_price = _missilesPrototypes[0]._price;
-	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
-	}
-
-	
-
-};
 
 void BashTower::SetPosition(FPoint pos) {
 	_position = pos;
@@ -1022,6 +802,28 @@ void BashTower::DrawHintText(IRect rect) {
 		Render::PrintString(FPoint(rect.x + 120, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
+}
+void BashTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		BashMissile::BMissInfo info;
+		info._target = nullptr;
+		string id = missile->first_attribute("id")->value();
+
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("bashChance")->value();
+		info._bash.x = utils::lexical_cast<float>(value);
+		value = missile->first_attribute("bashLenght")->value();
+		info._bash.y = utils::lexical_cast<float>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		_missilesPrototypes.push_back(info);
+	}
+	_price = _missilesPrototypes[0]._price;
 };
 
 //----------------------------------------------//
@@ -1077,83 +879,6 @@ void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 }
 
-void SplashTower::LoadFromXml(std::string filename) {
-
-	_towerType = TowerType::SPLASH;
-	_position = IPoint(0, 0);
-	_cell = IPoint(0, 0);
-	_target = nullptr;
-	_missiles.clear();
-
-	try {
-		file<> file(filename.c_str());
-		// Может бросить исключение, если нет файла.
-
-		xml_document<> doc;
-		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-
-		xml_node<>* game = doc.first_node();
-		if (!game) { Assert(false); throw runtime_error("No root node"); }
-
-		xml_node<>* towers = game->first_node("Towers");
-		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
-			string id = tower->first_attribute("id")->value();
-			if (id == "SplashTower") {
-
-				string value = tower->first_attribute("texture")->value();
-				_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-				value = tower->first_attribute("price")->value();
-				_price = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("reload")->value();
-				_reloadTime = utils::lexical_cast<float>(value);
-				_reloadTimer = 0;
-				value = tower->first_attribute("range")->value();
-				_range = utils::lexical_cast<int>(value);
-				value = tower->first_attribute("lvlCount")->value();
-				_lvlCount = utils::lexical_cast<int>(value);
-
-				value = tower->first_attribute("idleAnimation")->value();
-				_idleAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-
-				_idleAnimAngles = IDL_ANGLES;
-				
-				value = tower->first_attribute("atkAnimation")->value();
-				_atkAnim = Core::resourceManager.Get<Render::Animation>(value)->Clone();
-				_atkAnim->setSpeed(_atkAnim->getSpeed()*_reloadTime);
-
-				_attackAnimAngles = ATK_ANGLES;
-				
-				for (xml_node<>* missile = tower->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
-					SplashMissile::SpMissInfo info;
-					string id = missile->first_attribute("id")->value();
-
-					value = missile->first_attribute("misSpeed")->value();
-					info._modSpeed = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("minDMG")->value();
-					info._damage.x = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("maxDMG")->value();
-					info._damage.y = utils::lexical_cast<int>(value);
-
-					value = missile->first_attribute("splashRange")->value();
-					info._sRange = utils::lexical_cast<int>(value);
-					value = missile->first_attribute("price")->value();
-					info._price = utils::lexical_cast<int>(value);
-					_missilesPrototypes.push_back(info);
-				}
-			}
-		}
-
-		_price = _missilesPrototypes[0]._price;
-	}
-	catch (std::exception const& e) {
-		Log::log.WriteError(e.what());
-		Assert(false);
-	}
-
-	
-
-};
 
 void SplashTower::SetPosition(FPoint pos) {
 	_position = pos;
@@ -1187,4 +912,115 @@ void SplashTower::DrawHintText(IRect rect) {
 		Render::PrintString(FPoint(rect.x + 120, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + 120, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
+}
+void SplashTower::LoadMissilesFormXML(rapidxml::xml_node<>* towerNode){
+	for (xml_node<>* missile = towerNode->first_node("Missile"); missile; missile = missile->next_sibling("Missile")) {
+		SplashMissile::SpMissInfo info;
+		string id = missile->first_attribute("id")->value();
+
+		string value = missile->first_attribute("misSpeed")->value();
+		info._modSpeed = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("minDMG")->value();
+		info._damage.x = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("maxDMG")->value();
+		info._damage.y = utils::lexical_cast<int>(value);
+
+		value = missile->first_attribute("splashRange")->value();
+		info._sRange = utils::lexical_cast<int>(value);
+		value = missile->first_attribute("price")->value();
+		info._price = utils::lexical_cast<int>(value);
+		_missilesPrototypes.push_back(info);
+	}
+	_price = _missilesPrototypes[0]._price;
 };
+
+
+//----------------------------------------------//
+//----------------------------------------------//
+//					Фабрика						//
+//----------------------------------------------//
+//----------------------------------------------//
+
+TowerPrototypeFactory::TowerPrototypeFactory() {
+		_Nloaded = false;
+		_Slloaded = false;
+		_Sploaded = false;
+		_Bloaded = false;
+		_Dloaded = false;
+		
+}
+
+
+void TowerPrototypeFactory::Init(std::string xmlfilename) {
+	
+	try {
+		file<> file(xmlfilename.c_str());
+		// Может бросить исключение, если нет файла.
+		xml_document<> doc;
+		doc.parse<0>(file.data());
+		// Может бросить исключение, если xml испорчен.
+
+		xml_node<>* game = doc.first_node();
+		if (!game) { Assert(false); throw runtime_error("No root node"); }
+
+		xml_node<>* towers = game->first_node("Towers");
+		for (xml_node<>* tower = towers->first_node("Tower"); tower; tower = tower->next_sibling("Tower")) {
+			string id = tower->first_attribute("id")->value();
+			
+			if (id == "NormalTower") {
+				_nPrototype.LoadTowerFormXML(tower);
+				_nPrototype.LoadMissilesFormXML(tower);
+			} 
+			else if (id == "SplashTower") {
+				_spPrototype.LoadTowerFormXML(tower);
+				_spPrototype.LoadMissilesFormXML(tower);
+			}
+			else if (id == "SlowTower") {
+				_slPrototype.LoadTowerFormXML(tower);
+				_slPrototype.LoadMissilesFormXML(tower);
+			}
+			else if (id == "DecayTower") {
+				_dPrototype.LoadTowerFormXML(tower);
+				_dPrototype.LoadMissilesFormXML(tower);
+			}
+			else if (id == "BashTower") {
+				_bPrototype.LoadTowerFormXML(tower);
+				_bPrototype.LoadMissilesFormXML(tower);
+			}
+				
+		}
+	
+
+	}
+	catch (std::exception const& e) {
+		Log::log.WriteError(e.what());
+		Assert(false);
+	}
+};
+
+TowerParent::Ptr TowerPrototypeFactory::createTower(TowerType tType)
+{
+	switch (tType)
+	{
+	case NORMAL:
+		return _nPrototype.clone();
+		break;
+	case SPLASH:
+		return _spPrototype.clone();
+		break;
+	case SLOW:
+		return _slPrototype.clone();
+		break;
+	case DECAY:
+		return _dPrototype.clone();
+		break;
+	case BASH:
+		return _bPrototype.clone();
+		break;
+	default:
+		return nullptr;
+		break;
+	}
+	
+}
+
