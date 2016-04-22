@@ -26,10 +26,20 @@ public:
 	void MouseMove(const IPoint& mouse_pos);
 	void MouseUp(const IPoint& mouse_pos);
 	
+	//Действия по клику
 	void SwitchTowerType(IPoint);
 	void TryDestroyTower(IPoint);
 	void TryUpgradeTower(IPoint,IPoint);
 	void TryBuildTower(IPoint, IPoint);
+
+	//Действия в апдейте
+	void MonsterSpawn();
+	void MonsterKill();
+	bool EndWave();
+	void TryStartNewWave(bool);
+
+	//Действия в Draw
+	void DrawBuildCursor();
 
 private:
 	void Init();

@@ -85,13 +85,8 @@ void TestWidget::Draw()
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->UpgradeDraw();
 	}
-	Render::device.SetTexturing(true);
-	if (_curTowerType != EMPTY && _curTowerType != DESTROY && _enableBuildCursor && _buildCursorPos.x<768) {
-		Render::BeginAlphaMul(0.5);
-		_buildCursor->Draw(IPoint(_buildCursorPos.x - 32, _buildCursorPos.y - 32));
-		Render::EndAlphaMul();
-	}
-
+	
+	DrawBuildCursor();
 		
 	
 	//Render::device.PopMatrix();
@@ -105,8 +100,6 @@ void TestWidget::Draw()
 
 void TestWidget::Update(float dt)
 {
-	
-
 	//anim->Update(dt*0.5);
 	if (World::Instance().State() == LOSE || World::Instance().State() == WIN)
 		dt *= 0;
@@ -121,9 +114,6 @@ void TestWidget::Update(float dt)
 	}
 
 	for (unsigned int i = 0; i < _towers.size(); i++) {
-		//if (_towers[i]->TakeAim(_monsters)) {
-		//	_towers[i]->Shoot();
-		//}
 		_towers[i]->TryShoot(_monsters);
 	}
 
@@ -132,53 +122,11 @@ void TestWidget::Update(float dt)
 
 	if (World::Instance().State() == WAVE) {
 		//Cпавн
-		if (_curMonsterAttack < _monsterAttack.GetAttack().size()) {
-			
-			if (_monsterAttack.GetAttack()[_curMonsterAttack].Count()>_curMonsterCount && _spawnTimer>_spawnTime) {
-				int hp = _monsterAttack.GetAttack()[_curMonsterAttack].MaxHp();
-				int spd = _monsterAttack.GetAttack()[_curMonsterAttack].Speed();
-				MonsterParent::Ptr m;
-				m = _monsterAttack.GetAttackPrototypes()[_curMonsterAttack]->clone();
-				m->SetPosition(FPoint(_spawn.x * _fieldMap.CellSize().x + 32 + math::random(-31, 31), _spawn.y * _fieldMap.CellSize().y + 32 + math::random(-31, 31)), &_fieldMap);
-				
-				++_curMonsterCount;
-				_monsters.push_back(m);
-
-			}
-		}
-
-		for (std::vector<MonsterParent::Ptr>::iterator it = _monsters.begin(); it != _monsters.end();) {
-			if ((*it)->Dead() && (*it)->EndDeadAnim()) {
-				World::Instance().GoldAdd(_monsterAttack.GetAttack()[_curMonsterAttack].MGold());
-				it = _monsters.erase(it);
-			}else if((*it)->Finish()) {
-				//World::Instance().GoldAdd(_monsterAttack.GetAttack()[_curMonsterAttack].MGold());
-				
-				
-				World::Instance().LoseLife((*it)->Damage());
-				it = _monsters.erase(it);
-			}
-			else {
-				it++;
-			}
-
-		}
-		//Проверка окончания волны
-		float endWave = true;
-		for (unsigned int i = 0; i < _monsters.size(); i++) {
-			if (!_monsters[i]->Finish() && !_monsters[i]->Dead())
-				endWave = false;
-		}
+		MonsterSpawn();
+		//Чистка
+		MonsterKill();
 		//Очистка старой и начало новой
-		if (endWave && _curMonsterCount>0 && _monsters.size() == 0) {
-			_monsters.clear();
-			_curMonsterCount = 0;
-			if(_curMonsterAttack+1<_monsterAttack.GetAttack().size())
- 				++_curMonsterAttack;
-			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[_curMonsterAttack]);
-			//World::Instance().SetAttackIndex(_curMonsterAttack);
-		}
-		
+		TryStartNewWave(EndWave());
 	}
 
 	//Сброс задержки спавна монстра
@@ -217,12 +165,6 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 			}
 		}
 	}
-
-
-
-
-
-	
 	return false;
 }
 
@@ -334,7 +276,6 @@ void TestWidget::SwitchTowerType(IPoint mPos){
 	}
 };
 
-
 void TestWidget::TryDestroyTower(IPoint cellPos) {
 	if (_fieldMap.DestroyTower(cellPos)) {
 		int destrIndex = 0;
@@ -351,7 +292,6 @@ void TestWidget::TryDestroyTower(IPoint cellPos) {
 		}
 	};
 };
-
 
 void TestWidget::TryUpgradeTower(IPoint cellPos, IPoint mPos) {
 	////////////////////////////////////////
@@ -400,7 +340,6 @@ void TestWidget::TryUpgradeTower(IPoint cellPos, IPoint mPos) {
 	}
 };
 
-
 void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
 	if (_fieldMap.AddTower(cellPos)) {
 		TowerParent::Ptr t;
@@ -429,5 +368,71 @@ void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
 		_curTowerType = EMPTY;
 		_tryMenu->Reset();
 		_fieldMap.ShowGhosts(_curTowerType);
+	}
+};
+
+void TestWidget::DrawBuildCursor() {
+	Render::device.SetTexturing(true);
+	if (_curTowerType != EMPTY && _curTowerType != DESTROY && _enableBuildCursor && _buildCursorPos.x<768) {
+		Render::BeginAlphaMul(0.5);
+		_buildCursor->Draw(IPoint(_buildCursorPos.x - 32, _buildCursorPos.y - 32));
+		Render::EndAlphaMul();
+	}
+};
+
+void TestWidget::MonsterSpawn() {
+	if (_curMonsterAttack < _monsterAttack.GetAttack().size()) {
+
+		if (_monsterAttack.GetAttack()[_curMonsterAttack].Count()>_curMonsterCount && _spawnTimer>_spawnTime) {
+			int hp = _monsterAttack.GetAttack()[_curMonsterAttack].MaxHp();
+			int spd = _monsterAttack.GetAttack()[_curMonsterAttack].Speed();
+			MonsterParent::Ptr m;
+			m = _monsterAttack.GetAttackPrototypes()[_curMonsterAttack]->clone();
+			m->SetPosition(FPoint(_spawn.x * _fieldMap.CellSize().x + 32 + math::random(-31, 31), _spawn.y * _fieldMap.CellSize().y + 32 + math::random(-31, 31)), &_fieldMap);
+
+			++_curMonsterCount;
+			_monsters.push_back(m);
+
+		}
+	}
+};
+
+void TestWidget::MonsterKill() {
+	for (std::vector<MonsterParent::Ptr>::iterator it = _monsters.begin(); it != _monsters.end();) {
+		if ((*it)->Dead() && (*it)->EndDeadAnim()) {
+			World::Instance().GoldAdd(_monsterAttack.GetAttack()[_curMonsterAttack].MGold());
+			it = _monsters.erase(it);
+		}
+		else if ((*it)->Finish()) {
+			//World::Instance().GoldAdd(_monsterAttack.GetAttack()[_curMonsterAttack].MGold());
+
+
+			World::Instance().LoseLife((*it)->Damage());
+			it = _monsters.erase(it);
+		}
+		else {
+			it++;
+		}
+
+	}
+};
+
+bool TestWidget::EndWave() {
+	float endWave = true;
+	for (unsigned int i = 0; i < _monsters.size(); i++) {
+		if (!_monsters[i]->Finish() && !_monsters[i]->Dead())
+			endWave = false;
+	}
+	return endWave;
+};
+
+void TestWidget::TryStartNewWave(bool endWave) {
+	if (endWave && _curMonsterCount>0 && _monsters.size() == 0) {
+		_monsters.clear();
+		_curMonsterCount = 0;
+		if (_curMonsterAttack + 1<_monsterAttack.GetAttack().size())
+			++_curMonsterAttack;
+		World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[_curMonsterAttack]);
+		//World::Instance().SetAttackIndex(_curMonsterAttack);
 	}
 };
