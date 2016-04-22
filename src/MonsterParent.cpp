@@ -766,7 +766,7 @@ NormalMonster::NormalMonster(NormalMonster& proto) {
 		this->_dieAnim = proto._dieAnim->Clone();
 };
 
-NormalMonster::NormalMonster(NormMInfo inf) : MonsterParent() {
+NormalMonster::NormalMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 	_position =inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
@@ -821,7 +821,7 @@ BossMonster::BossMonster(BossMonster& proto) {
 		this->_dieAnim = proto._dieAnim->Clone();
 };
 
-BossMonster::BossMonster(BossMInfo inf) : MonsterParent() {
+BossMonster::BossMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
@@ -879,7 +879,7 @@ ImmuneMonster::ImmuneMonster(ImmuneMonster& proto) {
 		this->_dieAnim = proto._dieAnim->Clone();
 };
 
-ImmuneMonster::ImmuneMonster(ImmMInfo inf) : MonsterParent() {
+ImmuneMonster::ImmuneMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
@@ -938,7 +938,7 @@ HealingMonster::HealingMonster(HealingMonster& proto) {
 		this->_dieAnim = proto._dieAnim->Clone();
 };
 
-HealingMonster::HealingMonster(HealMInfo inf) : MonsterParent() {
+HealingMonster::HealingMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;

@@ -5,6 +5,21 @@ class MonsterParent
 {
 public:
 	typedef boost::intrusive_ptr<MonsterParent> Ptr;
+	struct MonsterInfo{
+		FPoint				 _position;
+		int					 _modSpeed;
+		int					 _hp;
+		FieldMap *			 _map;
+		Render::AnimationPtr _runAnim;
+		Render::AnimationPtr _idleAnim;
+		Render::AnimationPtr _dieAnim;
+		std::string			 _dieSound;
+		int					 _meat;
+		float				 _reduceDamage;
+		int					 _healPerSecond;
+	};
+
+
 	MonsterParent();
 	MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * map, Render::TexturePtr _skin);
 	virtual ~MonsterParent();
@@ -95,21 +110,9 @@ inline void intrusive_ptr_release(MonsterParent* e) { e->Release(); }
 class BossMonster : public MonsterParent
 {
 public:
-	struct BossMInfo {
-		FPoint _position;
-		int	_modSpeed;
-		int _hp;
-		FieldMap * _map;
-		float _reduceDamage;
-		Render::AnimationPtr _runAnim;
-		Render::AnimationPtr _idleAnim;
-		Render::AnimationPtr _dieAnim;
-		std::string _dieSound;
-		int		   _meat;
-	};
 	BossMonster();
 	BossMonster(BossMonster& proto);
-	BossMonster(BossMInfo);
+	BossMonster(MonsterParent::MonsterInfo);
 	~BossMonster();
 	MonsterParent::Ptr clone() {
 
@@ -126,20 +129,9 @@ private:
 class ImmuneMonster : public MonsterParent
 {
 public:
-	struct ImmMInfo {
-		FPoint _position;
-		int	_modSpeed;
-		int _hp;
-		FieldMap * _map;
-		Render::AnimationPtr _runAnim;
-		Render::AnimationPtr _idleAnim;
-		Render::AnimationPtr _dieAnim;
-		std::string _dieSound;
-		int		   _meat;
-	};
 	ImmuneMonster();
 	ImmuneMonster(ImmuneMonster& proto);
-	ImmuneMonster(ImmMInfo);
+	ImmuneMonster(MonsterParent::MonsterInfo);
 	~ImmuneMonster();
 	MonsterParent::Ptr clone() {
 
@@ -157,21 +149,9 @@ private:
 class HealingMonster :public MonsterParent
 {
 public:
-	struct HealMInfo {
-		FPoint _position;
-		int	_modSpeed;
-		int _hp;
-		FieldMap * _map;
-		int _healPerSecond;
-		Render::AnimationPtr _runAnim;
-		Render::AnimationPtr _idleAnim;
-		Render::AnimationPtr _dieAnim;
-		std::string _dieSound;
-		int		   _meat;
-	};
 	HealingMonster();
 	HealingMonster(HealingMonster& proto);
-	HealingMonster(HealMInfo);
+	HealingMonster(MonsterParent::MonsterInfo);
 	~HealingMonster();
 	MonsterParent::Ptr clone() {
 
@@ -188,20 +168,9 @@ private:
 class NormalMonster :public MonsterParent
 {
 public:
-	struct NormMInfo {
-		FPoint _position;
-		int	_modSpeed;
-		int _hp;
-		FieldMap * _map;
-		Render::AnimationPtr _runAnim;
-		Render::AnimationPtr _idleAnim;
-		Render::AnimationPtr _dieAnim;
-		std::string _dieSound;
-		int		   _meat;
-	};
 	NormalMonster();
 	NormalMonster(NormalMonster& proto);
-	NormalMonster(NormMInfo);
+	NormalMonster(MonsterParent::MonsterInfo);
 	~NormalMonster();
 	MonsterParent::Ptr clone() {
 
