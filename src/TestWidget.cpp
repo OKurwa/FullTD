@@ -111,11 +111,14 @@ void TestWidget::Update(float dt)
 		_monsters[i]->Update(dt);
 		if (_monsters[i]->Dying()) {
 			World::Instance().GoldAdd(_monsters[i]->TakeMonsterMeat());
+			Message msg = Message("ChangeGold", 1);
+			msg.SetTargetLayer("TestLayer");
+			Core::mainScreen.ProcessMessage(msg);
 		}	
 	}
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->Update(dt);
-		_towers[i]->SetCurGold(World::Instance().Gold());
+		
 	}
 
 	for (unsigned int i = 0; i < _towers.size(); i++) {
@@ -140,7 +143,7 @@ void TestWidget::Update(float dt)
 	
 	
 	World::Instance().Update(dt);
-	_tryMenu->SetCurGold(World::Instance().Gold());
+	
 }
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
@@ -281,6 +284,19 @@ void TestWidget::AcceptMessage(const Message& message)
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
 			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
+			_tryMenu->SetCurGold(World::Instance().Gold());
+			for (unsigned int i = 0; i < _towers.size(); i++) {
+				_towers[i]->SetCurGold(World::Instance().Gold());
+			}
+		}
+		
+	} else if(message.getPublisher() == "ChangeGold"){
+		if (message.getIntegerParam() == 1) {
+			_tryMenu->SetCurGold(World::Instance().Gold());
+			for (unsigned int i = 0; i < _towers.size(); i++) {
+				_towers[i]->SetCurGold(World::Instance().Gold());
+			}
+
 		}
 		
 	}
@@ -313,6 +329,9 @@ void TestWidget::TryDestroyTower(IPoint cellPos) {
 		}
 		if (found) {
 			World::Instance().GoldAdd(_towers[destrIndex]->Price()*0.75);
+			Message msg = Message("ChangeGold", 1);
+			msg.SetTargetLayer("TestLayer");
+			Core::mainScreen.ProcessMessage(msg);
 			_towers.erase(_towers.begin() + destrIndex);
 		}
 	};
@@ -326,6 +345,9 @@ void TestWidget::TryUpgradeTower(IPoint cellPos, IPoint mPos) {
 		if (Core::mainInput.GetMouseLeftButton() && _selectedTower->UpgradeIRect().Contains(mPos)) {
 			if (World::Instance().GoldSpend(_selectedTower->UpgradePrice())) {
 				_selectedTower->Upgrade();
+				Message msg = Message("ChangeGold", 1);
+				msg.SetTargetLayer("TestLayer");
+				Core::mainScreen.ProcessMessage(msg);
 			}
 			else {
 				MM::manager.PlaySample("Denied");
@@ -375,6 +397,9 @@ void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
 				t->SetCell(cellPos);
 				t->SetPosition(FPoint(cellPos.x*cSize.x + cSize.x / 2, cellPos.y*cSize.y + cSize.y / 2));
 				_towers.push_back(t);
+				Message msg = Message("ChangeGold", 1);
+				msg.SetTargetLayer("TestLayer");
+				Core::mainScreen.ProcessMessage(msg);
 			}
 			else {
 				MM::manager.PlaySample("Denied");
@@ -457,6 +482,9 @@ void TestWidget::TryStartNewWave(bool endWave) {
 		if (_curMonsterAttack + 1<_monsterAttack.GetAttack().size())
 			++_curMonsterAttack;
 		World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[_curMonsterAttack]);
+		Message msg = Message("ChangeGold", 1);
+		msg.SetTargetLayer("TestLayer");
+		Core::mainScreen.ProcessMessage(msg);
 		//World::Instance().SetAttackIndex(_curMonsterAttack);
 	}
 };
