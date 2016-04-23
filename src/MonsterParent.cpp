@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "FireParent.h"
 #include "MonsterParent.h"
-const short YOU_PASSED = 9999;
-const short YOU_SHALL_PASS = 9998;
-const short YOU_SHALL_NOT_PASS = -1;
+const short FINISH_MARK = 9999;
+const short PASS_MARK = 9998;
+const short NOT_PASS_MARK = -1;
 //----------------------------------------------//
 //----------------------------------------------//
 //			Базовый класс монстра 				//
@@ -18,7 +18,7 @@ MonsterParent::MonsterParent() {
 	_moveTimer = 0;
 	_hp = 0;
 	_maxHp = _hp;
-	_damaged = false;
+	_empty = false;
 	_dead = false;
 	_dying = false;
 	_finish = false;
@@ -72,7 +72,7 @@ MonsterParent::MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * m
 	
 	_hp = hp;
 	_maxHp = _hp;
-	_damaged = false;
+	_empty = false;
 	
 	_skin = skin;
 	_dead = false;
@@ -84,33 +84,24 @@ MonsterParent::~MonsterParent() {};
 void MonsterParent::Draw() {
 	if (!_dead && !_finish) {
 
-
-		
 		if (_idleAnim && _runAnim && _dieAnim) {
-			IPoint pos = IPoint(_position.x - 64, _position.y - 40);
+			IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
+			Render::device.SetTexturing(true);
+			if (!_dying) {
 
-			if (_idleAnim && _runAnim && _dieAnim) {
-				Render::device.SetTexturing(true);
-				//Render::device.PushMatrix();
-				//Render::device.MatrixTranslate(pos);
-				//Render::device.MatrixScale(0.5, 0.5, 1);
-				//Render::device.MatrixTranslate(pos.x*2,pos.y*2,0);
-				if (!_dying) {
-
-					if (_bash != FPoint(0, 0)) {
-						_idleAnim->Draw(pos);
-					}
-					else {
-						_runAnim->Draw(pos);
-					}
+				if (_bash != FPoint(0, 0)) {
+					_idleAnim->Draw(pos);
+				}
+				else {
+					_runAnim->Draw(pos);
+				}
 
 
 			}
 			else {
 				_dieAnim->Draw(pos);
-				
-			}
 
+			}
 			//Render::device.PopMatrix();
 
 			Render::device.SetTexturing(false);
@@ -120,95 +111,22 @@ void MonsterParent::Draw() {
 			IRect cRect = IRect(_position.x - 15, _position.y - 15, width, 5);
 			//Render::device.SetTexturing(false);
 			Render::BindFont("arial");
-
 			//Render::BeginColor(Color(255 - 255*_hp / _maxHp, 255* _hp / _maxHp, 0, 255));
 			Render::BeginColor(Color(0, 255, 0, 255));
 			Render::DrawRect(cRect);
 			Render::EndColor();
-
-
 		}
-		
-		/*
-		if (_idleAnim && _runAnim && _dieAnim) {
-			IPoint pos = IPoint(_position.x - 32, _position.y - 20);
-
-			if (_idleAnim && _runAnim && _dieAnim) {
-				Render::device.SetTexturing(true);
-				Render::device.PushMatrix();
-				//Render::device.MatrixTranslate(pos);
-				Render::device.MatrixScale(0.5, 0.5, 1);
-				Render::device.MatrixTranslate(pos.x*2,pos.y*2,0);
-				if (!_dying) {
-
-					if (_bash != FPoint(0, 0)) {
-						_idleAnim->Draw();
-					}
-					else {
-						_runAnim->Draw();
-					}
-					
-
-				}
-				else {
-					_dieAnim->Draw();
-					_meat->Draw(FRect(46, 76,66, 96), FRect(0, 1, 0, 1));
-					Render::BindFont("arial");
-					Render::BeginColor(Color(255, 255, 255, 255));
-					Render::PrintString(FPoint(76, 66), "+", 2.00f, LeftAlign, BottomAlign);
-					Render::EndColor();
-					//_meat->DrawRect(FRect(pos.x, pos.x + 64, pos.y + 10, pos.y + 74), FRect(0, 1, 0, 1));
-				}
-				
-				Render::device.PopMatrix();
-				
-				Render::device.SetTexturing(false);
-				int width = 30 * _hp / _maxHp;
-				if (width < 0)
-					width = 0;
-				IRect cRect = IRect(_position.x - 15, _position.y - 15, width, 5);
-				//Render::device.SetTexturing(false);
-				Render::BindFont("arial");
-
-				//Render::BeginColor(Color(255 - 255*_hp / _maxHp, 255* _hp / _maxHp, 0, 255));
-				Render::BeginColor(Color(0, 255, 0, 255));
-				Render::DrawRect(cRect);
-				Render::EndColor();
-				
-				
-			}
-			*/
-		}
-		else {
-			IRect cRect = IRect(_position.x - 2, _position.y - 2, 5, 5);
-			//Render::device.SetTexturing(false);
-			Render::BindFont("arial");
-
-			Render::BeginColor(Color(100, 200, 100, 255));
-			Render::DrawRect(cRect);
-			Render::EndColor();
-			Render::device.SetTexturing(true);
-			Render::BeginColor(Color(255, 255, 255, 255));
-			Render::PrintString(FPoint(_position.x - 2, _position.y - 2), utils::lexical_cast(math::round(_hp)), 0.70f);
-			Render::EndColor();
-			Render::device.SetTexturing(false);
-			//Render::device.SetTexturing(true);
-		}
-
-
-		
 	}
 };
 
 void MonsterParent::DrawMeat() {
 	if (_dying && !_dead) {
-		IPoint pos = IPoint(_position.x - 64, _position.y - 40);
+		IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
 		_meat->Draw(FRect(pos.x + 56, pos.x + 71, pos.y + 86, pos.y + 101), FRect(0, 1, 0, 1));
 		Render::BindFont("arial");
 		Render::BeginColor(Color(255, 255, 255, 255));
 		Render::PrintString(FPoint(pos.x + 71, pos.y + 86), "+" + utils::lexical_cast(_meatCont), 1.00f, LeftAlign, BottomAlign);
 		Render::EndColor();
-		//_meat->DrawRect(FRect(pos.x, pos.x + 64, pos.y + 10, pos.y + 74), FRect(0, 1, 0, 1));
 	}
 	
 };
@@ -299,7 +217,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 		if (_idleAnim && _runAnim && _dieAnim) {
 
 			
-			if (angle > -157.5 && angle <= -112.5) {
+			if (angle > angle225.angleStart && angle <= angle225.angleFinish) {
 
 				if (_lastAngle != -135) {
 					_runAnim->setLoop(false);
@@ -331,7 +249,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				_lastAngle = -135;
 			}
 
-			if (angle > -112.5 && angle <= -67.5) {
+			if (angle > angle270.angleStart && angle <= angle270.angleFinish) {
 				if (_lastAngle != -90) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -358,7 +276,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				}
 				_lastAngle = -90;
 			}
-			if (angle > -67.5 && angle <= -22.5) {
+			if (angle > angle315.angleStart && angle <= angle315.angleFinish) {
 				if (_lastAngle != -45) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -386,7 +304,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				_lastAngle = -45;
 			}
 
-			if (angle > -22.5 && angle <= 22.5) {
+			if (angle > angle0.angleStart && angle <= angle0.angleFinish) {
 				if (_lastAngle != 0) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -414,7 +332,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				_lastAngle = 0;
 			}
 
-			if (angle > 22.5 && angle <= 67.5) {
+			if (angle > angle45.angleStart && angle <= angle45.angleFinish) {
 				if (_lastAngle != 45) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -442,7 +360,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				_lastAngle = 45;
 			}
 
-			if (angle > 67.5 && angle <= 112.5) {
+			if (angle > angle90.angleStart && angle <= angle90.angleFinish) {
 				if (_lastAngle != 90) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -471,7 +389,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				_lastAngle = 90;
 			}
 
-			if (angle > 112.5 && angle <= 157.5) {
+			if (angle > angle135.angleStart && angle <= angle135.angleFinish) {
 				if (_lastAngle != 135) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -499,7 +417,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 				}
 				_lastAngle = 135;
 			}
-			if (angle > 157.5 || angle <= -157.5) {
+			if (angle > angle180.angleStart || angle <= angle180.angleFinish) {
 				if (_lastAngle != 180) {
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
@@ -550,16 +468,16 @@ bool MonsterParent::FindAWay() {
 			switch (_map->Cells()[i][j]->Type())
 			{
 			case PASS:
-				intMap[i][j] = YOU_SHALL_PASS;
+				intMap[i][j] = PASS_MARK;
 				break;
 			case SPAWN:
-				intMap[i][j] = YOU_SHALL_PASS;
+				intMap[i][j] = PASS_MARK;
 				break;
 			case LAIR:
-				intMap[i][j] = YOU_PASSED;
+				intMap[i][j] = FINISH_MARK;
 				break;
 			default:
-				intMap[i][j] = YOU_SHALL_NOT_PASS;
+				intMap[i][j] = NOT_PASS_MARK;
 				break;
 			}
 		}
@@ -623,8 +541,8 @@ bool MonsterParent::FindAWay() {
 
 	for (unsigned int i = 0; i < intMap.size(); i++) {
 		for (unsigned int j = 0; j < intMap[i].size(); j++) {
-			if (intMap[i][j]!= YOU_SHALL_NOT_PASS && intMap[i][j]!= YOU_PASSED) {
-				intMap[i][j] = YOU_SHALL_PASS;
+			if (intMap[i][j]!= NOT_PASS_MARK && intMap[i][j]!=FINISH_MARK) {
+				intMap[i][j] = PASS_MARK;
 			}
 		}
 	}
@@ -654,9 +572,9 @@ std::vector<IPoint> MonsterParent::FillAround(std::vector<IPoint> lastWaveFilled
 				if (k >= 0 && k < map.size()) {
 					if (l >= 0 && l < map[k].size()) {
 						//Если смежная клетка не пункт назначения
-						if (map[k][l] != YOU_PASSED) {
+						if (map[k][l] != FINISH_MARK) {
 							//и является проходимой и не помеченной волной
-							if (map[k][l] == YOU_SHALL_PASS) {
+							if (map[k][l] == PASS_MARK) {
 								map[k][l] = d + 1;//метим ее значением следующей волны.
 								result.push_back(IPoint(k, l));
 							}
@@ -745,6 +663,16 @@ void MonsterParent::SetPosition(FPoint pos,FieldMap *map) {
 
 	_moveTimer = 0;
 };
+
+int MonsterParent::TakeMonsterMeat() {
+	if (!_empty) {
+		_empty = true;
+		return _meatCont;
+	}else{
+		return 0;
+	}
+};
+
 
 //----------------------------------------------//
 //----------------------------------------------//

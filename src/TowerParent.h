@@ -11,7 +11,7 @@
 //			Базовый класс башни 				//
 //----------------------------------------------//
 //----------------------------------------------//
-class TowerParent 
+class TowerParent : public RefCounter
 {
 public:
 	typedef boost::intrusive_ptr<TowerParent> Ptr;
@@ -35,17 +35,6 @@ public:
 	void Upgrade();
 	virtual int UpgradePrice() = 0 ;
 	virtual void TryShoot(std::vector<MonsterParent::Ptr> & monsters) = 0;
-	friend void intrusive_ptr_add_ref(TowerParent*);
-	friend void intrusive_ptr_release(TowerParent*);
-	void AddRef() {
-		++ref_cnt_;
-	}
-	void Release() {
-		if (--ref_cnt_ == 0) {
-			delete this;
-
-		}
-	}
 	void SetPrice(int);
 	int Price();
 	void SetCurGold(int);
@@ -55,13 +44,14 @@ public:
 	
 protected:
 
-	int ref_cnt_;
+	
 
 	
 	TowerType _towerType;
 	IPoint _damage;
 	FPoint _position;
 	IPoint _cell;
+	IPoint _cellSize;
 	MonsterParent * _target;
 	float  _reloadTime;
 	float  _reloadTimer;
@@ -79,6 +69,7 @@ protected:
 	
 	//Визуальная
 	Render::TexturePtr _texHint;
+	static const IRect _hintTexRect;
 	Render::AnimationPtr _idleAnim;
 	Render::AnimationPtr _atkAnim;
 	AnimAngles _attackAnimAngles;
@@ -90,8 +81,7 @@ protected:
 
 	bool _hint;
 };
-inline void intrusive_ptr_add_ref(TowerParent* e) { e->AddRef(); }
-inline void intrusive_ptr_release(TowerParent* e) { e->Release(); }
+
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -261,26 +251,7 @@ private:
 
 
 
-// Фабрика для создания башен
-class TowerPrototypeFactory
-{
-public:
-	TowerPrototypeFactory();
-	void Init(std::string filename);
-	TowerParent::Ptr createTower(TowerType tType);
 
-private:
-	bool _Nloaded;
-	bool _Slloaded;
-	bool _Sploaded;
-	bool _Bloaded;
-	bool _Dloaded;
-	NormalTower _nPrototype;
-	SlowTower _slPrototype;
-	SplashTower _spPrototype;
-	BashTower _bPrototype;
-	DecayTower _dPrototype;
-};
 
 
 const AnimAngles ATK_ANGLES = {

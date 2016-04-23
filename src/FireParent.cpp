@@ -10,7 +10,7 @@ using namespace rapidxml;
 //----------------------------------------------//
 //----------------------------------------------//
 
-FireParent::FireParent() : ref_cnt_(0) {
+FireParent::FireParent() {
 	//_missileType = "";
 	_position = FPoint(0,0);
 	_targetPosition = FPoint(0, 0);
@@ -47,14 +47,6 @@ void FireParent::Draw() {
 
 		_misEffCont.Draw();
 
-	}
-	else {
-		IRect cRect = IRect(_position.x - 1, _position.y - 1, 3, 3);
-		//Render::device.SetTexturing(false);
-		Render::BeginColor(Color(255, 200, 100, 255));
-		Render::DrawRect(cRect);
-		Render::EndColor();
-		//Render::device.SetTexturing(true);
 	}
 };
 
@@ -108,7 +100,7 @@ TowerType FireParent::Type() {
 
 };
 
-bool FireParent::Fly() {
+bool FireParent::isFlying() {
 	return _fly;
 };
 
@@ -177,23 +169,28 @@ void FireParent::MakePath() {
 		
 };
 
+void FireParent::TakeNearestMonster(float & distance, int & index, std::vector<MonsterParent::Ptr> & monsters) {
+	for (unsigned int i = 0; i < monsters.size(); i++) {
+		if (!monsters[i].get()->Dead() && !monsters[i].get()->Dying()) {
+			FPoint tarPos = monsters[i]->Position();
+			float tmpD = _position.GetDistanceTo(tarPos);
+			if (tmpD<distance) {
+				distance = tmpD;
+				index = i;
+			}
+		}
+
+	}
+};
+
 MonsterParent::Ptr  FireParent::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
 	MonsterParent::Ptr resTarget = nullptr;
 	if (target == nullptr || target->Finish() || target->Dead() || target->Dying()) {
-		float d = 9999;
-		int tarIndex = 9999;
-		for (unsigned int i = 0; i < monsters.size(); i++) {
-			if (!monsters[i].get()->Dead() && !monsters[i].get()->Dying()) {
-				FPoint tarPos = monsters[i]->Position();
-				float tmpD = _position.GetDistanceTo(tarPos);
-				if (tmpD<d) {
-					d = tmpD;
-					tarIndex = i;
-				}
-			}
-
-		}
-		if (d <= range && tarIndex < 9999) {
+		float d = INFINITE;
+		int tarIndex = INFINITE;
+		TakeNearestMonster(d, tarIndex, monsters);
+		
+		if (d <= range && tarIndex < INFINITE) {
 			resTarget = monsters[tarIndex];
 			_target = resTarget.get();
 			_flyTime = d / (float)_modSpeed;
@@ -349,20 +346,10 @@ void SlowMissile::DealDamage()
 MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
 	MonsterParent::Ptr resTarget = nullptr;
 	if (target == nullptr || target->Finish() || target->Dead() || target->Dying()) {
-		float d = 9999;
-		int tarIndex = 9999;
-		for (unsigned int i = 0; i < monsters.size(); i++) {
-			if (!monsters[i].get()->Dead() && !monsters[i].get()->Dying()) {
-				FPoint tarPos = monsters[i]->Position();
-				float tmpD = _position.GetDistanceTo(tarPos);
-				if (tmpD<d) {
-					d = tmpD;
-					tarIndex = i;
-				}
-			}
-
-		}
-		if (d <= range && tarIndex < 9999) {
+		float d = INFINITE;
+		int tarIndex = INFINITE;
+		TakeNearestMonster(d, tarIndex, monsters);
+		if (d <= range && tarIndex < INFINITE) {
 			resTarget = monsters[tarIndex];
 			_targetPosition = monsters[tarIndex]->Position();
 			_targets = monsters;
@@ -539,20 +526,10 @@ void SplashMissile::DealDamage()
 MonsterParent::Ptr  SplashMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
 	MonsterParent::Ptr resTarget = nullptr;
 	if (target == nullptr || target->Finish() || target->Dead() || target->Dying()) {
-		float d = 9999;
-		int tarIndex = 9999;
-		for (unsigned int i = 0; i < monsters.size(); i++) {
-			if (!monsters[i].get()->Dead() && !monsters[i].get()->Dying()) {
-				FPoint tarPos = monsters[i]->Position();
-				float tmpD = _position.GetDistanceTo(tarPos);
-				if (tmpD<d) {
-					d = tmpD;
-					tarIndex = i;
-				}
-			}
-
-		}
-		if (d <= range && tarIndex < 9999) {
+		float d = INFINITE;
+		int tarIndex = INFINITE;
+		TakeNearestMonster(d, tarIndex, monsters);
+		if (d <= range && tarIndex < INFINITE) {
 			resTarget = monsters[tarIndex];
 			_targetPosition = monsters[tarIndex]->Position();
 			_targets = monsters;

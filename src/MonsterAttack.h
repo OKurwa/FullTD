@@ -3,7 +3,7 @@
 class Attack {
 public:
 	Attack(); 
-	Attack(int index, const std::string mType, const std::string aName, const int mCount, int hp, int speed);
+	
 	~Attack();
 	std::string Type();
 	std::string Name();
@@ -11,20 +11,10 @@ public:
 	int			Index();
 	int			MaxHp();
 	int			Speed();
-	int		WGold();
-	int		MGold();
-	bool		Finished();
-	void		SetType(std::string);
-	void		SetName(std::string);
-	void		SetCount(int);
-	void		SetIndex(int);
-	void		SetMaxHp(int);
-	void		SetSpeed(int);
-	void		SetWGold(int);
-	void		SetMGold(int);
-	void		SetFinished(bool finish);
-
-	
+	int			WGold();
+	int			MGold();
+	void LoadTowerFormXML(rapidxml::xml_node<>* atkNode);
+		
 private:
 	int _index;
 	std::string _monsterType;
@@ -32,7 +22,7 @@ private:
 	int		    _monsterCount;
 	int         _maxHp;
 	int         _modSpeed;
-	bool		_finished;
+	//bool		_finished;
 	int         _waveGold;
 	int         _monsterGold;
 };
@@ -42,7 +32,7 @@ public:
 	MonsterAttack();
 	~MonsterAttack();
 	void SetDelay(float d);
-	void LoadFromFile(std::string fileName);
+	
 	void LoadFromXml(std::string);
 	void SaveToFile(std::string fileName);
 	float Delay();

@@ -1,7 +1,7 @@
 #pragma once
 #include "FieldMap.h"
 
-class MonsterParent
+class MonsterParent : public RefCounter
 {
 public:
 	typedef boost::intrusive_ptr<MonsterParent> Ptr;
@@ -42,19 +42,8 @@ public:
 	FPoint HitPosition(float dt);
 	void SetPosition(FPoint,FieldMap*);
 	int Damage() { return _damage; };
-	friend void intrusive_ptr_add_ref(MonsterParent*);
-	friend void intrusive_ptr_release(MonsterParent*);
-	void AddRef() {
-		++ref_cnt_;
-	}
-	void Release() {
-		if (--ref_cnt_ == 0) {
-			delete this;
-
-		}
-	}
-
-	//void SetHint(IPoint);
+	int TakeMonsterMeat();
+	
 protected:
 	int ref_cnt_;
 	int _damage;
@@ -68,7 +57,7 @@ protected:
 	bool	   _dead; 
 	bool	   _dying;
 	bool       _finish;
-	bool	   _damaged;
+	bool	   _empty;
 	FieldMap   * _map;
 	IPoint _curCell;
 	float _moveTimer;
@@ -102,8 +91,7 @@ protected:
 	bool _hint;
 	std::string _dieSound;
 };
-inline void intrusive_ptr_add_ref(MonsterParent* e) { e->AddRef(); }
-inline void intrusive_ptr_release(MonsterParent* e) { e->Release(); }
+
 
 
 
@@ -214,3 +202,12 @@ const AnimAngles DIE_ANGLES = {
 	IPoint(112,119),
 	IPoint(132,139),
 	IPoint(152,159) };
+
+const Sector angle0 = {-22.5, 22.5};
+const Sector angle45 = { 22.5, 67.5 };
+const Sector angle90 = { 67.5, 112.5 };
+const Sector angle135 = { 112.5, 157.5 };
+const Sector angle180 = { 157.5, -157.5 };
+const Sector angle225 = { -157.5, -112.5 };
+const Sector angle270 = { -112.5, -67.5 };
+const Sector angle315 = { -67.5, -22.5 };

@@ -13,18 +13,6 @@ Attack::Attack(){
 	_monsterCount = 0;
 	_maxHp = 0;
 	_modSpeed = 0;
-	_finished = false;
-	_waveGold = 0;
-	_monsterGold = 0;
-};
-Attack::Attack(int index, const std::string mType, const std::string aName, const int mCount, int hp, int speed) {
-	_index = index;
-	_monsterType = mType;
-	_attackName = aName;
-	_monsterCount = mCount;
-	_maxHp = hp;
-	_modSpeed = speed;
-	_finished = false;
 	_waveGold = 0;
 	_monsterGold = 0;
 };
@@ -63,42 +51,26 @@ int Attack::MGold() {
 	return _monsterGold;
 };
 
-bool Attack::Finished() {
-	return _finished;
+
+void Attack::LoadTowerFormXML(rapidxml::xml_node<>* atkNode) {
+	_attackName = Xml::GetStringAttributeOrDef(atkNode, "name", "name");
+	_monsterType = Xml::GetStringAttributeOrDef(atkNode, "type", "Normal");
+	_monsterCount = Xml::GetIntAttributeOrDef(atkNode, "count", 0);
+	_maxHp = Xml::GetIntAttributeOrDef(atkNode, "hp", 0);
+	_modSpeed = Xml::GetIntAttributeOrDef(atkNode, "speed", 0);
+	_monsterGold = Xml::GetIntAttributeOrDef(atkNode, "goldPM", 0);
+	_waveGold = Xml::GetIntAttributeOrDef(atkNode, "goldAA", 0);
 };
 
-void Attack::SetType(std::string s) {
-	_monsterType = s;
-};
-void Attack::SetName(std::string s) {
-	_attackName = s;
-};
-void Attack::SetCount(int count) {
-	_monsterCount = count;
-};
-void Attack::SetIndex(int index) {
-	_index = index;
-};
 
-void Attack::SetMaxHp(int hp) {
-	_maxHp = hp;
-};
 
-void Attack::SetSpeed(int speed) {
-	_modSpeed = speed;
-};
 
-void Attack::SetWGold(int g) {
-	_waveGold = g;
-};
 
-void Attack::SetMGold(int g) {
-	_monsterGold = g;
-};
 
-void Attack::SetFinished(bool finish) {
-	_finished = finish;
-};
+
+
+
+
 
 MonsterAttack::MonsterAttack() {
 	_attacks.clear();
@@ -111,84 +83,7 @@ void MonsterAttack::SetDelay(float d) {
 	_attackDelay = d;
 };
 
-void MonsterAttack::LoadFromFile(std::string file) {
-	_attacks.clear();
-	std::ifstream settingsFile(file);
-	std::string line;
-	std::vector<std::string> lines;
-	lines.clear();
 
-	if (settingsFile.is_open()) {
-		while (std::getline(settingsFile, line)) {
-			if (line != "")
-				lines.push_back(line);
-
-		}
-	}
-	settingsFile.close();
-
-
-	int index = 0;
-	
-	std::string name;
-	std::string value;
-	line = lines[0];
-	size_t pos = line.find("=", 0);
-	name = line.substr(0, pos);
-	value = line.substr(pos + 1);
-	if (name == "TYPE" && value == "MA") {
-		line = lines[1];
-		pos = line.find("=", 0);
-		name = line.substr(0, pos);
-		value = line.substr(pos + 1);
-		if (name == "attackCount") {
-			_attacks.resize(utils::lexical_cast<int>(value));
-		}
-
-		line = lines[2];
-		pos = line.find("=", 0);
-		name = line.substr(0, pos);
-		value = line.substr(pos + 1);
-		if (name == "delay") {
-			_attackDelay = utils::lexical_cast<float>(value);
-		}
-		
-		for (unsigned int i = 3; i < lines.size(); i++) {
-			line = lines[i];
-			pos = line.find("=", 0);
-			name = line.substr(0, pos);
-			value = line.substr(pos + 1);
-
-			if (name == "index") {
-				index = utils::lexical_cast<int>(value);
-				_attacks[index].SetIndex(index);
-			}
-			if (name == "type") {
-				_attacks[index].SetType(value);
-			}
-
-			if (name == "name") {
-				_attacks[index].SetName(value);
-			}
-			if (name == "count") {
-				_attacks[index].SetCount(utils::lexical_cast<int>(value));
-			}
-			if (name == "hp") {
-				_attacks[index].SetMaxHp(utils::lexical_cast<int>(value));
-			}
-			if (name == "speed") {
-				_attacks[index].SetSpeed(utils::lexical_cast<int>(value));
-			}
-			if (name == "wgold") {
-				_attacks[index].SetWGold(utils::lexical_cast<int>(value));
-			}
-			if (name == "mgold") {
-				_attacks[index].SetMGold(utils::lexical_cast<int>(value));
-			}
-
-		}
-	}
-};
 
 void MonsterAttack::LoadFromXml(std::string filename) {
 	_attacks.clear();
@@ -210,15 +105,7 @@ void MonsterAttack::LoadFromXml(std::string filename) {
 		for (xml_node<>* attack = attacks->first_node("Attack"); attack; attack = attack->next_sibling("Attack")) {
 			
 			Attack atk;
-			
-			atk.SetName(Xml::GetStringAttributeOrDef(attack, "name", "name"));
-			atk.SetType(Xml::GetStringAttributeOrDef(attack, "type","Normal"));
-			atk.SetCount(Xml::GetIntAttributeOrDef(attack, "count", 0));
-			atk.SetMaxHp(Xml::GetIntAttributeOrDef(attack, "hp", 0));
-			atk.SetSpeed(Xml::GetIntAttributeOrDef(attack, "speed", 0));
-			atk.SetMGold(Xml::GetIntAttributeOrDef(attack, "goldPM", 0));
-			atk.SetWGold(Xml::GetIntAttributeOrDef(attack, "goldAA", 0));
-			
+			atk.LoadTowerFormXML(attack);
 			MonsterParent::MonsterInfo info;
 			string value;
 			info._position = FPoint(0, 0);

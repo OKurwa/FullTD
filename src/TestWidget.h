@@ -7,6 +7,7 @@
 #include "MonsterParent.h"
 #include "World.h"
 #include "Menu.h"
+#include "TowerPrototypeFactory.h"
 ///
 /// Виджет - основной визуальный элемент на экране.
 /// Он отрисовывает себя, а также может содержать другие виджеты.

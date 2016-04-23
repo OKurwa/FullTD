@@ -2,6 +2,7 @@
 #include "TestAppDelegate.h"
 #include "StartWidget.h"
 #include "TestWidget.h"
+#include "PanelWidget.h"
 
 enum {
 	WINDOW_WIDTH = 1024,
@@ -37,7 +38,7 @@ void TestAppDelegate::RegisterTypes()
 	//
 	REGISTER_WIDGET_XML(StartWidget, "StartWidget");
 	REGISTER_WIDGET_XML(TestWidget, "TestWidget");
-	
+	REGISTER_WIDGET_XML(PanelWidget, "PanelWidget");
 }
 
 void TestAppDelegate::LoadResources()

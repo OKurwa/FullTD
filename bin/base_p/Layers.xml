@@ -3,6 +3,7 @@
 	<Layer name="TestLayer" >
 		<Controls>
 			<TestWidget name="TestWidget"/>
+      <PanelWidget name="PanelWidget"/>
 		</Controls>
 		<Script>TestLayerFunc</Script>
 	</Layer>

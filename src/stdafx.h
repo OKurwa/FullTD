@@ -26,3 +26,10 @@ typedef struct {
 	IPoint _a270;
 	IPoint _a315;
 }AnimAngles;
+
+
+
+typedef struct {
+	float angleStart;
+	float angleFinish;
+} Sector;

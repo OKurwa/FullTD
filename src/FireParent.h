@@ -14,7 +14,7 @@
 
 
 
-class FireParent {
+class FireParent : public RefCounter{
 public:
 	typedef boost::intrusive_ptr<FireParent> Ptr;
 	struct MissInfo {
@@ -57,27 +57,16 @@ public:
 
 	TowerType Type();
 
-	bool Fly();
+	bool isFlying();
 
 	bool Hit();
 
 	void MakePath();
 
+	void TakeNearestMonster(float & distance, int & index, std::vector<MonsterParent::Ptr> & monsters);
+
 	virtual MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
 
-	friend void intrusive_ptr_add_ref(FireParent*);
-	friend void intrusive_ptr_release(FireParent*);
-
-	void AddRef() {
-		++ref_cnt_;
-	}
-
-	void Release() {
-		if (--ref_cnt_ == 0) {
-			delete this;
-
-		}
-	}
 protected:
 	int ref_cnt_;
 	TowerType _missileType;
@@ -100,8 +89,7 @@ protected:
 	ParticleEffectPtr _misEff;
 	ParticleEffectPtr _hitEff;
 };
-inline void intrusive_ptr_add_ref(FireParent* e) { e->AddRef(); }
-inline void intrusive_ptr_release(FireParent* e) { e->Release(); }
+
 
 
 //----------------------------------------------//

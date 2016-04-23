@@ -4,6 +4,7 @@
 #include "FireParent.h"
 #include "TowerParent.h"
 #include "MonsterParent.h"
+#include "TowerPrototypeFactory.h"
 #include "TestWidget.h"
 
 
@@ -91,8 +92,8 @@ void TestWidget::Draw()
 	
 	//Render::device.PopMatrix();
 	_menuBG->Draw(IPoint(768, 0));
-	if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START)
-		World::Instance().Draw();
+	//if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START)
+	//	World::Instance().Draw();
 	
 	_tryMenu->Draw();
 	//anim->Draw(IPoint(0, 0));
@@ -108,6 +109,9 @@ void TestWidget::Update(float dt)
 	_fieldMap.Update(dt);
 	for (unsigned int i = 0; i < _monsters.size(); i++) {
 		_monsters[i]->Update(dt);
+		if (_monsters[i]->Dying()) {
+			World::Instance().GoldAdd(_monsters[i]->TakeMonsterMeat());
+		}	
 	}
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->Update(dt);
@@ -256,7 +260,7 @@ void TestWidget::AcceptMessage(const Message& message)
 			//_fieldMap.SaveToFile("save.txt");
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
-			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
+			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
 		}
 		
 	}
@@ -276,7 +280,7 @@ void TestWidget::AcceptMessage(const Message& message)
 			
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
-			World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
+			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
 		}
 		
 	}
@@ -421,7 +425,6 @@ void TestWidget::MonsterSpawn() {
 void TestWidget::MonsterKill() {
 	for (std::vector<MonsterParent::Ptr>::iterator it = _monsters.begin(); it != _monsters.end();) {
 		if ((*it)->Dead() && (*it)->EndDeadAnim()) {
-			World::Instance().GoldAdd(_monsterAttack.GetAttack()[_curMonsterAttack].MGold());
 			it = _monsters.erase(it);
 		}
 		else if ((*it)->Finish()) {
@@ -453,7 +456,7 @@ void TestWidget::TryStartNewWave(bool endWave) {
 		_curMonsterCount = 0;
 		if (_curMonsterAttack + 1<_monsterAttack.GetAttack().size())
 			++_curMonsterAttack;
-		World::Instance().SetNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[_curMonsterAttack]);
+		World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[_curMonsterAttack]);
 		//World::Instance().SetAttackIndex(_curMonsterAttack);
 	}
 };
