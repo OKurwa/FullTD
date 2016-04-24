@@ -33,18 +33,13 @@ public:
 	void Init(CellType cell, IPoint size, FPoint position);
 	void Draw();
 	CellType Type();
-	IPoint Size();
-	FPoint Position();
+	//IPoint Size();
+	//FPoint Position();
 	bool Selected();
-	
-
-	
-
-
-	void SetPos(FPoint);
-	void SetSize(IPoint);
+	//void SetPos(FPoint);
+	//void SetSize(IPoint);
 	//void SetTexture(std::string);
-	void SetType(CellType cell);
+	//void SetType(CellType cell);
 	void Select();
 	void UnSelect();
 	bool AddTower();
@@ -79,9 +74,8 @@ class FieldMap
 public:
 	FieldMap() ;
 	~FieldMap();
-	void Init();
+	//void Init();
 	void LoadFromXml(std::string);
-	void SaveToFile(std::string);
 	void Draw();
 	void Update(float dt);
 	bool AddTower(IPoint);

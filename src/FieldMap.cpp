@@ -110,14 +110,14 @@ void	FieldCell::Draw() {
 CellType FieldCell::Type() {
 	return _cellType;
 };
-
+/*
 IPoint FieldCell::Size() {
 	return _size;
-};
-
+};*/
+/*
 FPoint FieldCell::Position() {
 	return _position;
-};
+};*/
 
 bool FieldCell::Selected() {
 	return _selected;
@@ -126,16 +126,16 @@ bool FieldCell::Selected() {
 bool FieldCell::Empty() {
 	return _empty;
 };
-
+/*
 void FieldCell::SetPos(FPoint pos) {
 	_position = pos;
-};
-
+};*/
+/*
 void FieldCell::SetSize(IPoint size) {
 	_size = size;
-};
+};*/
 
-
+/*
 void FieldCell::SetType(CellType cell) {
 	_cellType = cell;
 	if (cell == SLOT) {
@@ -145,7 +145,7 @@ void FieldCell::SetType(CellType cell) {
 	else {
 		_tex = nullptr;
 	}
-};
+};*/
 
 void FieldCell::Select() {
 	_selected = true;
@@ -200,7 +200,7 @@ FieldMap::~FieldMap() {
 	}
 	_cells.clear();
 };
-
+/*
 void FieldMap::Init() {
 	for (int row = 0; row < _size.x; row++) {
 		std::vector<boost::intrusive_ptr<FieldCell>> nCol;
@@ -210,7 +210,7 @@ void FieldMap::Init() {
 			_cells[row].push_back(cell);
 		}
 	}
-};
+};*/
 
 
 
@@ -490,43 +490,4 @@ void FieldMap::LoadFromXml(std::string filename) {
 
 
 };
-
-
-
-
-
-
-
-void FieldMap::SaveToFile(std::string file) {
-	_cellSize = IPoint(32, 32);
-	std::ofstream settingsFile(file);
-	std::string line;
-	std::vector<std::string> lines;
-	lines.clear();
-	lines.push_back("TYPE=TDMAP");
-	lines.push_back("");
-	lines.push_back("sizeX=" + utils::lexical_cast(_size.x));
-	lines.push_back("sizeY=" + utils::lexical_cast(_size.y));
-	lines.push_back("");
-	for (unsigned int row = 0; row < _size.x; row++) {
-		lines.push_back("row=" + utils::lexical_cast(row));
-		lines.push_back("");
-		for (unsigned int col = 0; col < _size.y; col++) {
-			lines.push_back("col=" + utils::lexical_cast(col));
-			lines.push_back("celltype=" + utils::lexical_cast(static_cast<int>(_cells[row][col]->Type())));
-			lines.push_back("");
-		}
-	}
-	
-	if (settingsFile.is_open()) {
-		for (unsigned int i = 0; i < lines.size(); i++) {
-			settingsFile << lines[i] << endl;
-		}
-	}
-	settingsFile.close();
-
-
-	
-};
-
 
