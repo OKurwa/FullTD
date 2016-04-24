@@ -71,19 +71,19 @@ TowerParent::Ptr TowerPrototypeFactory::createTower(TowerType tType)
 	switch (tType)
 	{
 	case NORMAL:
-		return _nPrototype.clone();
+		return _nPrototype.Clone();
 		break;
 	case SPLASH:
-		return _spPrototype.clone();
+		return _spPrototype.Clone();
 		break;
 	case SLOW:
-		return _slPrototype.clone();
+		return _slPrototype.Clone();
 		break;
 	case DECAY:
-		return _dPrototype.clone();
+		return _dPrototype.Clone();
 		break;
 	case BASH:
-		return _bPrototype.clone();
+		return _bPrototype.Clone();
 		break;
 	default:
 		return nullptr;

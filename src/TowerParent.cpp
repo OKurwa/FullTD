@@ -255,14 +255,14 @@ void TowerParent::UpdateAnimAngle(MonsterParent * target) {
 		}
 	}
 }
-
+/*
 std::vector<FireParent::Ptr> & TowerParent::GetMissiles() {
 	return _missiles;
-};
-
+};*/
+/*
 FPoint TowerParent::Position() {
 	return _position;
-};
+};*/
 
 IPoint TowerParent::Cell() {
 	return _cell;
@@ -310,10 +310,10 @@ void TowerParent::SetCell(IPoint cell) {
 void TowerParent::SetUpgradeButton(bool b) {
 	_showUpgradeButton = b;
 };
-
+/*
 bool TowerParent::UpgradeButtonActive() {
 	return _showUpgradeButton;
-};
+};*/
 
 
 IRect TowerParent::UpgradeIRect() {
@@ -333,10 +333,10 @@ void TowerParent::Upgrade() {
 		
 	}
 };
-
+/*
 void TowerParent::SetPrice(int p) {
 	_price = p;
-};
+};*/
 
 int	 TowerParent::Price() {
 	return _price;

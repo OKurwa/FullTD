@@ -22,20 +22,20 @@ public:
 	void UpgradeDraw();
 	void Update(float dt);
 	void TowerParent::UpdateAnimAngle(MonsterParent * _target);
-	virtual Ptr clone() = 0;
-	std::vector<FireParent::Ptr> & GetMissiles();
-	FPoint Position();
+	virtual Ptr Clone() = 0;
+	//std::vector<FireParent::Ptr> & GetMissiles();
+	//FPoint Position();
 	IPoint Cell();
 	virtual void SetPosition(FPoint);
 	void TowerParent::SetUButtonPosition();
 	void SetCell(IPoint);
 	void SetUpgradeButton(bool);
-	bool UpgradeButtonActive();
+	//bool UpgradeButtonActive();
 	IRect UpgradeIRect();
 	void Upgrade();
 	virtual int UpgradePrice() = 0 ;
 	virtual void TryShoot(std::vector<MonsterParent::Ptr> & monsters) = 0;
-	void SetPrice(int);
+	//void SetPrice(int);
 	int Price();
 	void SetCurGold(int);
 	void SetHint(IPoint);
@@ -97,7 +97,7 @@ public:
 	NormalTower(NormalTower&);
 	NormalTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~NormalTower();
-	TowerParent::Ptr clone() {
+	TowerParent::Ptr Clone() {
 
 		return new NormalTower(*this);
 	}
@@ -128,7 +128,7 @@ public:
 	SlowTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, FPoint sFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~SlowTower();
 
-	TowerParent::Ptr clone() {
+	TowerParent::Ptr Clone() {
 		return new SlowTower(*this);
 	}
 	//void Draw();
@@ -162,7 +162,7 @@ public:
 	DecayTower(DecayTower& proto);
 	DecayTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint decay, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~DecayTower();
-	TowerParent::Ptr clone() {
+	TowerParent::Ptr Clone() {
 		return new DecayTower(*this);
 	}
 
@@ -195,7 +195,7 @@ public:
 	BashTower(BashTower& proto);
 	BashTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint bash, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~BashTower();
-	TowerParent::Ptr clone() {
+	TowerParent::Ptr Clone() {
 
 		return new BashTower(*this);
 	}
@@ -228,7 +228,7 @@ public:
 	SplashTower(SplashTower& proto);
 	SplashTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~SplashTower();
-	TowerParent::Ptr clone() {
+	TowerParent::Ptr Clone() {
 		return new SplashTower(*this);
 	}
 

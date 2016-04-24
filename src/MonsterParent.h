@@ -30,7 +30,7 @@ public:
 	virtual void PostUpdate(float dt) {};
 	void UpdateAnimAngle(float dt);
 	virtual void TakeDamage(TowerType effType, FPoint values, float damage) = 0;
-	virtual Ptr clone() = 0;
+	virtual Ptr Clone() = 0;
 	bool FindAWay();
 	std::vector<IPoint> FillAround(std::vector<IPoint> lastWaveFilled, std::vector<std::vector<int>> & map, int d);
 	bool Dead();
@@ -102,7 +102,7 @@ public:
 	BossMonster(BossMonster& proto);
 	BossMonster(MonsterParent::MonsterInfo);
 	~BossMonster();
-	MonsterParent::Ptr clone() {
+	MonsterParent::Ptr Clone() {
 
 		return new BossMonster(*this);
 	}
@@ -121,7 +121,7 @@ public:
 	ImmuneMonster(ImmuneMonster& proto);
 	ImmuneMonster(MonsterParent::MonsterInfo);
 	~ImmuneMonster();
-	MonsterParent::Ptr clone() {
+	MonsterParent::Ptr Clone() {
 
 		return new ImmuneMonster(*this);
 	}
@@ -141,7 +141,7 @@ public:
 	HealingMonster(HealingMonster& proto);
 	HealingMonster(MonsterParent::MonsterInfo);
 	~HealingMonster();
-	MonsterParent::Ptr clone() {
+	MonsterParent::Ptr Clone() {
 
 		return new HealingMonster(*this);
 	}
@@ -160,7 +160,7 @@ public:
 	NormalMonster(NormalMonster& proto);
 	NormalMonster(MonsterParent::MonsterInfo);
 	~NormalMonster();
-	MonsterParent::Ptr clone() {
+	MonsterParent::Ptr Clone() {
 
 		return new NormalMonster(*this);
 	}

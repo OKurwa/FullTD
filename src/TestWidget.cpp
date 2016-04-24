@@ -389,7 +389,7 @@ void TestWidget::MonsterSpawn() {
 			int hp = _monsterAttack.GetAttack()[_curMonsterAttack].MaxHp();
 			int spd = _monsterAttack.GetAttack()[_curMonsterAttack].Speed();
 			MonsterParent::Ptr m;
-			m = _monsterAttack.GetAttackPrototypes()[_curMonsterAttack]->clone();
+			m = _monsterAttack.GetAttackPrototypes()[_curMonsterAttack]->Clone();
 			m->SetPosition(FPoint(_spawn.x * _fieldMap.CellSize().x + 32 + math::random(-31, 31), _spawn.y * _fieldMap.CellSize().y + 32 + math::random(-31, 31)), &_fieldMap);
 
 			++_curMonsterCount;
