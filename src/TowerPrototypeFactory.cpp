@@ -11,12 +11,6 @@ using namespace rapidxml;
 //----------------------------------------------//
 
 TowerPrototypeFactory::TowerPrototypeFactory() {
-	_Nloaded = false;
-	_Slloaded = false;
-	_Sploaded = false;
-	_Bloaded = false;
-	_Dloaded = false;
-
 }
 
 void TowerPrototypeFactory::Init(std::string xmlfilename) {
