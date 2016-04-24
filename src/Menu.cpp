@@ -110,10 +110,10 @@ void Button::Reset() {
 	_pressed = false;
 	_light = false;
 };
-
+/*
 void Button::SetCurGold(int g) {
 	_curGold = g;
-};
+};*/
 
 int Button::Value() {
 	return _value;
@@ -235,7 +235,7 @@ void Menu::Reset() {
 		}
 	}
 };
-
+/*
 void Menu::SetCurGold(int g) {
 	for (unsigned int i = 0; i < _buttons.size(); i++) {
 		for (unsigned int j = 0; j < _buttons[i].size(); j++) {
@@ -243,7 +243,7 @@ void Menu::SetCurGold(int g) {
 				_buttons[i][j]->SetCurGold(g);
 		}
 	}
-};
+};*/
 
 
 void Menu::LoadFromXml(std::string filename) {

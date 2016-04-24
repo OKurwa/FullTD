@@ -15,7 +15,7 @@ public:
 	void SetLighter(IPoint);
 	int Press(IPoint);
 	void Reset();
-	void SetCurGold(int);
+	//void SetCurGold(int);
 	int Value();
 	void LoadButtonFormXML(rapidxml::xml_node<>* buttonNode);
 	void SetRect(IRect);
@@ -33,7 +33,7 @@ private:
 	bool _empty;
 	bool _enabled;
 	std::string _cornerText;
-	int _curGold;
+	//int _curGold;
 	bool _hintEnable;
 	int _value;
 	Hint::Ptr _hint;
@@ -63,7 +63,7 @@ public:
 	void Update(float dt);
 	void SetLighter(IPoint);
 	void Reset();
-	void SetCurGold(int);
+	//void SetCurGold(int);
 	void LoadFromXml(std::string);
 	void SetDisabled(std::vector<int>);
 private:
@@ -72,9 +72,9 @@ private:
 	IPoint _size;
 	Render::TexturePtr _buttonsTex;
 	std::vector<std::vector<Button::Ptr>> _buttons;
-	Render::TexturePtr _border;
-	Render::TexturePtr _background;
-	Render::TexturePtr _time;
-	Render::TexturePtr _wave;
+	//Render::TexturePtr _border;
+	//Render::TexturePtr _background;
+	//Render::TexturePtr _time;
+	//Render::TexturePtr _wave;
 
 };
