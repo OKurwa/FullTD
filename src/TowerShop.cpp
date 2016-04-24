@@ -93,10 +93,24 @@ std::vector<int> TowerShop::GetDisabledButtons(int gold)
 
 TowerType TowerShop::GetTypeFromButton(int id)
 {
+	if (id == NO_VALUE)
+		return EMPTY;
 	TowerType res = EMPTY;
 	for (int i = 0; i < _lots.size(); i++) {
-		if (_lots[i].buttonId = id) {
+		if (_lots[i].buttonId == id) {
 			res = _lots[i].type;
+			break;
+		}
+	}
+	return res;
+}
+
+int TowerShop::GetButtonFromType(TowerType type)
+{
+	int res = NO_VALUE;
+	for (int i = 0; i < _lots.size(); i++) {
+		if (_lots[i].type == type) {
+			res = _lots[i].buttonId;
 			break;
 		}
 	}

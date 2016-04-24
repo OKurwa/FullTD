@@ -2,7 +2,7 @@
 #include <fstream>
 #include "PanelWidget.h"
 
-
+const int NO_VALUE = -1;
 
 
 PanelWidget::PanelWidget(const std::string& name, rapidxml::xml_node<>* elem)
@@ -16,14 +16,13 @@ PanelWidget::PanelWidget(const std::string& name, rapidxml::xml_node<>* elem)
 
 void PanelWidget::Init()
 {
-	_start_w = Core::resourceManager.Get<Render::Texture>("StartWindow");
-	_lose_w = Core::resourceManager.Get<Render::Texture>("LoseWindow");
-	_win_w = Core::resourceManager.Get<Render::Texture>("WinWindow");
-	
+	_menu = new Menu;
+	_menu->LoadFromXml("Menu.xml");
 }
 
 void PanelWidget::Draw()
 {
+	
 	World::WorldInfo info = World::Instance().GetInfo();
 	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
 		Render::BindFont("arial");
@@ -48,19 +47,23 @@ void PanelWidget::Draw()
 		Render::device.SetTexturing(false);
 	}
 		
-		
+	_menu->Draw();
 }
 
 void PanelWidget::Update(float dt)
 {
-		
+	_menu->Update(dt);
 }
 
 
 
 bool PanelWidget::MouseDown(const IPoint &mouse_pos)
 {	
-	
+	int id = World::Instance().GetButtonId();
+	id = _menu->Press(mouse_pos, id);
+	if (id == NO_VALUE)
+		_menu->Reset();
+	World::Instance().SetTowerTypeById(id);
 	
 	return false;
 }
@@ -68,7 +71,7 @@ bool PanelWidget::MouseDown(const IPoint &mouse_pos)
 
 void PanelWidget::MouseMove(const IPoint &mouse_pos)
 {
-	
+	_menu->SetLighter(mouse_pos);
 }
 
 
@@ -107,6 +110,12 @@ void PanelWidget::AcceptMessage(const Message& message)
 		
 
 			
+	}
+	else if (message.getPublisher() == "ChangeGold") {
+		if (message.getIntegerParam() == 1) {
+			_menu->SetDisabled(World::Instance().GetDisabled());
+		}
+
 	}
 }
 

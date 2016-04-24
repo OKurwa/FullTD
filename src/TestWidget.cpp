@@ -46,10 +46,10 @@ void TestWidget::Init()
 	_towerPs.push_back(_towerFactory.createTower(DECAY));
 	_towerPs.push_back(_towerFactory.createTower(BASH));
 	_enableBuildCursor = false;
-	_curTowerType = EMPTY;
+	
 	_selectedTower = nullptr;
-	_tryMenu = new Menu;
-	_tryMenu->LoadFromXml("Menu.xml");
+	//_tryMenu = new Menu;
+	//_tryMenu->LoadFromXml("Menu.xml");
 
 }
 
@@ -86,7 +86,7 @@ void TestWidget::Draw()
 	//if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START)
 	//	World::Instance().Draw();
 	
-	_tryMenu->Draw();
+	//_tryMenu->Draw();
 	//anim->Draw(IPoint(0, 0));
 	//_newMenu->Draw();
 }
@@ -152,7 +152,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 	SwitchTowerType(mouse_pos);
 	if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START) {
 		if (Core::mainInput.GetMouseLeftButton()) {
-			switch (_curTowerType)
+			switch (World::Instance().GetTowerType())
 			{
 			case DESTROY:
 				TryDestroyTower(pos1);
@@ -172,7 +172,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 
 void TestWidget::MouseMove(const IPoint &mouse_pos)
 {
-	_tryMenu->SetLighter(mouse_pos);
+	//_tryMenu->SetLighter(mouse_pos);
 	//_newMenu->SetLighter(mouse_pos);
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->SetHint(mouse_pos);
@@ -217,49 +217,6 @@ void TestWidget::AcceptMessage(const Message& message)
 		if (code == 'a')
 		{
 		}
-		if (code == '1')
-		{
-			_curTowerType = NORMAL;
-		}
-		if (code == '2')
-		{
-			_curTowerType = SPLASH;
-		}
-		if (code == '3')
-		{
-			_curTowerType = SLOW;
-		}
-		if (code == '4')
-		{
-			_curTowerType = DECAY;
-		}
-		if (code == '5')
-		{
-			_curTowerType = BASH;
-		}
-		if (code == 's'|| code == 'S') {
-			_fieldMap.Reset();
-			_towers.clear();
-			_monsters.clear();
-			//_monsterAttack.LoadFromFile("loadMob.txt");
-			_monsterAttack.LoadFromXml("NewMap.xml");
-			_spawnTimer = 0;
-			_spawnTime = 0.7;
-			_curMonsterAttack = 0;
-			_curTowerType = EMPTY;
-			_curMonsterCount = 0;
-			_tryMenu->Reset();
-			//for (int i = 0; i < _monsterAttack.GetAttack()[0].Count(); i++) {
-			//	_monsters[i]->FindAWay();
-			//}
-
-			//_fieldMap.TryInit();
-			//_fieldMap.SaveToFile("save.txt");
-
-			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
-			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
-		}
-		
 	}
 	else if (message.getPublisher() == "StartLayer") {
 		if (message.getIntegerParam() == 1) {
@@ -271,14 +228,14 @@ void TestWidget::AcceptMessage(const Message& message)
 			_spawnTimer = 0;
 			_spawnTime = 0.7;
 			_curMonsterAttack = 0;
-			_curTowerType = EMPTY;
+			
 			_curMonsterCount = 0;
-			_tryMenu->Reset();
+			//_tryMenu->Reset();
 			
 
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
 			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
-			_tryMenu->SetCurGold(World::Instance().Gold());
+			//_tryMenu->SetCurGold(World::Instance().Gold());
 			for (unsigned int i = 0; i < _towers.size(); i++) {
 				_towers[i]->SetCurGold(World::Instance().Gold());
 			}
@@ -286,7 +243,7 @@ void TestWidget::AcceptMessage(const Message& message)
 		
 	} else if(message.getPublisher() == "ChangeGold"){
 		if (message.getIntegerParam() == 1) {
-			_tryMenu->SetCurGold(World::Instance().Gold());
+			//_tryMenu->SetCurGold(World::Instance().Gold());
 			for (unsigned int i = 0; i < _towers.size(); i++) {
 				_towers[i]->SetCurGold(World::Instance().Gold());
 			}
@@ -296,21 +253,21 @@ void TestWidget::AcceptMessage(const Message& message)
 	}
 }
 
-
+//Переключение отображения слотов и курсора
 void TestWidget::SwitchTowerType(IPoint mPos){
 	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
-		_curTowerType = static_cast<TowerType>(_tryMenu->Press(mPos, _curTowerType));
-		if (_curTowerType != EMPTY && _curTowerType != DESTROY) {
+		if (World::Instance().GetTowerType() != EMPTY && World::Instance().GetTowerType() != DESTROY) {
 			_enableBuildCursor = true;
 		}
 		else {
 			_enableBuildCursor = false;
 		}
 
-		_fieldMap.ShowGhosts(_curTowerType);
+		_fieldMap.ShowGhosts(World::Instance().GetTowerType());
 	}
 };
 
+//Разрушение башни
 void TestWidget::TryDestroyTower(IPoint cellPos) {
 	if (_fieldMap.DestroyTower(cellPos)) {
 		int destrIndex = 0;
@@ -381,10 +338,11 @@ void TestWidget::TryUpgradeTower(IPoint cellPos, IPoint mPos) {
 	}
 };
 
+//Постройка башни
 void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
 	if (_fieldMap.AddTower(cellPos)) {
 		TowerParent::Ptr t;
-		t = _towerFactory.createTower(_curTowerType);
+		t = _towerFactory.createTower(World::Instance().GetTowerType());
 
 		if (t) {
 			if (World::Instance().GoldSpend(t->Price())) {
@@ -397,27 +355,27 @@ void TestWidget::TryBuildTower(IPoint cellPos, IPoint cSize) {
 			}
 			else {
 				MM::manager.PlaySample("Denied");
-				_curTowerType = EMPTY;
-				_tryMenu->Reset();
+				World::Instance().SetTowerTypeByType(EMPTY);
+				//_tryMenu->Reset();
 				bool b = _fieldMap.DestroyTower(cellPos);
 			}
 		}
 		else {
-			_curTowerType = EMPTY;
-			_tryMenu->Reset();
+			World::Instance().SetTowerTypeByType(EMPTY);
+			//_tryMenu->Reset();
 			bool b = _fieldMap.DestroyTower(cellPos);
 		}
 	}
 	else if (cellPos != IPoint(-1, -1)) {
-		_curTowerType = EMPTY;
-		_tryMenu->Reset();
-		_fieldMap.ShowGhosts(_curTowerType);
+		World::Instance().SetTowerTypeByType(EMPTY);
+		//_tryMenu->Reset();
+		_fieldMap.ShowGhosts(World::Instance().GetTowerType());
 	}
 };
 
 void TestWidget::DrawBuildCursor() {
 	Render::device.SetTexturing(true);
-	if (_curTowerType != EMPTY && _curTowerType != DESTROY && _enableBuildCursor && _buildCursorPos.x<768) {
+	if (World::Instance().GetTowerType() != EMPTY && World::Instance().GetTowerType() != DESTROY && _enableBuildCursor && _buildCursorPos.x<768) {
 		Render::BeginAlphaMul(0.5);
 		_buildCursor->Draw(IPoint(_buildCursorPos.x - 32, _buildCursorPos.y - 32));
 		Render::EndAlphaMul();

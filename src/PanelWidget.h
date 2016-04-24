@@ -27,9 +27,6 @@ private:
 	float _timer;
 	float _scale;
 	float _angle;
-	
 
-	Render::TexturePtr _start_w;
-	Render::TexturePtr _lose_w;
-	Render::TexturePtr _win_w;
+	Menu::Ptr _menu;
 };

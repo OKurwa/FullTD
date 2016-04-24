@@ -297,4 +297,27 @@ void Menu::LoadFromXml(std::string filename) {
 		Log::log.WriteError(e.what());
 		Assert(false);
 	}
-};
+}
+void Menu::SetDisabled(std::vector<int> toDis)
+{
+
+	for (int i = 0; i < _buttons.size(); i++)
+	{
+		for (int j = 0; j <_buttons[i].size(); j++)
+		{
+			_buttons[i][j]->SetEnabled(true);	
+		}
+	} 
+	for (int i = 0; i < _buttons.size(); i++)
+	{
+		for (int j = 0; j <_buttons[i].size(); j++)
+		{
+			for (int k = 0; k < toDis.size();k++) {
+				if (_buttons[i][j]->Value() == toDis[k]) {
+					_buttons[i][j]->SetEnabled(false);
+				}
+			}
+		}
+	}	
+}
+;

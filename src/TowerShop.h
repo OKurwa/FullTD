@@ -8,6 +8,7 @@ public:
 	void LoadFromXml(std::string);
 	std::vector<int> GetDisabledButtons(int);
 	TowerType GetTypeFromButton(int);
+	int GetButtonFromType(TowerType);
 private:
 	struct LotStruct {
 		TowerType type;

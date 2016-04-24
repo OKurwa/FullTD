@@ -2,7 +2,7 @@
 #include "World.h"
 
 
-void World::SetTowerType(int buttonId)
+void World::SetTowerTypeById(int buttonId)
 {
 	_curTowerType = _shop.GetTypeFromButton(buttonId);
 }
@@ -11,6 +11,11 @@ std::vector<int> World::GetDisabled()
 {
 
 	return _shop.GetDisabledButtons(_gold);
+}
+
+void World::SetTowerTypeByType(TowerType type)
+{
+	_curTowerType = type;
 }
 
 World::World() {
@@ -77,6 +82,11 @@ void World::StartNewAttack(float delay, Attack & atk) {
 		_state = DELAY;
 		_delayTimer = delay;
 		GoldAdd(atk.WGold());
+		/*
+		Message msg = Message("ChangeGold", 1);
+		msg.SetTargetLayer("TestLayer");
+		Core::mainScreen.ProcessMessage(msg);
+		*/
 		++_curAttackIndex;
 		--_attacksRemaining;
 	}
@@ -113,6 +123,9 @@ void World::Update(float dt) {
 };
 void World::GoldAdd(int gold) {
 	_gold += gold;
+	Message msg = Message("ChangeGold", 1);
+	msg.SetTargetLayer("TestLayer");
+	Core::mainScreen.ProcessMessage(msg);
 };
 
 bool World::GoldSpend(int gold) {
@@ -121,6 +134,9 @@ bool World::GoldSpend(int gold) {
 	}
 	else{
 		_gold -= gold;
+		Message msg = Message("ChangeGold", 1);
+		msg.SetTargetLayer("TestLayer");
+		Core::mainScreen.ProcessMessage(msg);
 		return true;
 	}
 };
@@ -131,5 +147,9 @@ void World::LoseLife(int i) {
 TowerType World::GetTowerType()
 {
 	return _curTowerType;
+}
+int World::GetButtonId()
+{
+	return _shop.GetButtonFromType(_curTowerType);
 }
 ;

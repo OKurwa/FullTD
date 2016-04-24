@@ -50,8 +50,10 @@ public:
 	bool GoldSpend(int gold);
 	void LoseLife(int);
 	TowerType GetTowerType();
-	void SetTowerType(int buttonId);
+	int GetButtonId();
+	void SetTowerTypeById(int buttonId);
 	std::vector<int> GetDisabled();
+	void SetTowerTypeByType(TowerType);
 private:
 	World();
 	World(const World& root);

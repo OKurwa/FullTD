@@ -65,6 +65,7 @@ public:
 	void Reset();
 	void SetCurGold(int);
 	void LoadFromXml(std::string);
+	void SetDisabled(std::vector<int>);
 private:
 	IRect _rect;
 	IPoint _buttonSize;
