@@ -47,18 +47,17 @@ public:
 
 	virtual void DealDamage();
 
-	virtual Ptr clone() = 0;
+	virtual Ptr Clone() = 0;
 	
-	FPoint Position();
+	//FPoint Position();
 
-	FPoint TargetPosition();
+	//FPoint TargetPosition();
 
 	void SetPosition(FPoint);
 
 	TowerType Type();
 
-	bool isFlying();
-
+	//bool isFlying();
 	bool Hit();
 
 	void MakePath();
@@ -110,7 +109,7 @@ public:
 	
 	void DealDamage() override;
 	
-	NormalMissile::Ptr clone() {
+	NormalMissile::Ptr Clone() {
 		return new NormalMissile(*this);
 	}
 	
@@ -137,7 +136,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr clone() {
+	FireParent::Ptr Clone() {
 		return new SlowMissile(*this);
 	}
 	
@@ -166,7 +165,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr clone() {
+	FireParent::Ptr Clone() {
 		return new DecayMissile(*this);
 	}
 	
@@ -192,7 +191,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr clone() {
+	FireParent::Ptr Clone() {
 		return new BashMissile(*this);
 	}
 	
@@ -218,7 +217,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr clone() {
+	FireParent::Ptr Clone() {
 		return new SplashMissile(*this);
 	}
 	

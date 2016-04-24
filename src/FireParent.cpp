@@ -82,14 +82,14 @@ void FireParent::Update(float dt) {
 
 void FireParent::DealDamage() {
 };
-
+/*
 FPoint FireParent::Position() { 
 	return _position; 
-};
-
+};*/
+/*
 FPoint FireParent::TargetPosition() {
 	return _targetPosition;
-};
+};*/
 
 void FireParent::SetPosition(FPoint pos) {
 	_position = pos;
@@ -99,10 +99,10 @@ TowerType FireParent::Type() {
 	return _missileType;
 
 };
-
+/*
 bool FireParent::isFlying() {
 	return _fly;
-};
+};*/
 
 bool FireParent::Hit() {
 	if (_misEff && _hitEff) {
