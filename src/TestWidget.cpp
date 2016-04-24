@@ -55,11 +55,16 @@ void TestWidget::Init()
 	_towerPs.push_back(_towerFactory.createTower(SLOW));
 	_towerPs.push_back(_towerFactory.createTower(DECAY));
 	_towerPs.push_back(_towerFactory.createTower(BASH));
-	_tryMenu = new Menu(info, _towerPs);
+	//_tryMenu = new Menu(info, _towerPs);
     //anim = Core::resourceManager.Get<Render::Animation>("FireAntAttackAnimation");
 	_enableBuildCursor = false;
 	_curTowerType = EMPTY;
 	_selectedTower = nullptr;
+	//_newMenu = new Menu;
+	//_newMenu->LoadFromXml("Menu.xml");
+	_tryMenu = new Menu;
+	_tryMenu->LoadFromXml("Menu.xml");
+
 }
 
 void TestWidget::Draw()
@@ -97,11 +102,13 @@ void TestWidget::Draw()
 	
 	_tryMenu->Draw();
 	//anim->Draw(IPoint(0, 0));
-
+	//_newMenu->Draw();
 }
 
 void TestWidget::Update(float dt)
 {
+
+	//_newMenu->Update(dt);
 	//anim->Update(dt*0.5);
 	if (World::Instance().State() == LOSE || World::Instance().State() == WIN)
 		dt *= 0;
@@ -180,6 +187,7 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 void TestWidget::MouseMove(const IPoint &mouse_pos)
 {
 	_tryMenu->SetLighter(mouse_pos);
+	//_newMenu->SetLighter(mouse_pos);
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->SetHint(mouse_pos);
 	}
@@ -305,7 +313,7 @@ void TestWidget::AcceptMessage(const Message& message)
 
 void TestWidget::SwitchTowerType(IPoint mPos){
 	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
-		_curTowerType = _tryMenu->Press(mPos, _curTowerType);
+		_curTowerType = static_cast<TowerType>(_tryMenu->Press(mPos, _curTowerType));
 		if (_curTowerType != EMPTY && _curTowerType != DESTROY) {
 			_enableBuildCursor = true;
 		}
