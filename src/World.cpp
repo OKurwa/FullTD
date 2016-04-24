@@ -2,6 +2,17 @@
 #include "World.h"
 
 
+void World::SetTowerType(int buttonId)
+{
+	_curTowerType = _shop.GetTypeFromButton(buttonId);
+}
+
+std::vector<int> World::GetDisabled()
+{
+
+	return _shop.GetDisabledButtons(_gold);
+}
+
 World::World() {
 	
 };
@@ -29,6 +40,8 @@ void World::Init(	int gold,
 	}else{
 		_state = WIN;
 	}
+	_shop.LoadFromXml("NewMap.xml");
+	_curTowerType = EMPTY;
 };
 
 
@@ -114,4 +127,9 @@ bool World::GoldSpend(int gold) {
 
 void World::LoseLife(int i) {
 	_lives-=i;
-};
+}
+TowerType World::GetTowerType()
+{
+	return _curTowerType;
+}
+;

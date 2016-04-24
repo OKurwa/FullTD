@@ -38,30 +38,16 @@ void TestWidget::Init()
 	_texButtons = Core::resourceManager.Get<Render::Texture>("Towers");
 	_buildCursor = Core::resourceManager.Get<Render::Texture>("Ghost");
 	_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
-
-
-	Menu::MenuInfo info;
-	info._rect = IRect(768 +  (1024 - 768 - 128) / 2,44,128,192);
-	info._buttonSize = IPoint(64,64);
-	info._size = IPoint(2, 3);
-	info._buttonsTex = Core::resourceManager.Get<Render::Texture>("Towers");
-	
-	//TowerParent * t = new TowerParent(FPoint(32, 32), 0, 0, 0, 0, 0, nullptr);
-	//_towers.push_back(t);
-	
+		
 	_towerFactory.Init("NewMap.xml");
 	_towerPs.push_back(_towerFactory.createTower(NORMAL));
 	_towerPs.push_back(_towerFactory.createTower(SPLASH));
 	_towerPs.push_back(_towerFactory.createTower(SLOW));
 	_towerPs.push_back(_towerFactory.createTower(DECAY));
 	_towerPs.push_back(_towerFactory.createTower(BASH));
-	//_tryMenu = new Menu(info, _towerPs);
-    //anim = Core::resourceManager.Get<Render::Animation>("FireAntAttackAnimation");
 	_enableBuildCursor = false;
 	_curTowerType = EMPTY;
 	_selectedTower = nullptr;
-	//_newMenu = new Menu;
-	//_newMenu->LoadFromXml("Menu.xml");
 	_tryMenu = new Menu;
 	_tryMenu->LoadFromXml("Menu.xml");
 

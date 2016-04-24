@@ -1,4 +1,6 @@
 #pragma once
+
+//Класс подсказки
 class Hint : public RefCounter{
 public:
 	typedef boost::intrusive_ptr<Hint> Ptr;

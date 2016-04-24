@@ -227,7 +227,14 @@
 		</Tower>
 
 	</Towers>
-	
+	<Shop>
+		<Lot towerId = "NormalTower" menuButtonId = "0"/>
+		<Lot towerId = "SplashTower" menuButtonId = "1"/>
+		<Lot towerId = "SlowTower" menuButtonId = "2"/>
+		<Lot towerId = "DecayTower" menuButtonId = "3"/>
+		<Lot towerId = "BashTower" menuButtonId = "4"/>
+		<Lot towerId = "Destroy" menuButtonId = "5"/>
+	</Shop>
 	
 	
 </Game>

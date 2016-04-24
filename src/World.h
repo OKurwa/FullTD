@@ -1,6 +1,7 @@
 #pragma once
 #include "MonsterAttack.h"
 #include "TowerParent.h"
+#include "TowerShop.h"
 
 enum GameState {
 	START,
@@ -40,6 +41,7 @@ public:
 				MonsterAttack & attacks);
 	
 	WorldInfo GetInfo();
+
 	GameState State();
 	void StartNewAttack(float delay, Attack & atk);
 	int Gold();
@@ -47,7 +49,9 @@ public:
 	void GoldAdd(int gold);
 	bool GoldSpend(int gold);
 	void LoseLife(int);
-	
+	TowerType GetTowerType();
+	void SetTowerType(int buttonId);
+	std::vector<int> GetDisabled();
 private:
 	World();
 	World(const World& root);
@@ -61,6 +65,7 @@ private:
 	int _monstersRemaining;
 	int _lives;
 	int _curAttackIndex;
+	TowerType _curTowerType;
 	int _maxHP;
 	int _speed;
 	int _gpm;
@@ -68,6 +73,6 @@ private:
 	std::string _curAttackType;
 	float _delayTimer;
 	GameState _state;
-	
+	TowerShop _shop;
 	//MonsterAttack _attacks;
 };

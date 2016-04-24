@@ -19,6 +19,7 @@ void PanelWidget::Init()
 	_start_w = Core::resourceManager.Get<Render::Texture>("StartWindow");
 	_lose_w = Core::resourceManager.Get<Render::Texture>("LoseWindow");
 	_win_w = Core::resourceManager.Get<Render::Texture>("WinWindow");
+	
 }
 
 void PanelWidget::Draw()
