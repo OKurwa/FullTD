@@ -36,7 +36,7 @@
 		<texture id="ButtonRed2" path="textures/ButtonRed2.png"/>
 		<texture id="ButtonGreen1" path="textures/ButtonGreen1.png"/>
 		<texture id="StartWave" path="textures/startWave.png"/>
-		
+		<texture id="Circle" path="textures/round.png"/>
 	<!-- Текстуры башен-->
 		<texture id="Ant" path="textures/towers/black_ant_light.png"/>
 		<texture id="IceAnt" path="textures/towers/ice_ant.png"/>

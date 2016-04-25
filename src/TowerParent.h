@@ -16,8 +16,9 @@ class TowerParent : public RefCounter
 public:
 	typedef boost::intrusive_ptr<TowerParent> Ptr;
 	TowerParent();
-	//TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~TowerParent();
+	void RangeDraw();
 	void Draw();
 	void UpgradeDraw();
 	void Update(float dt);
@@ -74,7 +75,7 @@ protected:
 	ParticleEffectPtr _upEff;
 	EffectsContainer _upCont;
 
-
+	Render::TexturePtr _texCircle;
 	bool _hint;
 };
 

@@ -22,32 +22,29 @@ TowerParent::TowerParent() {
 	_missileSpeed = 0;
 	_missiles.clear();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
+	_texCircle = Core::resourceManager.Get<Render::Texture>("Circle");
 	_damage = IPoint(0, 0);
 	_lvl = 0;
 	_curGold = 0;
 	_showUpgradeButton = false;
 };
-/*
-TowerParent::TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
-	//_towerType = "name";
-	_position = position;
-	_cell = cell;
-	_target = nullptr;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_damage = dmg;
-	_missileSpeed = mSpeed;
-	_missiles.clear();
-	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-};*/
+
 
 TowerParent::~TowerParent() {
-};
+}
+void TowerParent::RangeDraw()
+{
+	if (_hint) {
+		Render::BeginAlphaMul(0.15);
+		_texCircle->Draw(IRect(_position.x - _range, _position.y - _range, _range * 2, _range * 2), FRect(0, 1, 0, 1));
+		Render::EndAlphaMul();
+	}
+}
+;
 
 void TowerParent::Draw() {
-
-
+	
+	
 	for (unsigned int i = 0; i < _missiles.size(); i++) {
 		_missiles[i]->Draw();
 	}
@@ -107,7 +104,7 @@ void TowerParent::UpgradeDraw() {
 
 		DrawHintText(rect);
 
-
+		
 	}
 	// нопка апгрейда
 	if (_showUpgradeButton && _lvl < _lvlCount) {

@@ -37,8 +37,6 @@ void TestWidget::Init()
 	}
 	_texButtons = Core::resourceManager.Get<Render::Texture>("Towers");
 	_buildCursor = Core::resourceManager.Get<Render::Texture>("Ghost");
-	
-		
 	_towerFactory.Init("Towers.xml");
 	//_towerPs.push_back(_towerFactory.createTower(NORMAL));
 	//_towerPs.push_back(_towerFactory.createTower(SPLASH));
@@ -73,6 +71,10 @@ void TestWidget::Draw()
 
 	for (unsigned int i = 0; i < _monsters.size(); i++) {
 		_monsters[i]->DrawMeat();
+	}
+
+	for (unsigned int i = 0; i < _towers.size(); i++) {
+		_towers[i]->RangeDraw();
 	}
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->Draw();
