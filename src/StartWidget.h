@@ -27,6 +27,7 @@ private:
 	float _scale;
 	float _angle;
 	
+	Menu::Ptr _startMenu;
 
 	Render::TexturePtr _start_w;
 	Render::TexturePtr _lose_w;

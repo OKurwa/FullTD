@@ -4,6 +4,21 @@
 		<font name="arial" family="arial" size="12" color="255;255;255;255" letterSpacing="0">
 			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
 		</font>
+		<font name="dikovina_10" family="dikovina" size="10" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
+		<font name="dikovina_12" family="dikovina" size="12" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
+		<font name="dikovina_16" family="dikovina" size="16" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
+		<font name="dikovina_24" family="dikovina" size="24" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
+		<font name="dikovina_title" family="dikovina" size="24" color="255;255;255;255" letterSpacing="0">
+			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
+		</font>
 	</FreeTypeFonts>
 	<Textures>
 		<texture id="TestGrass" path="textures/grass/grass0062.png"/>
@@ -18,6 +33,8 @@
 		<texture id="Up" path="textures/up.png"/>
 		<texture id="Hint" path="textures/hint_w.png"/>
 		<texture id="Meat" path="textures/Cutlet.png"/>
+		<texture id="ButtonRed2" path="textures/ButtonRed2.png"/>
+		<texture id="ButtonGreen1" path="textures/ButtonGreen1.png"/>
 		
 	<!-- Текстуры башен-->
 		<texture id="Ant" path="textures/towers/black_ant_light.png"/>

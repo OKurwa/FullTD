@@ -73,7 +73,7 @@ void TowerParent::Draw() {
 	}
 	
 	
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_12");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(IPoint(_position.x-_cellSize.x/2,_position.y- _cellSize.y / 2), utils::lexical_cast(_lvl+1), 1.00f, LeftAlign, BottomAlign);
 	Render::EndColor();
@@ -131,13 +131,13 @@ void TowerParent::UpgradeDraw() {
 
 
 			if (_curGold < UpgradePrice()) {
-				Render::BindFont("arial");
+				Render::BindFont("dikovina_12");
 				Render::BeginColor(Color(255, 0, 0, 255));
 				Render::PrintString(_upgradeButtonRect.RightBottom(), utils::lexical_cast(UpgradePrice()), 1.00f, RightAlign, BottomAlign);
 				Render::EndColor();
 			}
 			else {
-				Render::BindFont("arial");
+				Render::BindFont("dikovina_12");
 				Render::BeginColor(Color(255, 255, 255, 255));
 				Render::PrintString(_upgradeButtonRect.RightBottom(), utils::lexical_cast(UpgradePrice()), 1.00f, RightAlign, BottomAlign);
 				Render::EndColor();
@@ -486,7 +486,7 @@ int  NormalTower::UpgradePrice() {
 
 void NormalTower::DrawHintText(IRect rect) {
 
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(FPoint(rect.x + rect.Width()/2, rect.y + 105), "Normal tower: "+ utils::lexical_cast(_lvl + 1) +" lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
@@ -571,7 +571,7 @@ int  SlowTower::UpgradePrice() {
 
 void SlowTower::DrawHintText(IRect rect) {
 
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Slow tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
@@ -656,7 +656,7 @@ int  DecayTower::UpgradePrice() {
 
 void DecayTower::DrawHintText(IRect rect) {
 
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Poison tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
@@ -742,7 +742,7 @@ int  BashTower::UpgradePrice() {
 
 void BashTower::DrawHintText(IRect rect) {
 
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Bash tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
@@ -831,7 +831,7 @@ int  SplashTower::UpgradePrice() {
 
 void SplashTower::DrawHintText(IRect rect) {
 
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Splash tower: " + utils::lexical_cast(_lvl+1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);

@@ -97,7 +97,7 @@ void TestWidget::Update(float dt)
 	//_newMenu->Update(dt);
 	//anim->Update(dt*0.5);
 	if (World::Instance().State() == LOSE || World::Instance().State() == WIN)
-		dt *= 0;
+		Core::mainScreen.pushLayer("StartLayer");
 	//dt *= 0.5;
 	_fieldMap.Update(dt);
 	for (unsigned int i = 0; i < _monsters.size(); i++) {

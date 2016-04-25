@@ -6,6 +6,7 @@
 class Button : public RefCounter
 {
 public:
+	static const int NO_VALUE = -1;
 	typedef boost::intrusive_ptr<Button> Ptr;
 	Button();
 	~Button() {};
@@ -43,6 +44,7 @@ private:
 //Μενώ
 class Menu : public RefCounter {
 public:
+	
 	struct MenuInfo {
 		IRect _rect;
 		IPoint _buttonSize;

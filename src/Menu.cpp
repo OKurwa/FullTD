@@ -57,9 +57,9 @@ void Button::Draw() {
 		Render::device.SetTexturing(true);
 		
 	}
-	Render::BindFont("arial");
+	Render::BindFont("dikovina_12");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(_pos.x + _size.x, _pos.y, _cornerText, 1.0f, RightAlign, BottomAlign);
+	Render::PrintString(_pos.x + _size.x - 1, _pos.y + 1, _cornerText, 1.0f, RightAlign, BottomAlign);
 	Render::EndColor();
 
 };

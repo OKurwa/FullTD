@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+	
+<Menu cols="2" rows = "1" posX = "184" posY = "220" width = "410" height = "110" buttonWidth = "200" buttonHeight = "100">
+	<Button id = "0" texture = "ButtonGreen1" uStart = "0" uEnd = "1" vStart = "0" vEnd = "1">
+			
+	</Button>
+	<Button id = "1" texture = "ButtonRed2" uStart = "0" uEnd = "1" vStart = "0" vEnd = "1">
+		
+	</Button>
+</Menu>
