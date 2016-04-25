@@ -158,7 +158,17 @@ void Button::SetMenuPos(IPoint menuPos) {
 
 void Button::SetEnabled(bool e) {
 	_enabled = e;
-};
+}
+void Button::MoveBy(IPoint d)
+{
+	_rect.MoveBy(d);
+	_pos += d;
+}
+void Button::SetCornerText(std::string text)
+{
+	_cornerText = text;
+}
+;
 
 
 
@@ -308,5 +318,19 @@ void Menu::SetDisabled(std::vector<int> toDis)
 			}
 		}
 	}	
+}
+void Menu::MoveTo(IPoint pos)
+{
+	IPoint d = pos - IPoint(_rect.x, _rect.y);
+	_rect.MoveTo(pos);
+	for (int i = 0; i < _buttons.size(); i++) {
+		for (int j = 0; j < _buttons[i].size(); j++) {
+			_buttons[i][j]->MoveBy(d);
+		}
+	}
+}
+std::vector<std::vector<Button::Ptr>>& Menu::Buttons()
+{
+	return _buttons;
 }
 ;

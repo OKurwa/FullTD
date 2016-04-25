@@ -84,6 +84,6 @@ private:
 	TowerType _curTowerType;
 	
 
-
-	
+	Menu::Ptr _startButton;
+	Menu::Ptr _getMeatButton;
 };

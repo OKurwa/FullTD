@@ -36,7 +36,7 @@ void PanelWidget::Draw()
 	Render::BindFont("dikovina_12");
 	World::WorldInfo info = World::Instance().GetInfo();
 
-	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
+	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE || World::Instance().State() == START) {
 		
 		Render::device.SetTexturing(true);
 
@@ -45,10 +45,10 @@ void PanelWidget::Draw()
 		
 		Render::BeginColor(Color(255, 255, 255, 255));
 		Render::BindFont("dikovina_16");
-		Render::PrintString(FPoint(820, 600), "%HP%" + utils::lexical_cast(info.HP), 1.00f, LeftAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 600), "%HP%" + utils::lexical_cast(info.HP), 1.00f, CenterAlign, BottomAlign);
 		Render::BindFont("dikovina_12");
-		Render::PrintString(FPoint(820, 580), "%WB%" + utils::lexical_cast(math::round(info.delayTimer)) + "%SEC%", 1.00f, LeftAlign, BottomAlign);
-		Render::PrintString(FPoint(820, 560), "%WR%" + utils::lexical_cast(info.attacksRemaining), 1.00f, LeftAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 580), "%WB%" + utils::lexical_cast(math::round(info.delayTimer)) + "%SEC%", 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 560), "%WR%" + utils::lexical_cast(info.attacksRemaining), 1.00f, CenterAlign, BottomAlign);
 		Render::PrintString(FPoint(896, 520), "%CW%" + utils::lexical_cast(info.curAttack), 1.00f, CenterAlign, BottomAlign);
 		Render::PrintString(FPoint(896, 500), "%NAME%" + info.name, 1.00f, CenterAlign, BottomAlign);
 		Render::PrintString(FPoint(896, 480), "%TYPE%" + info.type, 1.00f, CenterAlign, BottomAlign);

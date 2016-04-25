@@ -86,8 +86,14 @@ protected:
 	Render::AnimationPtr _runAnim;
 	Render::AnimationPtr _idleAnim;
 	Render::AnimationPtr _dieAnim;
+	bool _dieAnimEnd;
 
 	Render::TexturePtr _meat;
+	float _meatFlyTimer;
+	static const IPoint _meatTexOffset;
+	static const IPoint _meatTexSize;
+	ParticleEffectPtr _meatEff;
+
 
 	AnimAngles _runAnimAngles;
 	AnimAngles _idleAnimAngles;

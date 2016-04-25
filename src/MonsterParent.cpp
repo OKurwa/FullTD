@@ -4,6 +4,9 @@
 const short FINISH_MARK = 9999;
 const short PASS_MARK = 9998;
 const short NOT_PASS_MARK = -1;
+const IPoint MonsterParent::_meatTexOffset = IPoint(56,71);
+const IPoint MonsterParent::_meatTexSize = IPoint(15, 15);
+
 //----------------------------------------------//
 //----------------------------------------------//
 //			Базовый класс монстра 				//
@@ -33,7 +36,8 @@ MonsterParent::MonsterParent() {
 	_meat = nullptr;
 	_meatCont = 0;
 	_dieSound = "Die";
-
+	_meatFlyTimer = 0;
+	_dieAnimEnd = false;
 	
 	//_stunEff = _Cont.AddEffect("Stun");
 	//_stunEff->Pause();
@@ -85,18 +89,31 @@ void MonsterParent::Draw() {
 			Render::DrawRect(cRect);
 			Render::EndColor();
 
-			_Cont.Draw();
+			
 		}
 	}
+	_Cont.Draw();
 };
 
 void MonsterParent::DrawMeat() {
 	if (_dying && !_dead) {
+
+		//if (_meatEff)
+		//	_meatEff->Draw();
 		IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
-		_meat->Draw(FRect(pos.x + 56, pos.x + 71, pos.y + 86, pos.y + 101), FRect(0, 1, 0, 1));
-		Render::BindFont("arial");
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(pos.x + 71, pos.y + 86), "+" + utils::lexical_cast(_meatCont), 1.00f, LeftAlign, BottomAlign);
+		Render::BeginColor(Color(255, 255, 255, 255 - 255 * _meatFlyTimer/2));
+		if (_meatFlyTimer > 0 && _meatFlyTimer <= 0.50) {
+			_meat->Draw(FRect(pos.x + _meatTexOffset.x - 10 * _meatFlyTimer,
+				pos.x + _meatTexOffset.x + _meatTexSize.x + 10 * _meatFlyTimer,
+				pos.y + _meatTexOffset.y + 10 * _meatFlyTimer,
+				pos.y + _meatTexOffset.y + _meatTexSize.y + 20 * _meatFlyTimer),
+				FRect(0, 1, 0, 1));
+
+			Render::BindFont("dikovina_12");
+
+			Render::PrintString(FPoint(pos.x + _meatTexOffset.x + _meatTexSize.x + 10 * _meatFlyTimer, pos.y + _meatTexOffset.y + 10 * _meatFlyTimer), "+" + utils::lexical_cast(_meatCont), 1.00f + _meatFlyTimer, LeftAlign, BottomAlign);
+		}
+		
 		Render::EndColor();
 	}
 	
@@ -130,15 +147,21 @@ void MonsterParent::Update(float dt) {
 	if (_hp <= 0 && !_dying) {
 		_dying = true;	
 		MM::manager.PlaySample(_dieSound);
+		_meatEff = _Cont.AddEffect("MeatEff");
+		_meatEff->posX = _position.x;
+		_meatEff->posY = _position.y;
+		_meatEff->Reset();
 	}
 	
 	PostUpdate(dt);
 
-	if(_dieAnim->IsFinished())
+	if(_dieAnim->IsFinished() && _meatFlyTimer > 0.5)
 		_dead = true;
-	if (_dying && !_dieAnim->IsPlaying()) {
+	
+	
+	if (_dying && !_dieAnim->IsPlaying() && !_dieAnimEnd) {
 		_dieAnim->setPlayback(true);
-		
+		_dieAnimEnd = true;
 	}
 	float edt = dt;
 	edt *= (1 - _slow.x)*(1 - _bash.x);
@@ -168,6 +191,7 @@ void MonsterParent::Update(float dt) {
 			
 		}
 		else {
+			_meatFlyTimer += dt;
 			_dieAnim->Update(dt);
 		}
 		

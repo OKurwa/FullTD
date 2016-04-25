@@ -50,7 +50,11 @@ void TestWidget::Init()
 	_selectedTower = nullptr;
 	//_tryMenu = new Menu;
 	//_tryMenu->LoadFromXml("Menu.xml");
-
+	_startButton = new Menu;
+	_startButton->LoadFromXml("WaveButton.xml");
+	IPoint cellPos = _fieldMap.GetSpawnCell();
+	IPoint cellSize = _fieldMap.CellSize();
+	_startButton->MoveTo(IPoint(cellPos.x*cellSize.x, cellPos.y*cellSize.y));
 }
 
 void TestWidget::Draw()
@@ -79,8 +83,8 @@ void TestWidget::Draw()
 	}
 	
 	DrawBuildCursor();
-		
-	
+	if(World::Instance().State() != WAVE)
+		_startButton->Draw();
 	
 	
 }
@@ -98,11 +102,11 @@ void TestWidget::Update(float dt)
 		_monsters[i]->Update(dt);
 		if (_monsters[i]->Dying()) {
 			World::Instance().GoldAdd(_monsters[i]->TakeMonsterMeat());
-		}	
+		}
 	}
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->Update(dt);
-		
+
 	}
 
 	for (unsigned int i = 0; i < _towers.size(); i++) {
@@ -124,24 +128,45 @@ void TestWidget::Update(float dt)
 	//Сброс задержки спавна монстра
 	if (_spawnTimer > _spawnTime)
 		_spawnTimer = 0;
-	
-	
+
+
 	World::Instance().Update(dt);
+	if (World::Instance().State() == DELAY) {
+		_startButton->Buttons()[0][0]->SetCornerText(utils::lexical_cast((int)World::Instance().GetInfo().delayTimer)+" ");
+	}
+	else {
+		_startButton->Buttons()[0][0]->SetCornerText("");
+	}
 	
 }
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
-{	
+{
+	int a = _startButton->Press(mouse_pos, Button::NO_VALUE);
+	if (a == 0 && World::Instance().State() == DELAY) {
+		World::Instance().GoldAdd(World::Instance().EarlyStart());
+		_startButton->Reset();
+	}
+	if (a == 0 && World::Instance().State() == START) {
+		World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
+		_startButton->Reset();
+	}
+	
+
 	IPoint fieldSize = _fieldMap.Size();
 	IPoint cellSize = _fieldMap.CellSize();
 	IPoint pos1 = _fieldMap.PosCell(mouse_pos);
 	_fieldMap.SelectCell(mouse_pos);
 	
+
+
+
+
 	////////////////////////////////////////
 	//			 Создание башни           //
 	////////////////////////////////////////
 	SwitchTowerType(mouse_pos);
-	if (World::Instance().State() != WIN && World::Instance().State() != LOSE && World::Instance().State() != START) {
+	if (World::Instance().State() != WIN && World::Instance().State() != LOSE) {
 		if (Core::mainInput.GetMouseLeftButton()) {
 			switch (World::Instance().GetTowerType())
 			{
@@ -163,8 +188,8 @@ bool TestWidget::MouseDown(const IPoint &mouse_pos)
 
 void TestWidget::MouseMove(const IPoint &mouse_pos)
 {
-	//_tryMenu->SetLighter(mouse_pos);
-	//_newMenu->SetLighter(mouse_pos);
+	_startButton->SetLighter(mouse_pos);
+	
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->SetHint(mouse_pos);
 	}
@@ -219,17 +244,8 @@ void TestWidget::AcceptMessage(const Message& message)
 			_spawnTimer = 0;
 			_spawnTime = 0.7;
 			_curMonsterAttack = 0;
-			
 			_curMonsterCount = 0;
-			//_tryMenu->Reset();
-			
-
 			World::Instance().Init(100, _monsterAttack.GetAttack().size(), _monsterAttack.GetAttack()[0].Count(), _monsterAttack.GetAttack()[0].Count(), 20, _monsterAttack);
-			World::Instance().StartNewAttack(_monsterAttack.Delay(), _monsterAttack.GetAttack()[0]);
-			//_tryMenu->SetCurGold(World::Instance().Gold());
-			for (unsigned int i = 0; i < _towers.size(); i++) {
-				_towers[i]->SetCurGold(World::Instance().Gold());
-			}
 		}
 		
 	} else if(message.getPublisher() == "ChangeGold"){
@@ -246,7 +262,7 @@ void TestWidget::AcceptMessage(const Message& message)
 
 //Переключение отображения слотов и курсора
 void TestWidget::SwitchTowerType(IPoint mPos){
-	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
+	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE || World::Instance().State() == START) {
 		if (World::Instance().GetTowerType() != EMPTY && World::Instance().GetTowerType() != DESTROY) {
 			_enableBuildCursor = true;
 		}

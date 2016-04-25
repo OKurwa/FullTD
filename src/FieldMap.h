@@ -84,7 +84,7 @@ public:
 	void ShowGhosts(TowerType);
 	void Reset();
 	std::vector<std::vector<FieldCell::Ptr>> Cells();
-
+	IPoint GetSpawnCell();
 private:
 	
 	IPoint _size;

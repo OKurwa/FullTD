@@ -54,6 +54,7 @@ public:
 	void SetTowerTypeById(int buttonId);
 	std::vector<int> GetDisabled();
 	void SetTowerTypeByType(TowerType);
+	int EarlyStart();
 private:
 	World();
 	World(const World& root);

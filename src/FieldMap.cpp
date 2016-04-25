@@ -293,7 +293,20 @@ void FieldMap::Reset() {
 
 std::vector<std::vector<boost::intrusive_ptr<FieldCell>>> FieldMap::Cells() {
 	return _cells;
-};
+}
+IPoint FieldMap::GetSpawnCell()
+{
+
+	for (unsigned int i = 0; i < _cells.size(); i++) {
+		for (unsigned int j = 0; j < _cells.size(); j++) {
+			if (_cells[i][j]->Type() == SPAWN) {
+				return IPoint(i,j);
+			}
+		}
+	}
+	return IPoint(0,0);
+}
+;
 
 
 

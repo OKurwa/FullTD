@@ -18,6 +18,13 @@ void World::SetTowerTypeByType(TowerType type)
 	_curTowerType = type;
 }
 
+int World::EarlyStart()
+{
+	int gold = _delayTimer;
+	_delayTimer = 0;
+	return gold;
+}
+
 World::World() {
 	
 };
@@ -50,6 +57,7 @@ void World::Init(	int gold,
 	Message msg = Message("ChangeGold", 1);
 	msg.SetTargetLayer("TestLayer");
 	Core::mainScreen.ProcessMessage(msg);
+	_delayTimer = attacks.Delay();
 };
 
 

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+	
+<Menu cols="1" rows = "1" posX = "0" posY = "0" width = "64" height = "64" buttonWidth = "64" buttonHeight = "64">
+	<Button id = "0" texture = "StartWave" uStart = "0" uEnd = "1" vStart = "0" vEnd = "1">
+			
+	</Button>
+</Menu>

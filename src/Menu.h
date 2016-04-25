@@ -22,6 +22,8 @@ public:
 	void SetRect(IRect);
 	void SetMenuPos(IPoint);
 	void SetEnabled(bool);
+	void MoveBy(IPoint);
+	void SetCornerText(std::string);
 private:
 	Render::TexturePtr _tex;
 	IRect _rect;
@@ -68,6 +70,8 @@ public:
 	
 	void LoadFromXml(std::string);
 	void SetDisabled(std::vector<int>);
+	void MoveTo(IPoint);
+	std::vector<std::vector<Button::Ptr>> & Buttons();
 private:
 	IRect _rect;
 	IPoint _buttonSize;
