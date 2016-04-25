@@ -28,18 +28,13 @@ public:
 	FieldCell();
 	~FieldCell();
 	
-	//FieldCell(const FieldCell&);
-	//FieldCell& operator = (const FieldCell&);
+	
 	void Init(CellType cell, IPoint size, FPoint position);
 	void Draw();
 	CellType Type();
-	//IPoint Size();
-	//FPoint Position();
+	
 	bool Selected();
-	//void SetPos(FPoint);
-	//void SetSize(IPoint);
-	//void SetTexture(std::string);
-	//void SetType(CellType cell);
+	
 	void Select();
 	void UnSelect();
 	bool AddTower();
@@ -56,7 +51,7 @@ private:
 	IPoint _size;
 	FPoint _position;
 	FRect  _uvRect;
-	//IPoint _coords;
+	
 	
 	Render::TexturePtr _tex;
 	Render::TexturePtr _ghost;
@@ -74,7 +69,7 @@ class FieldMap
 public:
 	FieldMap() ;
 	~FieldMap();
-	//void Init();
+	
 	void LoadFromXml(std::string);
 	void Draw();
 	void Update(float dt);
@@ -91,7 +86,7 @@ public:
 	std::vector<std::vector<FieldCell::Ptr>> Cells();
 
 private:
-	//int ref_cnt_;
+	
 	IPoint _size;
 	IPoint _cellSize;
 	std::vector<std::vector<FieldCell::Ptr>> _cells;

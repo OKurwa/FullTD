@@ -37,54 +37,28 @@ MonsterParent::MonsterParent() {
 	_curWaySplineY.Clear();
 };
 
-MonsterParent::MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * map, Render::TexturePtr skin) {
-	_position = position;
-	_modSpeed = modSpeed;
-	_map = map;
-	_curCell = map->PosCell(_position);
-	_curWayDistance = 0;
-	float timer = 0;
-	if (FindAWay()) {
-		_curWaySplineX.addKey(timer, _position.x);
-		_curWaySplineY.addKey(timer, _position.y);
-		for (int i = 1; i < _currentWay.size(); i++) {
-			FPoint newCell = FPoint(_currentWay[i].x * _map->CellSize().x + _map->CellSize().x / 2, _currentWay[i].y * _map->CellSize().y + _map->CellSize().y / 2);
-			FPoint oldCell = FPoint(_currentWay[i - 1].x * _map->CellSize().x + _map->CellSize().x / 2, _currentWay[i - 1].y * _map->CellSize().y + _map->CellSize().y / 2);
-			float distance = sqrt((newCell.x - oldCell.x)*(newCell.x - oldCell.x) + (newCell.y - oldCell.y)*(newCell.y - oldCell.y));
-			_curWayDistance += distance;
-			timer += distance / _modSpeed;
-			_curWaySplineX.addKey(timer, newCell.x);
-			_curWaySplineY.addKey(timer, newCell.y);
-
-		}
-		_curWaySplineX.CalculateGradient();
-		_curWaySplineY.CalculateGradient();
-	}
-	else {
-		_curWaySplineX.Clear();
-		_curWaySplineY.Clear();
-	}
-	
-	
-
-	_moveTimer = 0;
-	
-	
-	_hp = hp;
-	_maxHp = _hp;
-	_empty = false;
-	
-	_skin = skin;
-	_dead = false;
-	_finish = false;
-};
-
 MonsterParent::~MonsterParent() {};
 
 void MonsterParent::Draw() {
 	if (!_dead && !_finish) {
-
+		
 		if (_idleAnim && _runAnim && _dieAnim) {
+			
+			Color color = Color(255, 255, 255, 255);
+			if (_slow.x > 0 && _decay.x > 0) {
+				color = Color(0, 250, 154, 255);
+			}
+			if (_slow.x > 0) {
+				color = Color(60, 124, 255, 255);
+			}
+			else if (_decay.x>0) {
+				color = Color(124, 252, 0, 255);
+			}
+				
+			
+				
+			
+			Render::BeginColor(color);
 			IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
 			Render::device.SetTexturing(true);
 			if (!_dying) {
@@ -102,16 +76,13 @@ void MonsterParent::Draw() {
 				_dieAnim->Draw(pos);
 
 			}
-			//Render::device.PopMatrix();
-
+			
+			Render::EndColor();
 			Render::device.SetTexturing(false);
 			int width = 30 * _hp / _maxHp;
 			if (width < 0)
 				width = 0;
 			IRect cRect = IRect(_position.x - 15, _position.y - 15, width, 5);
-			//Render::device.SetTexturing(false);
-			Render::BindFont("arial");
-			//Render::BeginColor(Color(255 - 255*_hp / _maxHp, 255* _hp / _maxHp, 0, 255));
 			Render::BeginColor(Color(0, 255, 0, 255));
 			Render::DrawRect(cRect);
 			Render::EndColor();
@@ -235,7 +206,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setFirstPlayedFrame(_dieAnimAngles._a315.x);
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a315.y);
 					_dieAnim->setCurrentFrame(0);
-					//_dieAnim->setPlayback(true);
+					
 
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
@@ -292,7 +263,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setFirstPlayedFrame(_dieAnimAngles._a225.x);
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a225.y);
 					_dieAnim->setCurrentFrame(0);
-					//_dieAnim->setPlayback(true);
+					
 
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
@@ -320,8 +291,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setFirstPlayedFrame(_dieAnimAngles._a180.x);
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a180.y);
 					_dieAnim->setCurrentFrame(0);
-					//_dieAnim->setPlayback(true);
-
+					
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
 
@@ -348,7 +318,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setFirstPlayedFrame(_dieAnimAngles._a135.x);
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a135.y);
 					_dieAnim->setCurrentFrame(0);
-					//_dieAnim->setPlayback(true);
+					
 
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
@@ -377,7 +347,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setFirstPlayedFrame(_dieAnimAngles._a90.x);
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a90.y);
 					_dieAnim->setCurrentFrame(0);
-					//_dieAnim->setPlayback(true);
+					
 
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
@@ -509,8 +479,7 @@ bool MonsterParent::FindAWay() {
 			//Для всех клеток
 			for (int k = 0; k < intMap.size(); k++) {
 				for (int l = 0; l < intMap[k].size(); l++) {
-				//	if (k >= 0 && k < intMap.size()) {
-				//		if (l >= 0 && l < intMap[k].size()) {
+				
 					if (intMap[k][l] == d - 1) {//если значение их волны меньше на 1
 								//и они находятся в окрестности текущей клетки
 						if (d > 0 && math::abs(_currentWay[_currentWay.size() - 1].x - k) <= 1 && math::abs(_currentWay[_currentWay.size() - 1].y - l <= 1)) {
@@ -521,13 +490,7 @@ bool MonsterParent::FindAWay() {
 									
 								
 							}
-							//else if(intMap[k][l]>d && intMap[k][l]<9999) {
-							//	intMap[k][l] = 9998;
-							//}
 							
-				//		}
-				//	}
-
 				}
 
 				if (recover)
@@ -548,7 +511,7 @@ bool MonsterParent::FindAWay() {
 	}
 
 
-	//_currentWay.erase(_currentWay.begin());
+	
 	std::reverse(_currentWay.begin(), _currentWay.end());
 	if (_currentWay.size() > 0) {
 		return true;
@@ -770,17 +733,13 @@ BossMonster::~BossMonster() {
 
 void BossMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	
-	//values.y *= 1 - _reduceDamage;
+	
 	
 	if (effType == TowerType::SLOW)
 		_slow = values;
 	if (effType == TowerType::DECAY)
 		_decay =FPoint(values.x*4, values.y*4);
-	//if (effType == "Bash") {
-	//	values.x *= 100;
-	//	if (math::random(0, 100) <= values.x)
-	//		_bash = FPoint(1, values.y);
-	//}
+	
 
 	if (_hp > 0) {
 		_hp -= damage * (1 - _reduceDamage);
@@ -827,8 +786,7 @@ ImmuneMonster::~ImmuneMonster() {
 void ImmuneMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
 	
 	
-	//if (effType == "Slow")
-	//	_slow = values;
+	
 	if (effType == TowerType::DECAY)
 		_decay = values;
 	if (effType == TowerType::BASH) {
@@ -893,8 +851,7 @@ void HealingMonster::TakeDamage(TowerType effType, FPoint values, float damage) 
 		}
 	}
 		
-	//if (effType == "Decay")
-	//	_decay = values;
+	
 	if (effType == TowerType::BASH) {
 		values.x *= 100;
 		if (math::random(0, 100) <= values.x)
@@ -903,9 +860,7 @@ void HealingMonster::TakeDamage(TowerType effType, FPoint values, float damage) 
 
 	if (_hp > 0) {
 		_hp -= damage;
-		//if (_hp <= 0) {
-		//	_dead = true;
-		//}
+		
 	}
 	
 	

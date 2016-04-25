@@ -22,7 +22,6 @@ private:
 	int		    _monsterCount;
 	int         _maxHp;
 	int         _modSpeed;
-	//bool		_finished;
 	int         _waveGold;
 	int         _monsterGold;
 };

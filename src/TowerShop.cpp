@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "TowerShop.h"
+#include "Menu.h"
 using namespace std;
 using namespace Xml;
 using namespace rapidxml;
-const int NO_VALUE =-1;
+
 
 
 // Магазин башен
@@ -33,7 +34,7 @@ void TowerShop::LoadFromXml(std::string filename)
 			for (xml_node<>* lot = shop->first_node("Lot"); lot; lot = lot->next_sibling("Lot")) {
 				std::string tId = GetStringAttributeOrDef(lot, "towerId", "");
 				if (newLot.towerId == tId) {
-					newLot.buttonId = GetIntAttributeOrDef(lot, "menuButtonId", NO_VALUE);
+					newLot.buttonId = GetIntAttributeOrDef(lot, "menuButtonId", Button::NO_VALUE);
 					found = true;
 				}
 				if (found)
@@ -46,7 +47,7 @@ void TowerShop::LoadFromXml(std::string filename)
 		for (xml_node<>* lot = shop->first_node("Lot"); lot; lot = lot->next_sibling("Lot")) {
 			std::string tId = GetStringAttributeOrDef(lot, "towerId", "");
 			if (newLot.towerId == tId) {
-				newLot.buttonId = GetIntAttributeOrDef(lot, "menuButtonId", NO_VALUE);
+				newLot.buttonId = GetIntAttributeOrDef(lot, "menuButtonId", Button::NO_VALUE);
 				break;
 			}
 		};
@@ -93,7 +94,7 @@ std::vector<int> TowerShop::GetDisabledButtons(int gold)
 
 TowerType TowerShop::GetTypeFromButton(int id)
 {
-	if (id == NO_VALUE)
+	if (id == Button::NO_VALUE)
 		return EMPTY;
 	TowerType res = EMPTY;
 	for (int i = 0; i < _lots.size(); i++) {
@@ -107,7 +108,7 @@ TowerType TowerShop::GetTypeFromButton(int id)
 
 int TowerShop::GetButtonFromType(TowerType type)
 {
-	int res = NO_VALUE;
+	int res = Button::NO_VALUE;
 	for (int i = 0; i < _lots.size(); i++) {
 		if (_lots[i].type == type) {
 			res = _lots[i].buttonId;

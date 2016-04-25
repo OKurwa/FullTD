@@ -4,7 +4,7 @@
 using namespace rapidxml;
 using namespace Xml;
 using namespace std;
-const int NO_VALUE = -1;
+
 Button::Button() {
 	_tex = nullptr;
 	_rect = IRect(0,0,0,0);
@@ -110,10 +110,7 @@ void Button::Reset() {
 	_pressed = false;
 	_light = false;
 };
-/*
-void Button::SetCurGold(int g) {
-	_curGold = g;
-};*/
+
 
 int Button::Value() {
 	return _value;
@@ -178,7 +175,7 @@ int Menu::Press(IPoint mPos, int cur) {
 				if (_buttons[i][j]) {
 					tmp = _buttons[i][j]->Press(mPos);
 					
-					if (tmp != NO_VALUE) {
+					if (tmp != Button::NO_VALUE) {
 						cur = tmp;
 						allEmpty = false;
 					}
@@ -190,7 +187,7 @@ int Menu::Press(IPoint mPos, int cur) {
 		}
 	}
 	if (allEmpty)
-		cur = NO_VALUE;
+		cur = Button::NO_VALUE;
 	return cur;
 };
 

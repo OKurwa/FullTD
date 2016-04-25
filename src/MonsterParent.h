@@ -21,7 +21,7 @@ public:
 
 
 	MonsterParent();
-	MonsterParent(FPoint position, int modSpeed, int hp, FieldMap * map, Render::TexturePtr _skin);
+	
 	virtual ~MonsterParent();
 
 	virtual void Draw();
@@ -65,8 +65,6 @@ protected:
 	std::vector<IPoint> _currentWay;
 	Render::TexturePtr _skin; 
 	
-	//EffectsContainer _boomCont;
-	//ParticleEffectPtr _boomEff;
 	TimedSplinePath _curWaySplineX;
 	TimedSplinePath _curWaySplineY;
 
@@ -106,10 +104,9 @@ public:
 
 		return new BossMonster(*this);
 	}
-	//void Draw();
-	//void Update(float dt);
+	
 	void TakeDamage(TowerType effType, FPoint values, float damage);
-	//void PostUpdate(float dt);
+	
 private:
 	float _reduceDamage;
 };
@@ -125,11 +122,10 @@ public:
 
 		return new ImmuneMonster(*this);
 	}
-	//void Draw();
-	//void Update(float dt);
+	
 	
 	void TakeDamage(TowerType effType, FPoint values, float damage);
-	//void PostUpdate(float dt);
+	
 private:
 
 };
@@ -145,8 +141,6 @@ public:
 
 		return new HealingMonster(*this);
 	}
-	//void Draw();
-	//void Update(float dt);
 	void TakeDamage(TowerType effType, FPoint values, float damage);
 	void PostUpdate(float dt);
 private:
@@ -164,10 +158,9 @@ public:
 
 		return new NormalMonster(*this);
 	}
-	//void Draw();
-	//void Update(float dt);
+	
 	void TakeDamage(TowerType effType, FPoint values, float damage);
-	//void PostUpdate(float dt);
+	
 private:
 	
 };

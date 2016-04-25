@@ -11,7 +11,7 @@ using namespace rapidxml;
 //----------------------------------------------//
 
 FireParent::FireParent() {
-	//_missileType = "";
+	
 	_position = FPoint(0,0);
 	_targetPosition = FPoint(0, 0);
 	_speed = FPoint(0, 0);
@@ -26,21 +26,7 @@ FireParent::FireParent() {
 	_damage = IPoint(0, 0);
 };
 
-FireParent::FireParent(FPoint position, FPoint tPosition, int mSpeed, float fTime, float mFlyTimer, TowerType mType, IPoint dmg, Render::TexturePtr tex) : ref_cnt_(0) {
-	_missileType = mType;
-	_position = position;
-	_targetPosition = tPosition;
-	_speed = FPoint(0, 0);
-	_modSpeed = mSpeed;
-	_flyTime = fTime;
-	_missileTimer = mFlyTimer;
-	_fly = true;
-	_hit = false;
-	_tex = tex;
-	_damage = dmg;
-	MakePath();
 
-};
 
 void FireParent::Draw() {
 	if (_misEff || _hitEff) {
@@ -82,14 +68,7 @@ void FireParent::Update(float dt) {
 
 void FireParent::DealDamage() {
 };
-/*
-FPoint FireParent::Position() { 
-	return _position; 
-};*/
-/*
-FPoint FireParent::TargetPosition() {
-	return _targetPosition;
-};*/
+
 
 void FireParent::SetPosition(FPoint pos) {
 	_position = pos;
@@ -99,10 +78,7 @@ TowerType FireParent::Type() {
 	return _missileType;
 
 };
-/*
-bool FireParent::isFlying() {
-	return _fly;
-};*/
+
 
 bool FireParent::Hit() {
 	if (_misEff && _hitEff) {

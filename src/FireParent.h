@@ -35,9 +35,7 @@ public:
 
 	};
 	
-	FireParent();
-
-	FireParent(FPoint position,FPoint tPosition, int mSpeed, float fTime, float mFlyTimer, TowerType mType, IPoint dmg, Render::TexturePtr tex);
+	FireParent();	
 	
 	~FireParent() {};
 	
@@ -48,16 +46,11 @@ public:
 	virtual void DealDamage();
 
 	virtual Ptr Clone() = 0;
-	
-	//FPoint Position();
-
-	//FPoint TargetPosition();
 
 	void SetPosition(FPoint);
 
 	TowerType Type();
 
-	//bool isFlying();
 	bool Hit();
 
 	void MakePath();
@@ -172,7 +165,7 @@ public:
 private:
 	
 	FPoint _decay;
-	//FPoint decay;
+	
  };
 
 //----------------------------------------------//

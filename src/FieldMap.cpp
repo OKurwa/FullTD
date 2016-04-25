@@ -110,14 +110,7 @@ void	FieldCell::Draw() {
 CellType FieldCell::Type() {
 	return _cellType;
 };
-/*
-IPoint FieldCell::Size() {
-	return _size;
-};*/
-/*
-FPoint FieldCell::Position() {
-	return _position;
-};*/
+
 
 bool FieldCell::Selected() {
 	return _selected;
@@ -126,26 +119,7 @@ bool FieldCell::Selected() {
 bool FieldCell::Empty() {
 	return _empty;
 };
-/*
-void FieldCell::SetPos(FPoint pos) {
-	_position = pos;
-};*/
-/*
-void FieldCell::SetSize(IPoint size) {
-	_size = size;
-};*/
 
-/*
-void FieldCell::SetType(CellType cell) {
-	_cellType = cell;
-	if (cell == SLOT) {
-		_tex = Core::resourceManager.Get<Render::Texture>("Slot");
-		
-	}
-	else {
-		_tex = nullptr;
-	}
-};*/
 
 void FieldCell::Select() {
 	_selected = true;
@@ -200,17 +174,7 @@ FieldMap::~FieldMap() {
 	}
 	_cells.clear();
 };
-/*
-void FieldMap::Init() {
-	for (int row = 0; row < _size.x; row++) {
-		std::vector<boost::intrusive_ptr<FieldCell>> nCol;
-			_cells.push_back(nCol);
-		for (int col = 0; col < _size.x; col++) {
-			boost::intrusive_ptr<FieldCell> cell(new FieldCell);
-			_cells[row].push_back(cell);
-		}
-	}
-};*/
+
 
 
 
@@ -346,11 +310,7 @@ void FieldMap::LoadFromXml(std::string filename) {
 
 		xml_document<> doc;
 		doc.parse<0>(file.data());
-		// Может бросить исключение, если xml испорчен.
-		//xml_node<>*
-		//xml_attribute<>*
-		//boost::intrusive_ptr<xml_attribute<>>
-		//boost::intrusive_ptr<xml_attribute<>>
+		
 
 		xml_node<>* game = doc.first_node();
 		if (!game) { Assert(false); throw runtime_error("No root node"); }

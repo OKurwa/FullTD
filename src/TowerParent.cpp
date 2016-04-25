@@ -255,14 +255,7 @@ void TowerParent::UpdateAnimAngle(MonsterParent * target) {
 		}
 	}
 }
-/*
-std::vector<FireParent::Ptr> & TowerParent::GetMissiles() {
-	return _missiles;
-};*/
-/*
-FPoint TowerParent::Position() {
-	return _position;
-};*/
+
 
 IPoint TowerParent::Cell() {
 	return _cell;
@@ -283,7 +276,7 @@ void TowerParent::SetPosition(FPoint pos) {
 	if (_position.x < 0) {
 		buttonPos.x = 0;
 	}
-	//_upgradeButtonRect = IRect(buttonPos, width, height);
+	
 };
 
 void TowerParent::SetUButtonPosition() {
@@ -310,10 +303,7 @@ void TowerParent::SetCell(IPoint cell) {
 void TowerParent::SetUpgradeButton(bool b) {
 	_showUpgradeButton = b;
 };
-/*
-bool TowerParent::UpgradeButtonActive() {
-	return _showUpgradeButton;
-};*/
+
 
 
 IRect TowerParent::UpgradeIRect() {
@@ -333,10 +323,7 @@ void TowerParent::Upgrade() {
 		
 	}
 };
-/*
-void TowerParent::SetPrice(int p) {
-	_price = p;
-};*/
+
 
 int	 TowerParent::Price() {
 	return _price;
@@ -491,7 +478,6 @@ void NormalTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width()/2, rect.y + 105), "Normal tower: "+ utils::lexical_cast(_lvl + 1) +" lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	//Render::PrintString(FPoint(rect.x + 120, rect.y + 60), "Splash : " + utils::lexical_cast(0), 1.0f, CenterAlign, BottomAlign);
 	if (_lvl<_lvlCount - 1)
 		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
@@ -661,7 +647,6 @@ void DecayTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Poison tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	//Render::PrintString(FPoint(rect.x + 120, rect.y + 60), "Splash : " + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Poison : Deals " + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.x) + " DPS on " + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.y) + " sec", 1.0f, CenterAlign, BottomAlign);
 
 
@@ -747,7 +732,6 @@ void BashTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Bash tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	//Render::PrintString(FPoint(rect.x + 120, rect.y + 60), "Splash : " + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Bash :"+ utils::lexical_cast((int)(_missilesPrototypes[_lvl]._bash.x*100)) + " \\% on " + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.y) + " sec", 1.0f, CenterAlign, BottomAlign);
 	
 
@@ -837,9 +821,6 @@ void SplashTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Splash : " + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
-	//Render::PrintString(FPoint(rect.x + 120, rect.y + 60), "Bash :" + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.x * 100) + " % on " + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.y) + " sec", 1.0f, CenterAlign, BottomAlign);
-
-
 	if (_lvl<_lvlCount - 1)
 		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);

@@ -16,7 +16,7 @@
 		<font name="dikovina_24" family="dikovina" size="24" color="255;255;255;255" letterSpacing="0">
 			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
 		</font>
-		<font name="dikovina_title" family="dikovina" size="24" color="255;255;255;255" letterSpacing="0">
+		<font name="dikovina_title" family="dikovina" size="24" color="255;255;0;255" letterSpacing="0">
 			<Effect alpha="0.1" type="shadow" blurX="2" blurY="2" strength="50" angle="0" inner="false" color="0;0;0;255" offset="0"/>
 		</font>
 	</FreeTypeFonts>
