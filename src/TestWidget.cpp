@@ -40,11 +40,11 @@ void TestWidget::Init()
 	
 		
 	_towerFactory.Init("Towers.xml");
-	_towerPs.push_back(_towerFactory.createTower(NORMAL));
-	_towerPs.push_back(_towerFactory.createTower(SPLASH));
-	_towerPs.push_back(_towerFactory.createTower(SLOW));
-	_towerPs.push_back(_towerFactory.createTower(DECAY));
-	_towerPs.push_back(_towerFactory.createTower(BASH));
+	//_towerPs.push_back(_towerFactory.createTower(NORMAL));
+	//_towerPs.push_back(_towerFactory.createTower(SPLASH));
+	//_towerPs.push_back(_towerFactory.createTower(SLOW));
+	//_towerPs.push_back(_towerFactory.createTower(DECAY));
+	//_towerPs.push_back(_towerFactory.createTower(BASH));
 	_enableBuildCursor = false;
 	
 	_selectedTower = nullptr;

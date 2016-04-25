@@ -16,7 +16,7 @@ class TowerParent : public RefCounter
 public:
 	typedef boost::intrusive_ptr<TowerParent> Ptr;
 	TowerParent();
-	TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	//TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
 	~TowerParent();
 	void Draw();
 	void UpgradeDraw();
@@ -91,7 +91,7 @@ public:
 	
 	NormalTower();
 	NormalTower(NormalTower&);
-	NormalTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~NormalTower();
 	TowerParent::Ptr Clone() {
 
@@ -118,7 +118,7 @@ class SlowTower : public TowerParent
 public:
 	SlowTower();
 	SlowTower(SlowTower& proto);
-	SlowTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, FPoint sFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~SlowTower();
 
 	TowerParent::Ptr Clone() {
@@ -151,7 +151,7 @@ class DecayTower : public TowerParent
 public:
 	DecayTower();
 	DecayTower(DecayTower& proto);
-	DecayTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint decay, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~DecayTower();
 	TowerParent::Ptr Clone() {
 		return new DecayTower(*this);
@@ -183,7 +183,7 @@ class BashTower : public TowerParent
 public:
 	BashTower();
 	BashTower(BashTower& proto);
-	BashTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint bash, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~BashTower();
 	TowerParent::Ptr Clone() {
 
@@ -212,7 +212,7 @@ class SplashTower : public TowerParent
 public:
 	SplashTower();
 	SplashTower(SplashTower& proto);
-	SplashTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, int mSpeed, IPoint dmg, Render::TexturePtr tex);
+	
 	~SplashTower();
 	TowerParent::Ptr Clone() {
 		return new SplashTower(*this);

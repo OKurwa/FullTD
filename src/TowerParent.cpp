@@ -27,7 +27,7 @@ TowerParent::TowerParent() {
 	_curGold = 0;
 	_showUpgradeButton = false;
 };
-
+/*
 TowerParent::TowerParent(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) {
 	//_towerType = "name";
 	_position = position;
@@ -40,7 +40,7 @@ TowerParent::TowerParent(FPoint position, IPoint cell, float rTime, float rTimer
 	_missileSpeed = mSpeed;
 	_missiles.clear();
 	_texHint = Core::resourceManager.Get<Render::Texture>("Hint");
-};
+};*/
 
 TowerParent::~TowerParent() {
 };
@@ -419,16 +419,6 @@ NormalTower::NormalTower(NormalTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-NormalTower::NormalTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
-	_towerType = TowerType::NORMAL;
-	_position = position;
-	_cell = cell;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_missileSpeed = mSpeed;
-	_damage = dmg;
-};
 
 NormalTower::~NormalTower() {
 };
@@ -508,19 +498,6 @@ SlowTower::SlowTower(SlowTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-SlowTower::SlowTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, FPoint sFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
-	_towerType = TowerType::SLOW;
-	_position = position;
-	_cell = cell;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_missileSpeed = mSpeed;
-	_splashRange = sRange;
-	_slow = sFactor;
-	_damage = dmg;
-	_targets = targets;	
-};
 
 SlowTower::~SlowTower() {};
 
@@ -599,17 +576,6 @@ DecayTower::DecayTower(DecayTower& proto) {
 		this->_atkAnim = proto._atkAnim->Clone();
 };
 
-DecayTower::DecayTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint dFactor, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
-	_towerType = TowerType::DECAY;
-	_position = position;
-	_cell = cell;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_missileSpeed = mSpeed;
-	_decay = dFactor;
-	_damage = dmg;
-};
 
 DecayTower::~DecayTower() {};
 
@@ -685,18 +651,6 @@ BashTower::BashTower(BashTower& proto) {
 		this->_idleAnim = proto._idleAnim->Clone();
 	if (proto._atkAnim)
 		this->_atkAnim = proto._atkAnim->Clone();
-};
-
-BashTower::BashTower(FPoint position, IPoint cell, float rTime, float rTimer, int range, FPoint bash, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
-	_towerType = TowerType::BASH;
-	_position = position;
-	_cell = cell;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_missileSpeed = mSpeed;
-	_bash = bash;
-	_damage = dmg;
 };
 
 BashTower::~BashTower() {};
@@ -776,20 +730,6 @@ SplashTower::SplashTower(SplashTower& proto) {
 		this->_idleAnim = proto._idleAnim->Clone();
 	if (proto._atkAnim)
 		this->_atkAnim = proto._atkAnim->Clone();
-};
-
-SplashTower::SplashTower(FPoint position, IPoint cell, std::vector<MonsterParent::Ptr> & targets, float rTime, float rTimer, int range, int sRange, int mSpeed, IPoint dmg, Render::TexturePtr tex) : TowerParent() {
-	_towerType = TowerType::SPLASH;
-	_position = position;
-	_cell = cell;
-	_reloadTime = rTime;
-	_reloadTimer = rTimer;
-	_range = range;
-	_missileSpeed = mSpeed;
-	_splashRange = sRange;
-	_targets = targets;
-	_damage = dmg;
-	
 };
 
 SplashTower::~SplashTower() {};
