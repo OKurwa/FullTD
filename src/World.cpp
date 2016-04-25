@@ -45,8 +45,11 @@ void World::Init(	int gold,
 	}else{
 		_state = WIN;
 	}
-	_shop.LoadFromXml("NewMap.xml");
+	_shop.LoadFromXml("Towers.xml");
 	_curTowerType = EMPTY;
+	Message msg = Message("ChangeGold", 1);
+	msg.SetTargetLayer("TestLayer");
+	Core::mainScreen.ProcessMessage(msg);
 };
 
 
@@ -82,11 +85,11 @@ void World::StartNewAttack(float delay, Attack & atk) {
 		_state = DELAY;
 		_delayTimer = delay;
 		GoldAdd(atk.WGold());
-		/*
+		
 		Message msg = Message("ChangeGold", 1);
 		msg.SetTargetLayer("TestLayer");
 		Core::mainScreen.ProcessMessage(msg);
-		*/
+		
 		++_curAttackIndex;
 		--_attacksRemaining;
 	}

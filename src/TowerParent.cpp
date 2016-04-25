@@ -184,7 +184,7 @@ void TowerParent::Update(float dt) {
 	
 };
 
-void TowerParent::UpdateAnimAngle(MonsterParent * target) {
+void TowerParent::UpdateAnimAngle(MonsterParent::Ptr target) {
 	if (target) {
 
 
@@ -193,54 +193,54 @@ void TowerParent::UpdateAnimAngle(MonsterParent * target) {
 		if (_idleAnim && _atkAnim) {
 			_idleAnim->setLoop(false);
 			_idleAnim->setPlayback(false);
-			if (angle > -157.5 && angle <= -112.5) {
+			if (angle > angle225.angleStart && angle <= angle225.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a315.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a315.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a315.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a315.y);
 			}
 
-			if (angle > -112.5 && angle <= -67.5) {
+			if (angle > angle270.angleStart && angle <= angle270.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a270.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a270.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a270.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a270.y);
 			}
-			if (angle > -67.5 && angle <= -22.5) {
+			if (angle > angle315.angleStart && angle <= angle315.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a225.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a225.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a225.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a225.y);
 			}
 
-			if (angle > -22.5 && angle <= 22.5) {
+			if (angle > angle0.angleStart && angle <= angle0.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a180.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a180.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a180.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a180.y);
 			}
 
-			if (angle > 22.5 && angle <= 67.5) {
+			if (angle > angle45.angleStart && angle <= angle45.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a135.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a135.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a135.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a135.y);
 			}
 
-			if (angle > 67.5 && angle <= 112.5) {
+			if (angle > angle90.angleStart && angle <= angle90.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a90.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a90.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a90.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a90.y);
 			}
 
-			if (angle > 112.5 && angle <= 157.5) {
+			if (angle > angle135.angleStart && angle <= angle135.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a45.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a45.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a45.x);
 				_idleAnim->setLastPlayedFrame(_idleAnimAngles._a45.y);
 			}
-			if (angle > 157.5 || angle <= -157.5) {
+			if (angle > angle180.angleStart || angle <= angle180.angleFinish) {
 				_atkAnim->setFirstPlayedFrame(_attackAnimAngles._a0.x);
 				_atkAnim->setLastPlayedFrame(_attackAnimAngles._a0.y);
 				_idleAnim->setFirstPlayedFrame(_idleAnimAngles._a0.x);
@@ -437,7 +437,11 @@ void NormalTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 	
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new NormalMissile(_missilesPrototypes[_lvl]);
-		_target = mis->TakeAim(monsters, _target, _range).get();
+		MonsterParent::Ptr t;
+
+		t = mis->TakeAim(monsters, _target, _range).get();
+
+		_target = t;
 		
 		if (_target) {
 
@@ -475,12 +479,12 @@ void NormalTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(FPoint(rect.x + rect.Width()/2, rect.y + 105), "Normal tower: "+ utils::lexical_cast(_lvl + 1) +" lvl", 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width()/2, rect.y + 105), "%NBName%: "+ utils::lexical_cast(_lvl + 1) +"%LVL%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
 	if (_lvl<_lvlCount - 1)
-		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "%UPCost%" + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "%DReturn%" + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
 
@@ -524,7 +528,11 @@ void SlowTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new SlowMissile(_missilesPrototypes[_lvl], monsters);
-		_target = mis->TakeAim(monsters, _target, _range).get();
+		MonsterParent::Ptr t;
+
+		t = mis->TakeAim(monsters, _target, _range).get();
+
+		_target = t;
 		if (_target) {
 			UpdateAnimAngle(_target);
 			_missiles.push_back(mis);
@@ -559,16 +567,16 @@ void SlowTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Slow tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Splash : " + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 45), "Slow target : " + utils::lexical_cast((int)(_missilesPrototypes[_lvl]._sFactor.x * 100))+"\\% on "+ utils::lexical_cast(_missilesPrototypes[_lvl]._sFactor.y)+" sec", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%SLBName% : " + utils::lexical_cast(_lvl + 1) + "%LVL%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%SPLASH%" + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 45), "%SLOW%" + utils::lexical_cast((int)(_missilesPrototypes[_lvl]._sFactor.x * 100))+"%ON%"+ utils::lexical_cast(_missilesPrototypes[_lvl]._sFactor.y)+"%SEC%", 1.0f, CenterAlign, BottomAlign);
 
 	
 	if (_lvl<_lvlCount - 1)
-		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "%UPCost%" + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "%DReturn%" + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
 
@@ -609,7 +617,11 @@ void DecayTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new DecayMissile(_missilesPrototypes[_lvl]);
-		_target = mis->TakeAim(monsters, _target, _range).get();
+		MonsterParent::Ptr t;
+
+		t = mis->TakeAim(monsters, _target, _range).get();
+
+		_target = t;
 		if (_target) {
 			UpdateAnimAngle(_target);
 			_missiles.push_back(mis);
@@ -644,10 +656,10 @@ void DecayTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Poison tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Poison : Deals " + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.x) + " DPS on " + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.y) + " sec", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%PBName% :" + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%POISON%" + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.x) + "%DPS%" + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.y) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
 
 
 	if (_lvl<_lvlCount - 1)
@@ -693,7 +705,12 @@ void BashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new BashMissile(_missilesPrototypes[_lvl]);
-		_target = mis->TakeAim(monsters, _target, _range).get();
+		MonsterParent::Ptr t;
+
+		t = mis->TakeAim(monsters, _target, _range).get();
+			
+		_target = t;
+			
 		if (_target) {
 			UpdateAnimAngle(_target);
 			_missiles.push_back(mis);
@@ -729,15 +746,15 @@ void BashTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Bash tower: " + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Bash :"+ utils::lexical_cast((int)(_missilesPrototypes[_lvl]._bash.x*100)) + " \\% on " + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.y) + " sec", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%BBName% :" + utils::lexical_cast(_lvl + 1) + "%LVL%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%BASH%"+ utils::lexical_cast((int)(_missilesPrototypes[_lvl]._bash.x*100)) + "%ON%" + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.y) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
 	
 
 	if (_lvl<_lvlCount - 1)
-		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "%UPCost%" + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "%DReturn%" + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
 
@@ -781,7 +798,11 @@ void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new SplashMissile(_missilesPrototypes[_lvl],monsters);
-		_target = mis->TakeAim(monsters, _target, _range).get();
+		MonsterParent::Ptr t;
+
+		t = mis->TakeAim(monsters, _target, _range).get();
+
+		_target = t;
 		if (_target) {
 			UpdateAnimAngle(_target);
 			_missiles.push_back(mis);
@@ -817,13 +838,13 @@ void SplashTower::DrawHintText(IRect rect) {
 
 	Render::BindFont("dikovina_10");
 	Render::BeginColor(Color(255, 255, 255, 255));
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "Splash tower: " + utils::lexical_cast(_lvl+1) + " lvl", 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "Damage : " + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "Range : " + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "Splash : " + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%SPBName%: " + utils::lexical_cast(_lvl+1) + "%LVL%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%SPLASH%" + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
 	if (_lvl<_lvlCount - 1)
-		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "Upgrade cost : " + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "Destroy returns : " + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 30), "%UPCost%" + utils::lexical_cast(_missilesPrototypes[_lvl + 1]._price), 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 15), "%DReturn%" + utils::lexical_cast(_missilesPrototypes[_lvl]._price*0.75), 1.0f, CenterAlign, BottomAlign);
 	Render::EndColor();
 }
 

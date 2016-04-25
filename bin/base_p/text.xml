@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Workbook>
+    <Worksheet>
+        <Table>
+            <Row>
+                <Cell>
+                    <Data>ID</Data>
+                </Cell>
+                <Cell>
+                    <Data>Attributes</Data>
+                </Cell>
+                <Cell>
+                    <Data>en</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>StartPanelTitle</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>HUNGRY ANTS TD</Data>
+                </Cell>
+            </Row>
+			
+			
+            <Row>
+                <Cell>
+                    <Data>StartPanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Big hungry ants want to get some meat. 
+
+
+Do you want to help them?</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>LosePanelTitle</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>DEFEAT!</Data>
+                </Cell>
+            </Row>
+			
+			
+            <Row>
+                <Cell>
+                    <Data>LosePanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Now your ants became small and vegan! 
+
+
+Do you want to make them hunt more?</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>WinPanelTitle</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>VICTORY!</Data>
+                </Cell>
+            </Row>
+			
+			
+            <Row>
+                <Cell>
+                    <Data>WinPanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Now your ants became bigger and hungrier! 
+
+
+Do you want to feed them more?</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>HP</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>HP: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>WB</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>WAVE BEGINS IN : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SEC</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data> sec</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>WR</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>WAVES REMAINING : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>CW</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>CURRENT WAVE : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>NAME</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Name : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>TYPE</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Type: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>MHP</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Monster HP : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>MS</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Monster speed : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>MPM</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Meat per monster : </Data>
+                </Cell>
+            </Row>
+           
+		   
+		   <Row>
+                <Cell>
+                    <Data>MEAT</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>MEAT</Data>
+                </Cell>
+            </Row>
+			
+			
+			<!-- Хинты кнопок -->
+			<Row>
+                <Cell>
+                    <Data>NBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Normal tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>NBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Simple low cost one target tower.</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SPBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Splash tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SPBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Powerful tower, damage all targets in a small area.</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SLBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Slow tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SLBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Low damage tower, decrease movespeed of all targets in a small area.
+Effective against healing monsters.
+Weak against immune monsters.</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>PBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Poison tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>PBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Low damage tower, poison target with strong toxin.
+Effective against boss monsters.
+Weak against healing monsters.</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>BBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Bash tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>BBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Low damage tower, have a chance to stun target.
+Effective against immune monsters.
+Weak against boss monsters.</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>DBName</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Destroy tower</Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>DBHint</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Destroing tower and take some meat back.</Data>
+                </Cell>
+            </Row>
+			
+			<!-- Хинты башен -->
+			
+			<Row>
+                <Cell>
+                    <Data>RNG</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Range: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>DMG</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Damage: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SPLASH</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Splash: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>SLOW</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Slow target: </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>BASH</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Bash : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>POISON</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Poison : Deals </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>DPS</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data> DPS on </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>ON</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>\% on </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>DReturn</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Destroy returns : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>UPCost</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Upgrade cost : </Data>
+                </Cell>
+            </Row>
+			
+			<Row>
+                <Cell>
+                    <Data>LVL</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data> lvl</Data>
+                </Cell>
+            </Row>
+			
+        </Table>
+    </Worksheet>
+</Workbook>

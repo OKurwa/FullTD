@@ -154,36 +154,6 @@ void MonsterAttack::LoadFromXml(std::string filename) {
 };
 
 
-
-
-
-
-void MonsterAttack::SaveToFile(std::string file) {
-	std::ofstream sFile(file);
-	std::string line;
-	std::vector<std::string> lines;
-	lines.clear();
-	lines.push_back("TYPE=MA");
-	lines.push_back("");
-	lines.push_back("attackCount=" + utils::lexical_cast(_attacks.size()));
-	lines.push_back("delay=" + utils::lexical_cast(_attackDelay));
-	lines.push_back("");
-	for (unsigned int attack = 0; attack < _attacks.size(); attack++) {
-		lines.push_back("index=" + utils::lexical_cast(_attacks[attack].Index()));
-		lines.push_back("type=" + _attacks[attack].Type());
-		lines.push_back("name=" + _attacks[attack].Name());
-		lines.push_back("count=" + utils::lexical_cast(_attacks[attack].Count()));
-		lines.push_back("");
-	}
-
-	if (sFile.is_open()) {
-		for (unsigned int i = 0; i < lines.size(); i++) {
-			sFile << lines[i] << endl;
-		}
-	}
-	sFile.close();
-};
-
 float MonsterAttack::Delay() {
 	return _attackDelay;
 };

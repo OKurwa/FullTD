@@ -21,7 +21,7 @@ public:
 	void Draw();
 	void UpgradeDraw();
 	void Update(float dt);
-	void TowerParent::UpdateAnimAngle(MonsterParent * _target);
+	void TowerParent::UpdateAnimAngle(MonsterParent::Ptr _target);
 	virtual Ptr Clone() = 0;
 	IPoint Cell();
 	virtual void SetPosition(FPoint);
@@ -48,7 +48,7 @@ protected:
 	FPoint _position;
 	IPoint _cell;
 	IPoint _cellSize;
-	MonsterParent * _target;
+	MonsterParent::Ptr _target;
 	float  _reloadTime;
 	float  _reloadTimer;
 	int	   _range;
@@ -254,3 +254,4 @@ const AnimAngles IDL_ANGLES = {
 	IPoint(160,163),
 	IPoint(192,195),
 	IPoint(224,227) };
+

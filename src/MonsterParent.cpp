@@ -33,6 +33,17 @@ MonsterParent::MonsterParent() {
 	_meat = nullptr;
 	_meatCont = 0;
 	_dieSound = "Die";
+
+	
+	//_stunEff = _Cont.AddEffect("Stun");
+	//_stunEff->Pause();
+	//_stunEff->Reset();
+	//_coldEff = _Cont.AddEffect("Cold");
+	//_coldEff->Pause();
+	//_coldEff->Reset();
+	//_poisonEff = _Cont.AddEffect("Poison");
+	//_poisonEff->Pause();
+	//_poisonEff->Reset();
 	_curWaySplineX.Clear();
 	_curWaySplineY.Clear();
 };
@@ -44,21 +55,7 @@ void MonsterParent::Draw() {
 		
 		if (_idleAnim && _runAnim && _dieAnim) {
 			
-			Color color = Color(255, 255, 255, 255);
-			if (_slow.x > 0 && _decay.x > 0) {
-				color = Color(0, 250, 154, 255);
-			}
-			if (_slow.x > 0) {
-				color = Color(60, 124, 255, 255);
-			}
-			else if (_decay.x>0) {
-				color = Color(124, 252, 0, 255);
-			}
-				
-			
-				
-			
-			Render::BeginColor(color);
+			Render::BeginColor(_effectColor);
 			IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
 			Render::device.SetTexturing(true);
 			if (!_dying) {
@@ -78,6 +75,7 @@ void MonsterParent::Draw() {
 			}
 			
 			Render::EndColor();
+
 			Render::device.SetTexturing(false);
 			int width = 30 * _hp / _maxHp;
 			if (width < 0)
@@ -86,6 +84,8 @@ void MonsterParent::Draw() {
 			Render::BeginColor(Color(0, 255, 0, 255));
 			Render::DrawRect(cRect);
 			Render::EndColor();
+
+			_Cont.Draw();
 		}
 	}
 };
@@ -174,6 +174,59 @@ void MonsterParent::Update(float dt) {
 		
 
 	}
+
+	_Cont.Update(dt);
+	if (_coldEff && _runAnim) {
+		_coldEff->posX = _position.x;
+		_coldEff->posY = _position.y + _runAnim->getFrameHeight() / 4;
+	}
+	if (_stunEff && _idleAnim) {
+		_stunEff->posX = _position.x;
+		_stunEff->posY = _position.y + _runAnim->getFrameHeight() / 3;
+	}
+	if (_poisonEff && _runAnim) {
+		_poisonEff->posX = _position.x;
+		_poisonEff->posY = _position.y + _runAnim->getFrameHeight() / 4;
+	}
+
+
+	
+	
+	
+
+	//Включение эффектов
+	_effectColor = Color(255, 255, 255, 255);
+	if (_slow.x > 0 && _decay.x > 0) {
+		_effectColor = Color(0, 250, 154, 255);
+		
+		AddEffect("Cold");
+		AddEffect("Poison");
+	}else if (_slow.x > 0) {
+		_effectColor = Color(60, 124, 255, 255);
+		AddEffect("Cold");
+	}
+	else if (_decay.x>0) {
+		_effectColor = Color(124, 252, 0, 255);
+		AddEffect("Poison");
+	}
+
+	if (_bash.x > 0) {
+		AddEffect("Stun");
+	}
+
+
+	//Выключение эффектов
+	if (_slow.x == 0 && _coldEff) {
+		
+		_coldEff->Finish();
+	}
+	if (_bash.x == 0 && _stunEff) {
+		_stunEff->Finish();
+	}
+	if (_decay.x == 0 && _poisonEff) {
+		_poisonEff->Finish();
+	}
+
 };
 
 void MonsterParent::UpdateAnimAngle(float dt) {
@@ -634,7 +687,32 @@ int MonsterParent::TakeMonsterMeat() {
 	}else{
 		return 0;
 	}
-};
+}
+void MonsterParent::AddEffect(std::string eff)
+{
+	if (eff == "Poison") {
+		if (!_Cont.IsEffectAlive(_poisonEff.get())) {
+			_poisonEff = _Cont.AddEffect("Poison");
+			_poisonEff->Reset();
+
+		}
+	}
+	else if (eff == "Stun") {
+		if (!_Cont.IsEffectAlive(_stunEff.get())) {
+			_stunEff = _Cont.AddEffect("Stun");
+			_stunEff->Reset();
+
+		}
+	}
+	else if (eff == "Cold") {
+		if (!_Cont.IsEffectAlive(_coldEff.get())) {
+			_coldEff = _Cont.AddEffect("Cold");
+			_coldEff->Reset();
+
+		}
+	}
+}
+;
 
 
 //----------------------------------------------//
@@ -655,6 +733,12 @@ NormalMonster::NormalMonster(NormalMonster& proto) {
 		this->_runAnim = proto._runAnim->Clone();
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
+	if (proto._coldEff)
+		this->_coldEff = proto._coldEff->Clone();
+	if (proto._stunEff)
+		this->_stunEff = proto._stunEff->Clone();
+	if (proto._poisonEff)
+		this->_poisonEff = proto._poisonEff->Clone();
 };
 
 NormalMonster::NormalMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
@@ -710,6 +794,12 @@ BossMonster::BossMonster(BossMonster& proto) {
 		this->_runAnim = proto._runAnim->Clone();
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
+	if (proto._coldEff)
+		this->_coldEff = proto._coldEff->Clone();
+	if (proto._stunEff)
+		this->_stunEff = proto._stunEff->Clone();
+	if (proto._poisonEff)
+		this->_poisonEff = proto._poisonEff->Clone();
 };
 
 BossMonster::BossMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
@@ -764,6 +854,12 @@ ImmuneMonster::ImmuneMonster(ImmuneMonster& proto) {
 		this->_runAnim = proto._runAnim->Clone();
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
+	if (proto._coldEff)
+		this->_coldEff = proto._coldEff->Clone();
+	if (proto._stunEff)
+		this->_stunEff = proto._stunEff->Clone();
+	if (proto._poisonEff)
+		this->_poisonEff = proto._poisonEff->Clone();
 };
 
 ImmuneMonster::ImmuneMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
@@ -822,6 +918,12 @@ HealingMonster::HealingMonster(HealingMonster& proto) {
 		this->_runAnim = proto._runAnim->Clone();
 	if (proto._dieAnim)
 		this->_dieAnim = proto._dieAnim->Clone();
+	if (proto._coldEff)
+		this->_coldEff = proto._coldEff->Clone();
+	if (proto._stunEff)
+		this->_stunEff = proto._stunEff->Clone();
+	if (proto._poisonEff)
+		this->_poisonEff = proto._poisonEff->Clone();
 };
 
 HealingMonster::HealingMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {

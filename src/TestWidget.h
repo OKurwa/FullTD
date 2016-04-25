@@ -85,6 +85,5 @@ private:
 	
 
 
-	Menu::Ptr _tryMenu;
-	Menu::Ptr _newMenu;
+	
 };

@@ -32,4 +32,10 @@ private:
 	Render::TexturePtr _start_w;
 	Render::TexturePtr _lose_w;
 	Render::TexturePtr _win_w;
+	Render::TextPtr _StartTitlePtr;
+	Render::TextPtr _StartTextPtr;
+	Render::TextPtr _LoseTitlePtr;
+	Render::TextPtr _LoseTextPtr;
+	Render::TextPtr _WinTitlePtr;
+	Render::TextPtr _WinTextPtr;
 };

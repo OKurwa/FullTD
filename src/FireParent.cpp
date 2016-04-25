@@ -445,7 +445,8 @@ BashMissile::~BashMissile() {
 
 void BashMissile::DealDamage()
 {
-	_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
+	if(!_target->Dead())
+		_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
 }
 
 

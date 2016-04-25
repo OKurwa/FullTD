@@ -232,15 +232,7 @@ void Menu::Reset() {
 		}
 	}
 };
-/*
-void Menu::SetCurGold(int g) {
-	for (unsigned int i = 0; i < _buttons.size(); i++) {
-		for (unsigned int j = 0; j < _buttons[i].size(); j++) {
-			if (_buttons[i][j])
-				_buttons[i][j]->SetCurGold(g);
-		}
-	}
-};*/
+
 
 
 void Menu::LoadFromXml(std::string filename) {

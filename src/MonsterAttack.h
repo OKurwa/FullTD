@@ -33,7 +33,6 @@ public:
 	void SetDelay(float d);
 	
 	void LoadFromXml(std::string);
-	void SaveToFile(std::string fileName);
 	float Delay();
 	std::vector<Attack> & GetAttack();
 	std::vector<MonsterParent::Ptr> & GetAttackPrototypes();

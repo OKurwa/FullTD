@@ -3,46 +3,40 @@
 <Menu cols="2" rows = "3" posX = "832" posY = "44" width = "128" height = "192" buttonWidth = "64" buttonHeight = "64">
 	<Button id = "0" texture = "Towers" uStart = "0" uEnd = "0.1666666" vStart = "0" vEnd = "1" cornerText = "10">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7" text = "Normal tower"  />
-			<HintText  down = "60" text = "Simple low cost one target tower."/>
+			<HintTitle down = "7" text = "NBName"  />
+			<HintText  down = "60" text = "NBHint"/>
 		</Hint>
 		
 	</Button>
 	<Button id = "1" texture = "Towers" uStart = "0.1666666" uEnd = "0.33333333" vStart = "0" vEnd = "1" cornerText = "50">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7" text = "Splash tower"  />
-			<HintText down = "60" text = "Powerful tower, damage all targets in a small area."/>
+			<HintTitle down = "7" text = "SPBName"  />
+			<HintText down = "60" text = "SPBHint"/>
 		</Hint>
 	</Button>
 	<Button id = "2" texture = "Towers" uStart = "0.33333333" uEnd = "0.5" vStart = "0" vEnd = "1" cornerText = "25">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7"  text = "Slow tower" />
-			<HintText down = "30" text = "Low damage tower, decrease movespeed of all targets in a small area."/>
-			<HintText down = "85" text = "Effective against healing monsters."/>
-			<HintText down = "100" text = "Weak against immune monsters."/>
+			<HintTitle down = "7"  text = "SLBName" />
+			<HintText down = "30" text = "SLBHint"/>
 		</Hint>
 	</Button>
 	<Button id = "3" texture = "Towers" uStart = "0.5" uEnd = "0.66666666" vStart = "0" vEnd = "1" cornerText = "15">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7"  text = "Poison tower" />
-			<HintText down = "30" text = "Low damage tower, poison target with strong toxin."/>
-			<HintText down = "85" text = "Effective against boss monsters."/>
-			<HintText down = "100" text = "Weak against healing monsters."/>
+			<HintTitle down = "7"  text = "PBName" />
+			<HintText down = "30" text = "PBHint"/>
 		</Hint>
 	</Button>
 	<Button id = "4" texture = "Towers" uStart = "0.66666666" uEnd = "0.833333333" vStart = "0" vEnd = "1" cornerText = "15">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7"  text = "Bash tower" />
-			<HintText down = "30" text = "Low damage tower, have a chance to stun target."/>
-			<HintText down = "85" text = "Effective against immune monsters."/>
-			<HintText down = "100" text = "Weak against boss monsters."/>
+			<HintTitle down = "7"  text = "BBName" />
+			<HintText down = "30" text = "BBHint"/>
 		</Hint>
 		
 	</Button>
 	<Button id = "5" texture = "Towers" uStart = "0.833333333" uEnd = "1" vStart = "0" vEnd = "1" cornerText = "">
 		<Hint width = "240" height = "128" texture = "Hint">
-			<HintTitle down = "7" text = "Destroy tower" />
-			<HintText down = "64" text = "Destroing tower and take some meat back."/>
+			<HintTitle down = "7" text = "DBName" />
+			<HintText down = "64" text = "DBHint"/>
 		</Hint>
 	</Button>
 </Menu>

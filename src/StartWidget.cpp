@@ -21,111 +21,58 @@ void StartWidget::Init()
 	_win_w = Core::resourceManager.Get<Render::Texture>("WinWindow");
 	_startMenu = new Menu;
 	_startMenu->LoadFromXml("StartMenu.xml");
+	_StartTitlePtr = Core::resourceManager.Get<Render::Text>("StartPanelTitle");
+	_StartTextPtr = Core::resourceManager.Get<Render::Text>("StartPanelText");
+	_LoseTitlePtr = Core::resourceManager.Get<Render::Text>("LosePanelTitle");
+	_LoseTextPtr = Core::resourceManager.Get<Render::Text>("LosePanelText");
+	_WinTitlePtr = Core::resourceManager.Get<Render::Text>("WinPanelTitle");
+	_WinTextPtr = Core::resourceManager.Get<Render::Text>("WinPanelText");
 }
 
 void StartWidget::Draw()
 {
 	Render::BindFont("dikovina_12");
 	GameState state = World::Instance().State();
+	Render::TextPtr _TitlePtr;
+	Render::TextPtr _TextPtr;
+	
+	Render::device.SetTexturing(false);
+	Render::BeginAlphaMul(0.5);
+	Render::BeginColor(Color(0, 0, 0, 255));
+	Render::DrawRect(0, 0, Render::device.Width(), Render::device.Height());
+	Render::EndColor();
+	Render::EndAlphaMul();
 	switch (state)
 	{
 	case START:
-		
-		Render::device.SetTexturing(true);
-
-		Render::BeginColor(titleColor);
-		Render::BindFont("dikovina_16");
-		Render::PrintString(FPoint(896, 680), "HUNGRY ANTS TD", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 330), "MEAT", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::device.SetTexturing(false);
-		Render::BeginAlphaMul(0.5);
-		Render::BeginColor(Color(0, 0, 0, 255));
-		Render::DrawRect(0, 0, Render::device.Width(), Render::device.Height());
-		Render::EndColor();
-		Render::EndAlphaMul();
 		Render::device.SetTexturing(true);
 		_start_w->Draw(FPoint(110, 180));
-		
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(384, 525), "HUNGRY ANTS TD", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(384, 440), "Big hungry ants want to get some meat.", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(384, 390), "Do you want to help them?", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
+		_TitlePtr = _StartTitlePtr;
+		_TextPtr = _StartTextPtr;
 
 		break;
 	case WIN:
-		
-		Render::device.SetTexturing(true);
-
-		Render::BeginColor(titleColor);
-		Render::BindFont("dikovina_16");
-		Render::PrintString(FPoint(896, 680), "HUNGRY ANTS TD", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 330), "MEAT", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::device.SetTexturing(false);
-		Render::BeginAlphaMul(0.5);
-		Render::BeginColor(Color(0, 0, 0, 255));
-		Render::DrawRect(0, 0, Render::device.Width(), Render::device.Height());
-		Render::EndColor();
-		Render::EndAlphaMul();
-		Render::device.SetTexturing(true);
-		
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(50, 750), utils::lexical_cast(state), 1.00f, LeftAlign, BottomAlign);
-		Render::EndColor();
 		_win_w->Draw(FPoint(110, 180));
-		
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(384, 525), "VICTORY!", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(384, 440), "Now your ants became bigger and hungrier! ", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(384, 420), "Do you want to feed them more?", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
+		_TitlePtr = _WinTitlePtr;
+		_TextPtr =_WinTextPtr;
+
 		break;
 	case LOSE:
-		
-		Render::device.SetTexturing(true);
-		Render::BindFont("dikovina_16");
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(896, 680), "HUNGRY ANTS TD", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 330), "MEAT", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::device.SetTexturing(false);
-		Render::BeginAlphaMul(0.5);
-		Render::BeginColor(Color(0, 0, 0, 255));
-		Render::DrawRect(0, 0, Render::device.Width(), Render::device.Height());
-		Render::EndColor();
-		Render::EndAlphaMul();
-
-		Render::device.SetTexturing(true);
-		
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(50, 750), utils::lexical_cast(state), 1.00f, LeftAlign, BottomAlign);
-		Render::EndColor();
 		_lose_w->Draw(FPoint(110, 180));
-		
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(384, 525), "DEFEAT!", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(384, 440), "Now your ants became small and vegan!", 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(384, 390), "Do you want to make them  hunt more?", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
+		_TitlePtr = _LoseTitlePtr;
+		_TextPtr = _LoseTextPtr;
 		break;
 	}
 
+	if (_TitlePtr) {
+		std::string str = _TitlePtr->ToString();
+		str = "{font size=\"16\"}" + str + "{}";
+		Render::PrintString(FPoint(384, 525), str, 1.00f, CenterAlign, BottomAlign);
+	}
+		
+	if(_TextPtr)
+		Render::PrintString(FPoint(384, 390), _TextPtr->ToString(), 1.00f, CenterAlign, BottomAlign);
 	_startMenu->Draw();
-
-
-
-
-
-	
-	
 }
 
 void StartWidget::Update(float dt)
@@ -200,13 +147,7 @@ void StartWidget::AcceptMessage(const Message& message)
 		{
 		}
 
-		if (code == 's' || code == 'S') {
-			Message msg = Message("StartLayer", 1);
-			msg.SetTargetLayer("TestLayer");
-			Core::mainScreen.ProcessMessage(msg);
-			Core::mainScreen.popLayer();
-			
-		}
+		
 		
 		
 	}

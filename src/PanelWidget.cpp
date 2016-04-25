@@ -20,40 +20,42 @@ void PanelWidget::Init()
 {
 	_menu = new Menu;
 	_menu->LoadFromXml("Menu.xml");
+	_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
 }
 
 void PanelWidget::Draw()
 {
+	_menuBG->Draw(IPoint(768, 0));
+	Render::BindFont("dikovina_16");
+	Render::BeginColor(titleColor);
+	Render::PrintString(FPoint(896, 680), "%StartPanelTitle%", 1.00f, CenterAlign, BottomAlign);
+	Render::EndColor();
+	Render::BeginColor(titleColor);
+	Render::PrintString(FPoint(896, 330), "%MEAT%", 1.00f, CenterAlign, BottomAlign);
+	Render::EndColor();
 	Render::BindFont("dikovina_12");
 	World::WorldInfo info = World::Instance().GetInfo();
+
 	if (World::Instance().State() == DELAY || World::Instance().State() == WAVE) {
 		
 		Render::device.SetTexturing(true);
 
-		Render::BindFont("dikovina_16");
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(896, 680), "HUNGRY ANTS TD", 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
+		
 
-		Render::BindFont("dikovina_12");
+		
 		Render::BeginColor(Color(255, 255, 255, 255));
-		Render::PrintString(FPoint(820, 600), "HP : " + utils::lexical_cast(info.HP), 1.00f, LeftAlign, BottomAlign);
-		Render::PrintString(FPoint(820, 580), "WAVE BEGINS IN : " + utils::lexical_cast(math::round(info.delayTimer)) + "sec", 1.00f, LeftAlign, BottomAlign);
-		Render::PrintString(FPoint(820, 560), "WAVES REMAINING : " + utils::lexical_cast(info.attacksRemaining), 1.00f, LeftAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 520), "CURRENT WAVE : " + utils::lexical_cast(info.curAttack), 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 500), "Name : " + info.name, 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 480), "Type: " + info.type, 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 460), "Monster HP : " + utils::lexical_cast(info.monsterMaxHP), 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 440), "Monster speed : " + utils::lexical_cast(info.monsterSpeed), 1.00f, CenterAlign, BottomAlign);
-		Render::PrintString(FPoint(896, 420), "Meat per monster : " + utils::lexical_cast(info.monsterMeat), 1.00f, CenterAlign, BottomAlign);
-		Render::EndColor();
-
-
 		Render::BindFont("dikovina_16");
-		Render::BeginColor(titleColor);
-		Render::PrintString(FPoint(896, 330), "MEAT", 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(820, 600), "%HP%" + utils::lexical_cast(info.HP), 1.00f, LeftAlign, BottomAlign);
+		Render::BindFont("dikovina_12");
+		Render::PrintString(FPoint(820, 580), "%WB%" + utils::lexical_cast(math::round(info.delayTimer)) + "%SEC%", 1.00f, LeftAlign, BottomAlign);
+		Render::PrintString(FPoint(820, 560), "%WR%" + utils::lexical_cast(info.attacksRemaining), 1.00f, LeftAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 520), "%CW%" + utils::lexical_cast(info.curAttack), 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 500), "%NAME%" + info.name, 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 480), "%TYPE%" + info.type, 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 460), "%MHP%" + utils::lexical_cast(info.monsterMaxHP), 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 440), "%MS%" + utils::lexical_cast(info.monsterSpeed), 1.00f, CenterAlign, BottomAlign);
+		Render::PrintString(FPoint(896, 420), "%MPM%" + utils::lexical_cast(info.monsterMeat), 1.00f, CenterAlign, BottomAlign);
 		Render::EndColor();
-
 		Render::BeginColor(Color(255, 255, 255, 255));
 		Render::BindFont("dikovina_24");
 		Render::PrintString(FPoint(896, 295), utils::lexical_cast(info.gold), 1.00f, CenterAlign, BottomAlign);

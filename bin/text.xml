@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Workbook>
+    <Worksheet>
+        <Table>
+            <Row>
+                <Cell>
+                    <Data>ID</Data>
+                </Cell>
+                <Cell>
+                    <Data>Attributes</Data>
+                </Cell>
+                <Cell>
+                    <Data>ru</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>StartPanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Big hungry ants want to get some meat.
+					Do you want to help them?</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>MyTooltip</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Текст тултипа</Data>
+                </Cell>
+            </Row>
+        </Table>
+    </Worksheet>
+	<Worksheet>
+        <Table>
+            <Row>
+                <Cell>
+                    <Data>ID</Data>
+                </Cell>
+                <Cell>
+                    <Data>Attributes</Data>
+                </Cell>
+                <Cell>
+                    <Data>ru</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>LosePanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Now your ants became small and vegan!
+					Do you want to make them  hunt more?</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>MyTooltip</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Текст тултипа</Data>
+                </Cell>
+            </Row>
+        </Table>
+    </Worksheet>
+	<Worksheet>
+        <Table>
+            <Row>
+                <Cell>
+                    <Data>ID</Data>
+                </Cell>
+                <Cell>
+                    <Data>Attributes</Data>
+                </Cell>
+                <Cell>
+                    <Data>ru</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>WinPanelText</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Now your ants became bigger and hungrier! 
+					Do you want to feed them more?</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data>MyTooltip</Data>
+                </Cell>
+                <Cell><Data></Data></Cell>
+                <Cell>
+                    <Data>Текст тултипа</Data>
+                </Cell>
+            </Row>
+        </Table>
+    </Worksheet>
+</Workbook>

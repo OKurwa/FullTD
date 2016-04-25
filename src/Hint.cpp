@@ -52,10 +52,10 @@ void Hint::Draw()
 		Render::EndAlphaMul();
 		Render::BindFont("dikovina_10");
 		
-		Render::PrintString(_rect.x + _rect.Width()/2, _rect.y + _rect.Height() - _titleYPos, _title, 1.0f, CenterAlign, TopAlign);
+		Render::PrintString(_rect.x + _rect.Width()/2, _rect.y + _rect.Height() - _titleYPos, "%" + _title + "%", 1.0f, CenterAlign, TopAlign);
 		
 		for (unsigned int i = 0; i < _lines.size(); i++) {
-			Render::PrintString(_rect.x + _rect.Width() / 2, _rect.y + _rect.Height() - _lines[i]._lineYPos, _rect.Width() - 30, _lines[i]._text, 1.0f, CenterAlign, TopAlign);
+			Render::PrintString(_rect.x + _rect.Width() / 2, _rect.y + _rect.Height() - _lines[i]._lineYPos, _rect.Width() - 20, "%"+_lines[i]._text+"%", 1.0f, CenterAlign, TopAlign);
 		}
 		
 		

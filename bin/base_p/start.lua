@@ -7,6 +7,7 @@ Include("gui.lua")
 -- функцией UploadResourceGroup, которая вызывается ниже.
 --
 LoadResource("Resources.xml")
+LoadFreeTypeText("text.xml")
 
 --
 -- Загрузка эффектов, созданных в редакторе частиц.

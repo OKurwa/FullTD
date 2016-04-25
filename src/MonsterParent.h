@@ -43,6 +43,7 @@ public:
 	void SetPosition(FPoint,FieldMap*);
 	int Damage() { return _damage; };
 	int TakeMonsterMeat();
+	void AddEffect(std::string);
 	
 protected:
 	int ref_cnt_;
@@ -74,6 +75,13 @@ protected:
 	FPoint _decay;
 	FPoint _slow;
 	
+	//Ёффекты
+	EffectsContainer _Cont;
+	ParticleEffectPtr _stunEff;
+	ParticleEffectPtr _coldEff;
+	ParticleEffectPtr _poisonEff;
+	Color _effectColor;
+
 	//јнимации
 	Render::AnimationPtr _runAnim;
 	Render::AnimationPtr _idleAnim;
@@ -196,7 +204,7 @@ const AnimAngles DIE_ANGLES = {
 	IPoint(132,139),
 	IPoint(152,159) };
 
-const Sector angle0 = {-22.5, 22.5};
+const Sector angle0 = { -22.5, 22.5 };
 const Sector angle45 = { 22.5, 67.5 };
 const Sector angle90 = { 67.5, 112.5 };
 const Sector angle135 = { 112.5, 157.5 };

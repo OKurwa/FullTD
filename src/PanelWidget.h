@@ -29,4 +29,5 @@ private:
 	float _angle;
 
 	Menu::Ptr _menu;
+	Render::TexturePtr _menuBG;
 };
