@@ -53,6 +53,7 @@ void TestWidget::Init()
 	IPoint cellPos = _fieldMap.GetSpawnCell();
 	IPoint cellSize = _fieldMap.CellSize();
 	_startButton->MoveTo(IPoint(cellPos.x*cellSize.x, cellPos.y*cellSize.y));
+	col = false;
 }
 
 void TestWidget::Draw()
@@ -87,8 +88,8 @@ void TestWidget::Draw()
 	DrawBuildCursor();
 	if(World::Instance().State() != WAVE)
 		_startButton->Draw();
-	
-	
+	//if (col)
+	//_collector.Draw();
 }
 
 void TestWidget::Update(float dt)
@@ -139,11 +140,14 @@ void TestWidget::Update(float dt)
 	else {
 		_startButton->Buttons()[0][0]->SetCornerText("");
 	}
-	
+	//if(col)
+	//_collector.Update(dt);
 }
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
 {
+	//_collector.CalulateWay(mouse_pos, FPoint(768, 340));
+	//col = true;
 	int a = _startButton->Press(mouse_pos, Button::NO_VALUE);
 	if (a == 0 && World::Instance().State() == DELAY) {
 		World::Instance().GoldAdd(World::Instance().EarlyStart());

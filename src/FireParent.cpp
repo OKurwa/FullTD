@@ -241,21 +241,10 @@ NormalMissile::~NormalMissile() {
 
 void NormalMissile::DealDamage()
 {
-	_target->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+	if (!_target->Finish())
+		_target->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
 }
 
-void NormalMissile::SetTarget(MonsterParent * target) {
-	_target = target;
-	if (target && _modSpeed>0) {
-		float d = _position.GetDistanceTo(target->Position());
-		_flyTime = d / _modSpeed;
-		_targetPosition = target->HitPosition(_flyTime);
-		_missileTimer = 0;
-		_fly = true;
-		_hit = false;
-		MakePath();
-	}
-};
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -310,13 +299,17 @@ SlowMissile::~SlowMissile() {
 
 void SlowMissile::DealDamage()
 {
-	for (unsigned int i = 0; i < _targets.size(); i++) {
-		FPoint tPos = _targets[i]->Position();
-		float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
-		if (d < _splashRange) {
-			_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
+
+	if (!_target->Finish()) {
+		for (unsigned int i = 0; i < _targets.size(); i++) {
+			FPoint tPos = _targets[i]->Position();
+			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
+			if (d < _splashRange) {
+				_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
+			}
 		}
 	}
+	
 }
 
 MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
@@ -405,7 +398,8 @@ DecayMissile::~DecayMissile() {
 
 void DecayMissile::DealDamage()
 {
-	_target->TakeDamage(_missileType, _decay, math::random(_damage.x, _damage.y));
+	if(!_target->Finish())
+		_target->TakeDamage(_missileType, _decay, math::random(_damage.x, _damage.y));
 }
 
 //----------------------------------------------//
@@ -445,7 +439,7 @@ BashMissile::~BashMissile() {
 
 void BashMissile::DealDamage()
 {
-	if(!_target->Dead())
+	if(!_target->Finish())
 		_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
 }
 
@@ -490,14 +484,18 @@ SplashMissile::~SplashMissile() {
 
 void SplashMissile::DealDamage()
 {
-	for (unsigned int i = 0; i < _targets.size(); i++) {
-		FPoint tPos = _targets[i]->Position();
-		float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
-		if (d < _splashRange) {
-			_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
-		}
+	
+	if (!_target->Finish()) {
+		for (unsigned int i = 0; i < _targets.size(); i++) {
+			FPoint tPos = _targets[i]->Position();
+			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
+			if (d < _splashRange) {
+				_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+			}
 
+		}
 	}
+	
 }
 
 MonsterParent::Ptr  SplashMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {

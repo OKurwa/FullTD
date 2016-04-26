@@ -45,7 +45,7 @@ public:
 
 	virtual void DealDamage();
 
-	virtual Ptr Clone() = 0;
+	//virtual Ptr Clone() = 0;
 
 	void SetPosition(FPoint);
 
@@ -102,11 +102,9 @@ public:
 	
 	void DealDamage() override;
 	
-	NormalMissile::Ptr Clone() {
-		return new NormalMissile(*this);
-	}
 	
-	void SetTarget(MonsterParent * target);
+	
+	
 	
 private:
 	
@@ -158,9 +156,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr Clone() {
-		return new DecayMissile(*this);
-	}
+	
 	
 private:
 	
@@ -184,9 +180,7 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr Clone() {
-		return new BashMissile(*this);
-	}
+	
 	
 private:
 	
@@ -210,9 +204,6 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr Clone() {
-		return new SplashMissile(*this);
-	}
 	
 	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
 private:

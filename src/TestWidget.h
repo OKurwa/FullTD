@@ -8,6 +8,7 @@
 #include "World.h"
 #include "Menu.h"
 #include "TowerPrototypeFactory.h"
+#include "MeatCollector.h"
 ///
 /// Виджет - основной визуальный элемент на экране.
 /// Он отрисовывает себя, а также может содержать другие виджеты.
@@ -86,4 +87,6 @@ private:
 
 	Menu::Ptr _startButton;
 	Menu::Ptr _getMeatButton;
+	MeatCollector _collector;
+	bool col;
 };
