@@ -53,9 +53,7 @@ MonsterParent::MonsterParent(const MonsterInfo & inf)
 	_dead = false;
 	_dying = false;
 	_finish = false;
-	_runAnimAngles = RUN_ANGLES;
-	_idleAnimAngles = MOB_IDL_ANGLES;
-	_dieAnimAngles = DIE_ANGLES;
+	
 	_position = inf._position;
 	_modSpeed = inf._modSpeed;
 	_map = inf._map;
@@ -72,6 +70,12 @@ MonsterParent::MonsterParent(const MonsterInfo & inf)
 	_bash.value = 0;
 	_decay.value =0;
 	_slow.value = 0;
+	_bash.length = 0;
+	_decay.length = 0;
+	_slow.length = 0;
+	_runAnimAngles = RUN_ANGLES;
+	_idleAnimAngles = MOB_IDL_ANGLES;
+	_dieAnimAngles = DIE_ANGLES;
 }
 ;
 

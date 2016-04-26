@@ -238,7 +238,7 @@ NormalMissile::NormalMissile() : FireParent() {
 	_target = nullptr;
 };
 
-NormalMissile::NormalMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent() {
+NormalMissile::NormalMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent(inf, targets) {
 	_missileType = TowerType::NORMAL;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
