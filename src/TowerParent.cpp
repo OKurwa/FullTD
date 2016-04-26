@@ -371,16 +371,10 @@ void TowerParent::LoadTowerFormXML(xml_node<>* towerNode){
 		
 		//Эффекты атак
 		//--Slow
-		info._sFactor.x = Xml::GetFloatAttributeOrDef(missile, "slow", 0);
-		info._sFactor.y = Xml::GetFloatAttributeOrDef(missile, "slowLenght", 0);
+		
 
-		//--Decay
-		info._decay.x = Xml::GetIntAttributeOrDef(missile, "decay", 0);
-		info._decay.y = Xml::GetIntAttributeOrDef(missile, "decayLenght", 0);
-
-		//--Bash
-		info._bash.x = Xml::GetFloatAttributeOrDef(missile, "bashChance", 0);
-		info._bash.y = Xml::GetFloatAttributeOrDef(missile, "bashLenght", 0);
+		info._eff.value = Xml::GetFloatAttributeOrDef(missile, "effect", 0);
+		info._eff.length = Xml::GetFloatAttributeOrDef(missile, "effectLenght", 0);
 
 
 		//Радиус поражения
@@ -545,7 +539,7 @@ void SlowTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%SPLASH%" + utils::lexical_cast(_missilesPrototypes[_lvl]._sRange), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 45), "%SLOW%" + utils::lexical_cast((int)(_missilesPrototypes[_lvl]._sFactor.x * 100))+"%ON%"+ utils::lexical_cast(_missilesPrototypes[_lvl]._sFactor.y)+"%SEC%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 45), "%SLOW%" + utils::lexical_cast((int)(_missilesPrototypes[_lvl]._eff.value * 100))+"%ON%"+ utils::lexical_cast((int)_missilesPrototypes[_lvl]._eff.length)+"%SEC%", 1.0f, CenterAlign, BottomAlign);
 
 	
 	if (_lvl<_lvlCount - 1)
@@ -622,7 +616,7 @@ void DecayTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%PBName% :" + utils::lexical_cast(_lvl + 1) + " lvl", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%POISON%" + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.x) + "%DPS%" + utils::lexical_cast(_missilesPrototypes[_lvl]._decay.y) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%POISON%" + utils::lexical_cast((int)_missilesPrototypes[_lvl]._eff.value) + "%DPS%" + utils::lexical_cast((int)_missilesPrototypes[_lvl]._eff.length) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
 
 
 	if (_lvl<_lvlCount - 1)
@@ -700,7 +694,7 @@ void BashTower::DrawHintText(IRect rect) {
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 105), "%BBName% :" + utils::lexical_cast(_lvl + 1) + "%LVL%", 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 90), "%DMG%" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.x) + "-" + utils::lexical_cast(_missilesPrototypes[_lvl]._damage.y), 1.0f, CenterAlign, BottomAlign);
 	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 75), "%RNG%" + utils::lexical_cast(_range), 1.0f, CenterAlign, BottomAlign);
-	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%BASH%"+ utils::lexical_cast((int)(_missilesPrototypes[_lvl]._bash.x*100)) + "%ON%" + utils::lexical_cast(_missilesPrototypes[_lvl]._bash.y) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
+	Render::PrintString(FPoint(rect.x + rect.Width() / 2, rect.y + 60), "%BASH%"+ utils::lexical_cast((int)(_missilesPrototypes[_lvl]._eff.value*100)) + "%ON%" + utils::lexical_cast((int)_missilesPrototypes[_lvl]._eff.length) + "%SEC%", 1.0f, CenterAlign, BottomAlign);
 	
 
 	if (_lvl<_lvlCount - 1)

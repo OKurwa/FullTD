@@ -24,6 +24,8 @@ FireParent::FireParent() {
 	_missilePathY.Clear();
 	_tex = nullptr;
 	_damage = IPoint(0, 0);
+	_effect.value = 0;
+	_effect.length = 0;
 };
 
 
@@ -242,7 +244,7 @@ NormalMissile::~NormalMissile() {
 void NormalMissile::DealDamage()
 {
 	if (!_target->Finish())
-		_target->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
 }
 
 
@@ -254,7 +256,6 @@ void NormalMissile::DealDamage()
 
 SlowMissile::SlowMissile() : FireParent() {
 	_missileType = TowerType::SLOW;
-	_slow = FPoint(0,0);
 	_splashRange = 0;
 	
 };
@@ -274,7 +275,7 @@ SlowMissile::SlowMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets
 	_tex = nullptr;
 	_damage = inf._damage;
 	_targets = targets;
-	_slow = inf._sFactor;
+	_effect = inf._eff;
 	_splashRange = inf._sRange;
 	_missilePathX.Clear();
 	_missilePathY.Clear();
@@ -306,7 +307,7 @@ void SlowMissile::DealDamage()
 			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
 			if (d < _splashRange) {
 				if (!_targets[i]->Finish())
-					_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
+					_targets[i]->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
 			}
 		}
 	
@@ -366,7 +367,7 @@ MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monst
 
 DecayMissile::DecayMissile() : FireParent() {
 	_missileType = TowerType::DECAY;
-	_decay = FPoint(0,0);
+	
 	_target = nullptr;
 	
 };
@@ -380,7 +381,7 @@ DecayMissile::DecayMissile(MissInfo inf) : FireParent() {
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_decay = inf._decay;
+	_effect = inf._eff;
 	_target = inf._target;
 	_damage = inf._damage;
 
@@ -400,7 +401,7 @@ DecayMissile::~DecayMissile() {
 void DecayMissile::DealDamage()
 {
 	if(!_target->Finish())
-		_target->TakeDamage(_missileType, _decay, math::random(_damage.x, _damage.y));
+		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
 }
 
 //----------------------------------------------//
@@ -411,7 +412,6 @@ void DecayMissile::DealDamage()
 
 BashMissile::BashMissile() : FireParent() {
 	_missileType = TowerType::BASH;
-	_bash = FPoint(0,0);
 	_target = nullptr;
 };
 
@@ -424,7 +424,7 @@ BashMissile::BashMissile(MissInfo inf) : FireParent() {
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_bash = inf._bash;
+	_effect = inf._eff;
 	_target = inf._target;
 	_damage = inf._damage;
 	_misEff = _misEffCont.AddEffect("Iskra1");
@@ -441,7 +441,7 @@ BashMissile::~BashMissile() {
 void BashMissile::DealDamage()
 {
 	if(!_target->Finish())
-		_target->TakeDamage(_missileType, _bash, math::random(_damage.x, _damage.y));
+		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
 }
 
 
@@ -492,7 +492,7 @@ void SplashMissile::DealDamage()
 			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
 			if (d < _splashRange) {
 				if (!_targets[i]->Finish())
-					_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+					_targets[i]->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
 			}
 
 		}

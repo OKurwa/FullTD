@@ -17,6 +17,7 @@
 class FireParent : public RefCounter{
 public:
 	typedef boost::intrusive_ptr<FireParent> Ptr;
+	
 	struct MissInfo {
 		FPoint _position;
 		IPoint _damage;
@@ -26,10 +27,10 @@ public:
 		int _price;
 
 		//Эффекты атак
-		FPoint _sFactor;
-		FPoint _decay;
-		FPoint _bash;
-
+		//FPoint _sFactor;
+		//FPoint _decay;
+		//FPoint _bash;
+		AttackEffect _eff;
 		//Радиус поражения
 		int _sRange;
 
@@ -80,6 +81,7 @@ protected:
 	EffectsContainer _misEffCont;
 	ParticleEffectPtr _misEff;
 	ParticleEffectPtr _hitEff;
+	AttackEffect _effect;
 };
 
 
@@ -129,7 +131,7 @@ public:
 	
 	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
 private:
-	FPoint _slow;
+	
 	int _splashRange;
 	std::vector<MonsterParent::Ptr> _targets;
 	
@@ -156,7 +158,7 @@ public:
 	
 private:
 	
-	FPoint _decay;
+
 	
  };
 
@@ -180,7 +182,7 @@ public:
 	
 private:
 	
-	FPoint _bash;
+	
 };
 
 

@@ -63,8 +63,8 @@ void MonsterParent::Draw() {
 			IPoint pos = IPoint(_position.x - _map->CellSize().x, _position.y - _map->CellSize().y * 2 / 3);
 			Render::device.SetTexturing(true);
 			if (!_dying) {
-
-				if (_bash != FPoint(0, 0)) {
+				
+				if (_bash.length > 0 ) {
 					_idleAnim->Draw(pos);
 				}
 				else {
@@ -121,28 +121,31 @@ void MonsterParent::DrawMeat() {
 
 void MonsterParent::Update(float dt) {
 	//Таймер замедления
-	if (_slow.y <= 0) {
-		_slow = FPoint(0, 0);
+	if (_slow.length <= 0) {
+		_slow.value = 0;
+		_slow.length = 0;
 	}
 	else {
-		_slow.y -= dt;
+		_slow.length -= dt;
 	}
 	//Таймер отравления
-	if (_decay.y <= 0) {
-		_decay = FPoint(0, 0);
+	if (_decay.length <= 0) {
+		_decay.value = 0;
+		_decay.length = 0;
 	}
 	else {
-		_decay.y -= dt;
+		_decay.length -= dt;
 	}
 	//Таймер оглушения
-	if (_bash.y <= 0) {
-		_bash = FPoint(0, 0);
+	if (_bash.length <= 0) {
+		_bash.value = 0;
+		_bash.length = 0;
 	}
 	else {
-		_bash.y -= dt;
+		_bash.length -= dt;
 	}
 
-	_hp -= _decay.x * dt;
+	_hp -= _decay.value * dt;
 
 	if (_hp <= 0 && !_dying) {
 		_dying = true;	
@@ -164,7 +167,7 @@ void MonsterParent::Update(float dt) {
 		_dieAnimEnd = true;
 	}
 	float edt = dt;
-	edt *= (1 - _slow.x)*(1 - _bash.x);
+	edt *= (1 - _slow.value)*(1 - _bash.value);
 
 	_moveTimer += edt;
 	_curWayDistance -= _modSpeed*edt;
@@ -181,7 +184,7 @@ void MonsterParent::Update(float dt) {
 
 		if (!_dying) {
 			
-			if (_bash != FPoint(0, 0)) {
+			if (_bash.length > 0) {
 				_idleAnim->Update(dt);
 			}
 			else {
@@ -220,34 +223,34 @@ void MonsterParent::Update(float dt) {
 
 	//Включение эффектов
 	_effectColor = Color(255, 255, 255, 255);
-	if (_slow.x > 0 && _decay.x > 0) {
+	if (_slow.value > 0 && _decay.value> 0) {
 		_effectColor = Color(0, 250, 154, 255);
 		
 		AddEffect("Cold");
 		AddEffect("Poison");
-	}else if (_slow.x > 0) {
+	}else if (_slow.value > 0) {
 		_effectColor = Color(60, 124, 255, 255);
 		AddEffect("Cold");
 	}
-	else if (_decay.x>0) {
+	else if (_decay.value>0) {
 		_effectColor = Color(124, 252, 0, 255);
 		AddEffect("Poison");
 	}
 
-	if (_bash.x > 0) {
+	if (_bash.value > 0) {
 		AddEffect("Stun");
 	}
 
 
 	//Выключение эффектов
-	if (_slow.x == 0 && _coldEff) {
+	if (_slow.value == 0 && _coldEff) {
 		
 		_coldEff->Finish();
 	}
-	if (_bash.x == 0 && _stunEff) {
+	if (_bash.value == 0 && _stunEff) {
 		_stunEff->Finish();
 	}
-	if (_decay.x == 0 && _poisonEff) {
+	if (_decay.value == 0 && _poisonEff) {
 		_poisonEff->Finish();
 	}
 
@@ -667,7 +670,7 @@ FPoint MonsterParent::Position() {
 
 FPoint MonsterParent::HitPosition(float dt) {
 	float edt = dt;
-	edt *=(1 - _slow.x)*(1 - _bash.x);
+	edt *=(1 - _slow.value)*(1 - _bash.value);
 	return FPoint(_curWaySplineX.getGlobalFrame(edt + _moveTimer),
 				  _curWaySplineY.getGlobalFrame(edt + _moveTimer));
 };
@@ -790,15 +793,16 @@ NormalMonster::NormalMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 NormalMonster::~NormalMonster() {
 };
 
-void NormalMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
+void NormalMonster::TakeDamage(TowerType effType, AttackEffect values, float damage) {
 	if (effType == TowerType::SLOW)
 		_slow = values;
 	if (effType == TowerType::DECAY)
 		_decay = values;
 	if (effType == TowerType::BASH) {
-		values.x *= 100;
-		if (math::random(0, 100) <= values.x)
-			_bash = FPoint(1, values.y);
+		values.value *= 100;
+		if (math::random(0, 100) <= values.value)
+			_bash.value = 1;
+			_bash.length = values.length;
 	}
 
 	if (_hp > 0) {
@@ -853,14 +857,17 @@ BossMonster::BossMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 BossMonster::~BossMonster() {
 };
 
-void BossMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
+void BossMonster::TakeDamage(TowerType effType, AttackEffect values, float damage) {
 	
 	
 	
 	if (effType == TowerType::SLOW)
 		_slow = values;
-	if (effType == TowerType::DECAY)
-		_decay =FPoint(values.x*4, values.y*4);
+	if (effType == TowerType::DECAY) {
+		_decay.value = 4 * values.value;
+		_decay.length = 4 * values.length;
+	}
+		
 	
 
 	if (_hp > 0) {
@@ -911,16 +918,17 @@ ImmuneMonster::ImmuneMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
 ImmuneMonster::~ImmuneMonster() {
 };
 
-void ImmuneMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
+void ImmuneMonster::TakeDamage(TowerType effType, AttackEffect values, float damage) {
 	
 	
 	
 	if (effType == TowerType::DECAY)
 		_decay = values;
 	if (effType == TowerType::BASH) {
-		values.x *= 100;
-		if (math::random(0, 100) <= values.x) {
-			_bash = FPoint(1, values.y * 2);
+		values.value *= 100;
+		if (math::random(0, 100) <= values.value) {
+			_bash.value = 1;
+			_bash.length = values.length;
 			damage *= 2;
 		}
 			
@@ -977,19 +985,23 @@ HealingMonster::HealingMonster(MonsterParent::MonsterInfo inf) : MonsterParent()
 HealingMonster::~HealingMonster() {
 };
 
-void HealingMonster::TakeDamage(TowerType effType, FPoint values, float damage) {
+void HealingMonster::TakeDamage(TowerType effType, AttackEffect values, float damage) {
 	if (effType == TowerType::SLOW) {
-		_slow = FPoint(values.x * 2, values.y*1.5);
-		if (_slow.x >= 1) {
-			_slow.x = 0.8;
+		_slow.value = 2 * values.value;
+		_slow.length = values.length*1.5;
+		if (_slow.value >= 1) {
+			_slow.value = 0.8;
 		}
 	}
 		
 	
 	if (effType == TowerType::BASH) {
-		values.x *= 100;
-		if (math::random(0, 100) <= values.x)
-			_bash = FPoint(1, values.y);
+		values.value *= 100;
+		if (math::random(0, 100) <= values.value) {
+			_bash.value = 1;
+			_bash.length = values.length;
+		}
+
 	}
 
 	if (_hp > 0) {

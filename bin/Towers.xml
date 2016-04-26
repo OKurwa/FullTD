@@ -17,25 +17,25 @@
 			<Missile id="4" reload="0.5" misSpeed="400" minDMG="300" maxDMG="450" range="192" splashRange="80"   price="50"/>
 		</Tower>
 		<Tower id="SlowTower" texture="IceAnt" animation="IceAttack" price="25" reload="0.5" range="192" lvlCount="5" idleAnimation = "IceIdleAnimation" atkAnimation = "IceAttackAnimation">
-			<Missile id="0" misSpeed="400" minDMG="5" maxDMG="10" splashRange="40" slow="0.3" slowLenght="3" price="25"/>
-			<Missile id="1" misSpeed="400" minDMG="5" maxDMG="10" splashRange="50" slow="0.4" slowLenght="3" price="50"/>	
-			<Missile id="2" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" slow="0.5" slowLenght="3" price="50"/>
-			<Missile id="3" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" slow="0.5" slowLenght="4" price="60"/>
-			<Missile id="4" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" slow="0.5" slowLenght="5" price="70"/>
+			<Missile id="0" misSpeed="400" minDMG="5" maxDMG="10" splashRange="40" effect="0.3" effectLenght="3" price="25"/>
+			<Missile id="1" misSpeed="400" minDMG="5" maxDMG="10" splashRange="50" effect="0.4" effectLenght="3" price="50"/>	
+			<Missile id="2" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" effect="0.5" effectLenght="3" price="50"/>
+			<Missile id="3" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" effect="0.5" effectLenght="4" price="60"/>
+			<Missile id="4" misSpeed="400" minDMG="5" maxDMG="10" splashRange="60" effect="0.5" effectLenght="5" price="70"/>
 		</Tower>
 		<Tower id="DecayTower" texture="PoisonAnt" animation="PoisonAttack" price="15" reload="0.5" range="250" lvlCount="5" idleAnimation = "PoisonIdleAnimation" atkAnimation = "PoisonAttackAnimation">
-			<Missile id="0" misSpeed="300" minDMG="5" maxDMG="10" decay="40" decayLenght="4" price="15"/>
-			<Missile id="1" misSpeed="300" minDMG="5" maxDMG="10" decay="60" decayLenght="4" price="20"/>
-			<Missile id="2" misSpeed="300" minDMG="5" maxDMG="10" decay="180" decayLenght="4" price="30"/>
-			<Missile id="3" misSpeed="300" minDMG="5" maxDMG="10" decay="300" decayLenght="4" price="50"/>
-			<Missile id="4" misSpeed="300" minDMG="5" maxDMG="10" decay="400" decayLenght="4" price="50"/>
+			<Missile id="0" misSpeed="300" minDMG="5" maxDMG="10" effect="40" effectLenght="4" price="15"/>
+			<Missile id="1" misSpeed="300" minDMG="5" maxDMG="10" effect="60" effectLenght="4" price="20"/>
+			<Missile id="2" misSpeed="300" minDMG="5" maxDMG="10" effect="180" effectLenght="4" price="30"/>
+			<Missile id="3" misSpeed="300" minDMG="5" maxDMG="10" effect="300" effectLenght="4" price="50"/>
+			<Missile id="4" misSpeed="300" minDMG="5" maxDMG="10" effect="400" effectLenght="4" price="50"/>
 		</Tower>
 		<Tower id="BashTower" texture="StunAnt" animation="StunAttack" price="15" reload="0.5" range="250" lvlCount="5" idleAnimation = "StunIdleAnimation" atkAnimation = "StunAttackAnimation">
-			<Missile id="0" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.2" bashLenght="3" price="15"/>
-			<Missile id="1" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.4" bashLenght="3" price="30"/>
-			<Missile id="2" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.6" bashLenght="3" price="45"/>
-			<Missile id="3" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.8" bashLenght="3" price="60"/>
-			<Missile id="4" misSpeed="600" minDMG="5" maxDMG="10" bashChance="0.9" bashLenght="3" price="75"/>
+			<Missile id="0" misSpeed="600" minDMG="5" maxDMG="10" effect="0.2" effectLenght="3" price="15"/>
+			<Missile id="1" misSpeed="600" minDMG="5" maxDMG="10" effect="0.4" effectLenght="3" price="30"/>
+			<Missile id="2" misSpeed="600" minDMG="5" maxDMG="10" effect="0.6" effectLenght="3" price="45"/>
+			<Missile id="3" misSpeed="600" minDMG="5" maxDMG="10" effect="0.8" effectLenght="3" price="60"/>
+			<Missile id="4" misSpeed="600" minDMG="5" maxDMG="10" effect="0.9" effectLenght="3" price="75"/>
 		</Tower>
 
 	</Towers>

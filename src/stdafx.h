@@ -15,6 +15,10 @@ enum TowerType {
 	DESTROY,
 	EMPTY
 };
+struct AttackEffect {
+	float value;
+	float length;
+};
 
 typedef struct {
 	IPoint _a0;

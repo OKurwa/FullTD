@@ -29,7 +29,7 @@ public:
 	virtual void Update(float dt);
 	virtual void PostUpdate(float dt) {};
 	void UpdateAnimAngle(float dt);
-	virtual void TakeDamage(TowerType effType, FPoint values, float damage) = 0;
+	virtual void TakeDamage(TowerType effType, AttackEffect values, float damage) = 0;
 	virtual Ptr Clone() = 0;
 	bool FindAWay();
 	std::vector<IPoint> FillAround(std::vector<IPoint> lastWaveFilled, std::vector<std::vector<int>> & map, int d);
@@ -72,9 +72,9 @@ protected:
 
 	//Ёффекты атак и счетчики
 
-	FPoint _bash;
-	FPoint _decay;
-	FPoint _slow;
+	AttackEffect _bash;
+	AttackEffect _decay;
+	AttackEffect _slow;
 	
 	//Ёффекты
 	EffectsContainer _Cont;
@@ -120,7 +120,7 @@ public:
 		return new BossMonster(*this);
 	}
 	
-	void TakeDamage(TowerType effType, FPoint values, float damage);
+	void TakeDamage(TowerType effType, AttackEffect values, float damage);
 	
 private:
 	float _reduceDamage;
@@ -139,7 +139,7 @@ public:
 	}
 	
 	
-	void TakeDamage(TowerType effType, FPoint values, float damage);
+	void TakeDamage(TowerType effType, AttackEffect values, float damage);
 	
 private:
 
@@ -156,7 +156,7 @@ public:
 
 		return new HealingMonster(*this);
 	}
-	void TakeDamage(TowerType effType, FPoint values, float damage);
+	void TakeDamage(TowerType effType, AttackEffect values, float damage);
 	void PostUpdate(float dt);
 private:
 	float _healPerSecond;
@@ -174,7 +174,7 @@ public:
 		return new NormalMonster(*this);
 	}
 	
-	void TakeDamage(TowerType effType, FPoint values, float damage);
+	void TakeDamage(TowerType effType, AttackEffect values, float damage);
 	
 private:
 	
