@@ -42,7 +42,7 @@ public:
 
 	//Действия в Draw
 	void DrawBuildCursor();
-
+	void TryTakeMonsterGold(MonsterParent::Ptr);
 private:
 	void Init();
 

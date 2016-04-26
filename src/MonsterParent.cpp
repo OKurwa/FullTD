@@ -736,6 +736,14 @@ void MonsterParent::AddEffect(std::string eff)
 		}
 	}
 }
+bool MonsterParent::isEmpty()
+{
+	return _empty;
+}
+IPoint MonsterParent::GetPoisition()
+{
+	return _position.Rounded();
+}
 ;
 
 

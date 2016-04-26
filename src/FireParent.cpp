@@ -300,15 +300,16 @@ SlowMissile::~SlowMissile() {
 void SlowMissile::DealDamage()
 {
 
-	if (!_target->Finish()) {
+	
 		for (unsigned int i = 0; i < _targets.size(); i++) {
 			FPoint tPos = _targets[i]->Position();
 			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
 			if (d < _splashRange) {
-				_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
+				if (!_targets[i]->Finish())
+					_targets[i]->TakeDamage(_missileType, _slow, math::random(_damage.x, _damage.y));
 			}
 		}
-	}
+	
 	
 }
 
@@ -485,16 +486,17 @@ SplashMissile::~SplashMissile() {
 void SplashMissile::DealDamage()
 {
 	
-	if (!_target->Finish()) {
+	
 		for (unsigned int i = 0; i < _targets.size(); i++) {
 			FPoint tPos = _targets[i]->Position();
 			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
 			if (d < _splashRange) {
-				_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
+				if (!_targets[i]->Finish())
+					_targets[i]->TakeDamage(_missileType, FPoint(0, 0), math::random(_damage.x, _damage.y));
 			}
 
 		}
-	}
+	
 	
 }
 

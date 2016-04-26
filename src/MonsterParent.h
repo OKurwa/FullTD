@@ -44,7 +44,8 @@ public:
 	int Damage() { return _damage; };
 	int TakeMonsterMeat();
 	void AddEffect(std::string);
-	
+	bool isEmpty();
+	IPoint GetPoisition();
 protected:
 	int ref_cnt_;
 	int _damage;

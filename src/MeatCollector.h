@@ -3,17 +3,32 @@
 class MeatCollector
 {
 public:
+	struct Meat {
+		IPoint _position;
+		IPoint _size;
+		float _flyTimer;
+		ParticleEffectPtr _tailEff;
+		EffectsContainer _tailCont;
+		TimedSplinePath _pathSplineX;
+		TimedSplinePath _pathSplineY;
+		SplinePath<FPoint> _sizeSpline;
+		
+	};
 	MeatCollector();
 	~MeatCollector();
-	void CalulateWay(FPoint a, FPoint b);
+	void AddMeat(FPoint a);
+	
 	void Draw();
 	void Update(float dt);
+	void SetTexSizes(IPoint startSize, IPoint finishSize);
+	void SetDestinationPoint(FPoint b);
 private:
-	IPoint _position;
-	float _flyTimer;
+	void CalulateWay(FPoint a, Meat & meat);
+	void CalulateTimedWay(FPoint a, Meat & meat);
+	IPoint _startSize;
+	IPoint _finishSize;
+	FPoint _dest;
 	Render::TexturePtr _meat;
-	ParticleEffectPtr _tailEff;
-	EffectsContainer _tailCont;
-	SplinePath<FPoint> _spline;
+	std::vector<Meat> _meats;
 };
 

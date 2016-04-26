@@ -127,10 +127,6 @@ public:
 
 	void DealDamage() override;
 	
-	FireParent::Ptr Clone() {
-		return new SlowMissile(*this);
-	}
-	
 	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
 private:
 	FPoint _slow;

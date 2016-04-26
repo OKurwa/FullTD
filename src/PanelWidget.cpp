@@ -20,12 +20,12 @@ void PanelWidget::Init()
 {
 	_menu = new Menu;
 	_menu->LoadFromXml("Menu.xml");
-	_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
+	//_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
 }
 
 void PanelWidget::Draw()
 {
-	_menuBG->Draw(IPoint(768, 0));
+	
 	Render::BindFont("dikovina_16");
 	Render::BeginColor(titleColor);
 	Render::PrintString(FPoint(896, 680), "%StartPanelTitle%", 1.00f, CenterAlign, BottomAlign);

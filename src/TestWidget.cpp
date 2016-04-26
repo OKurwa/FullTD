@@ -54,11 +54,14 @@ void TestWidget::Init()
 	IPoint cellSize = _fieldMap.CellSize();
 	_startButton->MoveTo(IPoint(cellPos.x*cellSize.x, cellPos.y*cellSize.y));
 	col = false;
+	_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
+	_collector.SetTexSizes(IPoint(10, 10), IPoint(33, 33));
+	_collector.SetDestinationPoint(FPoint(807, 295));
 }
 
 void TestWidget::Draw()
 {
-	
+	_menuBG->Draw(IPoint(768, 0));
 	IPoint fieldSize = _fieldMap.Size();
 	IPoint cellSize = _fieldMap.CellSize();
 	
@@ -88,8 +91,8 @@ void TestWidget::Draw()
 	DrawBuildCursor();
 	if(World::Instance().State() != WAVE)
 		_startButton->Draw();
-	//if (col)
-	//_collector.Draw();
+	
+	_collector.Draw();
 }
 
 void TestWidget::Update(float dt)
@@ -101,12 +104,13 @@ void TestWidget::Update(float dt)
 		Core::mainScreen.pushLayer("StartLayer");
 	//dt *= 0.5;
 	_fieldMap.Update(dt);
+
+
 	for (unsigned int i = 0; i < _monsters.size(); i++) {
 		_monsters[i]->Update(dt);
-		if (_monsters[i]->Dying()) {
-			World::Instance().GoldAdd(_monsters[i]->TakeMonsterMeat());
-		}
+		TryTakeMonsterGold(_monsters[i]);
 	}
+
 	for (unsigned int i = 0; i < _towers.size(); i++) {
 		_towers[i]->Update(dt);
 
@@ -140,14 +144,14 @@ void TestWidget::Update(float dt)
 	else {
 		_startButton->Buttons()[0][0]->SetCornerText("");
 	}
-	//if(col)
-	//_collector.Update(dt);
+	
+	_collector.Update(dt);
 }
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
 {
-	//_collector.CalulateWay(mouse_pos, FPoint(768, 340));
-	//col = true;
+	
+	
 	int a = _startButton->Press(mouse_pos, Button::NO_VALUE);
 	if (a == 0 && World::Instance().State() == DELAY) {
 		World::Instance().GoldAdd(World::Instance().EarlyStart());
@@ -385,7 +389,17 @@ void TestWidget::DrawBuildCursor() {
 		_buildCursor->Draw(IPoint(_buildCursorPos.x - 32, _buildCursorPos.y - 32));
 		Render::EndAlphaMul();
 	}
-};
+}
+void TestWidget::TryTakeMonsterGold(MonsterParent::Ptr monster)
+{
+	if (monster->Dying()) {
+		if (!monster->isEmpty()) {
+			_collector.AddMeat(monster->GetPoisition());
+			World::Instance().GoldAdd(monster->TakeMonsterMeat());
+		}
+	}
+}
+;
 
 void TestWidget::MonsterSpawn() {
 	if (_curMonsterAttack < _monsterAttack.GetAttack().size()) {
