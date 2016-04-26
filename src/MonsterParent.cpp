@@ -69,6 +69,9 @@ MonsterParent::MonsterParent(const MonsterInfo & inf)
 	_meatCont = inf._meat;
 	_curWaySplineX.Clear();
 	_curWaySplineY.Clear();
+	_bash.value = 0;
+	_decay.value =0;
+	_slow.value = 0;
 }
 ;
 

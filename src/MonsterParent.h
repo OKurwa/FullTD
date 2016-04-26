@@ -179,8 +179,6 @@ public:
 private:
 	
 };
-
-
 const AnimAngles MOB_IDL_ANGLES = {
 	IPoint(0,3),
 	IPoint(20,23),
