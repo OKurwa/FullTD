@@ -85,7 +85,7 @@ void MonsterAttack::SetDelay(float d) {
 
 
 
-void MonsterAttack::LoadFromXml(std::string filename) {
+void MonsterAttack::LoadFromXml(std::string & filename) {
 	_attacks.clear();
 	_attackDelay = 0;
 	try {

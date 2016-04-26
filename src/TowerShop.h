@@ -5,7 +5,7 @@ class TowerShop
 public:
 	TowerShop() {};
 	~TowerShop() {};
-	void LoadFromXml(std::string);
+	void LoadFromXml(std::string &);
 	std::vector<int> GetDisabledButtons(int);
 	TowerType GetTypeFromButton(int);
 	int GetButtonFromType(TowerType);

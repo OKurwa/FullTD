@@ -32,7 +32,7 @@ public:
 	~MonsterAttack();
 	void SetDelay(float d);
 	
-	void LoadFromXml(std::string);
+	void LoadFromXml(std::string &);
 	float Delay();
 	std::vector<Attack> & GetAttack();
 	std::vector<MonsterParent::Ptr> & GetAttackPrototypes();

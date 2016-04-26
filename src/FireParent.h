@@ -37,6 +37,7 @@ public:
 	};
 	
 	FireParent();	
+	FireParent(const MissInfo & , const std::vector<MonsterParent::Ptr> &);
 	
 	~FireParent() {};
 	
@@ -46,6 +47,7 @@ public:
 
 	virtual void DealDamage();
 
+	virtual IPoint GetTargetPos(MonsterParent::Ptr, float);
 	//virtual Ptr Clone() = 0;
 
 	void SetPosition(FPoint);
@@ -58,10 +60,9 @@ public:
 
 	void TakeNearestMonster(float & distance, int & index, std::vector<MonsterParent::Ptr> & monsters);
 
-	virtual MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
+	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range);
 
 protected:
-	int ref_cnt_;
 	TowerType _missileType;
 	FPoint _position;
 	FPoint _targetPosition;
@@ -98,16 +99,10 @@ public:
 	
 	NormalMissile();
 	
-	NormalMissile(MissInfo);
+	NormalMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets);
 	
 	~NormalMissile();
-	
-	void DealDamage() override;
-	
-	
-	
-	
-	
+
 private:
 	
 };
@@ -123,13 +118,14 @@ public:
 	
 	SlowMissile();
 	
-	SlowMissile(MissInfo, std::vector<MonsterParent::Ptr> & targets);
+	SlowMissile(const MissInfo & inf, const  std::vector<MonsterParent::Ptr> & targets);
 
 	~SlowMissile();
 
 	void DealDamage() override;
 	
-	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
+	IPoint GetTargetPos(MonsterParent::Ptr, float) override;
+	
 private:
 	
 	int _splashRange;
@@ -148,14 +144,10 @@ public:
 	
 	DecayMissile();
 	
-	DecayMissile(MissInfo);
+	DecayMissile(const MissInfo & inf, const  std::vector<MonsterParent::Ptr>& targets);
 
 	~DecayMissile();
 
-	void DealDamage() override;
-	
-	
-	
 private:
 	
 
@@ -172,13 +164,10 @@ public:
 	
 	BashMissile();
 	
-	BashMissile(MissInfo);
+	BashMissile(const MissInfo & inf, const  std::vector<MonsterParent::Ptr>& targets);
 
 	~BashMissile();
 
-	void DealDamage() override;
-	
-	
 	
 private:
 	
@@ -196,28 +185,16 @@ public:
 	
 	SplashMissile();
 	
-	SplashMissile::SplashMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets);
+	SplashMissile::SplashMissile(const MissInfo & inf, const  std::vector<MonsterParent::Ptr> & targets);
 
 	~SplashMissile();
 
 	void DealDamage() override;
 	
-	
-	MonsterParent::Ptr TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) override;
+	IPoint GetTargetPos(MonsterParent::Ptr, float) override;
 private:
 	int _splashRange;
 	std::vector<MonsterParent::Ptr> _targets;
 	
 };
-
-
-
-
-
-
-
-
-
-
-
 

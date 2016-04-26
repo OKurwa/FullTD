@@ -26,9 +26,22 @@ FireParent::FireParent() {
 	_damage = IPoint(0, 0);
 	_effect.value = 0;
 	_effect.length = 0;
-};
-
-
+}
+FireParent::FireParent(const MissInfo & inf, const std::vector<MonsterParent::Ptr>& targets)
+{
+	_position = inf._position;
+	_modSpeed = inf._modSpeed;
+	_damage = inf._damage;
+	_target = inf._target;
+	_missileTimer = 0;
+	_fly = true;
+	_hit = false;
+	_tex = nullptr;
+	_damage = inf._damage;
+	
+	
+}
+;
 
 void FireParent::Draw() {
 	if (_misEff || _hitEff) {
@@ -69,7 +82,14 @@ void FireParent::Update(float dt) {
 };
 
 void FireParent::DealDamage() {
-};
+	if (!_target->Finish())
+		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
+}
+IPoint FireParent::GetTargetPos(MonsterParent::Ptr monster,float dt)
+{
+	return monster->HitPosition(dt).Rounded();
+}
+;
 
 
 void FireParent::SetPosition(FPoint pos) {
@@ -172,7 +192,7 @@ MonsterParent::Ptr  FireParent::TakeAim(std::vector<MonsterParent::Ptr> & monste
 			resTarget = monsters[tarIndex];
 			_target = resTarget.get();
 			_flyTime = d / (float)_modSpeed;
-			_targetPosition = monsters[tarIndex]->HitPosition(d / (float)_modSpeed);
+			_targetPosition = GetTargetPos(monsters[tarIndex], d / (float)_modSpeed);
 			_missilePathX.Clear();
 			_missilePathY.Clear();
 			MakePath();
@@ -192,7 +212,7 @@ MonsterParent::Ptr  FireParent::TakeAim(std::vector<MonsterParent::Ptr> & monste
 			resTarget = target;
 			_target = resTarget.get();
 			_flyTime = tmpD / (float)_modSpeed;
-			_targetPosition = target->HitPosition(tmpD / (float)_modSpeed);
+			_targetPosition = GetTargetPos(target, tmpD / (float)_modSpeed);
 			_missilePathX.Clear();
 			_missilePathY.Clear();
 			MakePath();
@@ -218,34 +238,24 @@ NormalMissile::NormalMissile() : FireParent() {
 	_target = nullptr;
 };
 
-NormalMissile::NormalMissile(MissInfo inf) : FireParent() {
+NormalMissile::NormalMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent() {
 	_missileType = TowerType::NORMAL;
-	_position = inf._position;
-	
-	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
-	_damage = inf._damage;
-	_target = inf._target;
 	_misEff = _misEffCont.AddEffect("IskraViol");
 	_misEff->Pause();
 	_misEff->Reset();
 	_misEff->SetScale(0.5);
-	MakePath();
+	
 };
 
 NormalMissile::~NormalMissile() {
 
 };
 
-void NormalMissile::DealDamage()
-{
-	if (!_target->Finish())
-		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
-}
 
 
 //----------------------------------------------//
@@ -260,32 +270,20 @@ SlowMissile::SlowMissile() : FireParent() {
 	
 };
 
-SlowMissile::SlowMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets) : FireParent() {
+SlowMissile::SlowMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent(inf, targets) {
 	_missileType = TowerType::SLOW;
-	_position = inf._position;
-	
-	_modSpeed = inf._modSpeed;
 	float d = _position.GetDistanceTo(inf._tPosition);
 	_flyTime = d / _modSpeed;
 	_targetPosition = inf._tPosition;
-	
-	_missileTimer = 0;
-	_fly = true;
-	_hit = false;
-	_tex = nullptr;
-	_damage = inf._damage;
 	_targets = targets;
 	_effect = inf._eff;
 	_splashRange = inf._sRange;
 	_missilePathX.Clear();
 	_missilePathY.Clear();
-	
-	
 	_hitEff = _misEffCont.AddEffect("RingCold");
 	_hitEff->Pause();
 	_hitEff->Reset();
 	_hitEff->SetScale(1.3);
-	
 	_misEff = _misEffCont.AddEffect("IskraBlue");
 	_misEff->posX = _position.x;
 	_misEff->posY = _position.y;
@@ -300,8 +298,6 @@ SlowMissile::~SlowMissile() {
 
 void SlowMissile::DealDamage()
 {
-
-	
 		for (unsigned int i = 0; i < _targets.size(); i++) {
 			FPoint tPos = _targets[i]->Position();
 			float d = sqrt((tPos.x - _position.x)*(tPos.x - _position.x) + (tPos.y - _position.y)*(tPos.y - _position.y));
@@ -314,50 +310,12 @@ void SlowMissile::DealDamage()
 	
 }
 
-MonsterParent::Ptr  SlowMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
-	MonsterParent::Ptr resTarget = nullptr;
-	if (target == nullptr || target->Finish() || target->Dead() || target->Dying()) {
-		float d = INFINITE;
-		int tarIndex = INFINITE;
-		TakeNearestMonster(d, tarIndex, monsters);
-		if (d <= range && tarIndex < INFINITE) {
-			resTarget = monsters[tarIndex];
-			_targetPosition = monsters[tarIndex]->Position();
-			_targets = monsters;
-			_flyTime = d / _modSpeed;
-			_missilePathX.Clear();
-			_missilePathY.Clear();
-			MakePath();
-			return resTarget;
-		}
-		else {
-			resTarget = nullptr;
-			return resTarget;
-		}
+IPoint SlowMissile::GetTargetPos(MonsterParent::Ptr monster, float dt)
+{
+	return monster->Position().Rounded();
+}
 
-	}
-	else {
-		FPoint tarPos = target->Position();
-		float tmpD = _position.GetDistanceTo(tarPos);
 
-		if (tmpD <= range) {
-			resTarget = target;
-			_targetPosition = target->Position();
-			_targets = monsters;
-			_flyTime = tmpD / _modSpeed;
-			_missilePathX.Clear();
-			_missilePathY.Clear();
-			MakePath();
-			return resTarget;
-		}
-		else {
-			resTarget = nullptr;
-			return resTarget;
-		}
-
-	}
-
-};
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -372,19 +330,14 @@ DecayMissile::DecayMissile() : FireParent() {
 	
 };
 
-DecayMissile::DecayMissile(MissInfo inf) : FireParent() {
+DecayMissile::DecayMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent(inf, targets) {
 	_missileType = TowerType::DECAY;
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
 	_effect = inf._eff;
-	_target = inf._target;
-	_damage = inf._damage;
-
 	_misEff = _misEffCont.AddEffect("IskraGreen");
 	_misEff->posX = _position.x;
 	_misEff->posY = _position.y;
@@ -398,11 +351,6 @@ DecayMissile::DecayMissile(MissInfo inf) : FireParent() {
 DecayMissile::~DecayMissile() {
 };
 
-void DecayMissile::DealDamage()
-{
-	if(!_target->Finish())
-		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
-}
 
 //----------------------------------------------//
 //----------------------------------------------//
@@ -415,18 +363,14 @@ BashMissile::BashMissile() : FireParent() {
 	_target = nullptr;
 };
 
-BashMissile::BashMissile(MissInfo inf) : FireParent() {
+BashMissile::BashMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent(inf, targets) {
 	_missileType = TowerType::BASH;
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
 	if (inf._target && _modSpeed>0) {
 		float d = _position.GetDistanceTo(inf._target->Position());
 		_flyTime = d / _modSpeed;
 		_targetPosition = inf._target->HitPosition(_flyTime);
 	}
 	_effect = inf._eff;
-	_target = inf._target;
-	_damage = inf._damage;
 	_misEff = _misEffCont.AddEffect("Iskra1");
 	_misEff->Pause();
 	_misEff->Reset();
@@ -438,11 +382,7 @@ BashMissile::BashMissile(MissInfo inf) : FireParent() {
 BashMissile::~BashMissile() {
 };
 
-void BashMissile::DealDamage()
-{
-	if(!_target->Finish())
-		_target->TakeDamage(_missileType, _effect, math::random(_damage.x, _damage.y));
-}
+
 
 
 
@@ -457,21 +397,17 @@ SplashMissile::SplashMissile() : FireParent() {
 	_splashRange = 0;
 };
 
-SplashMissile::SplashMissile(MissInfo inf, std::vector<MonsterParent::Ptr> & targets): FireParent() {
+SplashMissile::SplashMissile(const MissInfo & inf, const std::vector<MonsterParent::Ptr> & targets) : FireParent(inf,targets) {
 	_missileType = TowerType::SPLASH;
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
 	float d = _position.GetDistanceTo(inf._tPosition);
 	_flyTime = d / _modSpeed;
 	_targetPosition = inf._tPosition;
-	_damage = inf._damage;
-	//_targets = targets;
+	_targets = targets;
 	_splashRange = inf._sRange;
 	_hitEff = _misEffCont.AddEffect("Ring");
 	_hitEff->Pause();
 	_hitEff->Reset();
 	_hitEff->SetScale(1.3);
-		
 	_misEff = _misEffCont.AddEffect("Iskra");
 	_misEff->Pause();
 	_misEff->Reset();
@@ -500,47 +436,8 @@ void SplashMissile::DealDamage()
 	
 }
 
-MonsterParent::Ptr  SplashMissile::TakeAim(std::vector<MonsterParent::Ptr> & monsters, MonsterParent::Ptr target, int range) {
-	MonsterParent::Ptr resTarget = nullptr;
-	if (target == nullptr || target->Finish() || target->Dead() || target->Dying()) {
-		float d = INFINITE;
-		int tarIndex = INFINITE;
-		TakeNearestMonster(d, tarIndex, monsters);
-		if (d <= range && tarIndex < INFINITE) {
-			resTarget = monsters[tarIndex];
-			_targetPosition = monsters[tarIndex]->Position();
-			_targets = monsters;
-			_flyTime = d / _modSpeed;
-			_missilePathX.Clear();
-			_missilePathY.Clear();
-			MakePath();
-			return resTarget;
-		}
-		else {
-			resTarget = nullptr;
-			return resTarget;
-		}
+IPoint SplashMissile::GetTargetPos(MonsterParent::Ptr monster, float dt)
+{
+	return monster->Position().Rounded();
+}
 
-	}
-	else {
-		FPoint tarPos = target->Position();
-		float tmpD = _position.GetDistanceTo(tarPos);
-
-		if (tmpD <= range) {
-			resTarget = target;
-			_targetPosition = target->Position();
-			_targets = monsters;
-			_flyTime = tmpD / _modSpeed;
-			_missilePathX.Clear();
-			_missilePathY.Clear();
-			MakePath();
-			return resTarget;
-		}
-		else {
-			resTarget = nullptr;
-			return resTarget;
-		}
-
-	}
-
-};

@@ -2,8 +2,8 @@
 #include "World.h"
 #include "Menu.h"
 ///
-/// Виджет - основной визуальный элемент на экране.
-/// Он отрисовывает себя, а также может содержать другие виджеты.
+/// Виджет панелей старта, проигрыша и победы
+/// 
 ///
 
 class StartWidget : public GUI::Widget
@@ -32,10 +32,10 @@ private:
 	Render::TexturePtr _start_w;
 	Render::TexturePtr _lose_w;
 	Render::TexturePtr _win_w;
-	Render::TextPtr _StartTitlePtr;
-	Render::TextPtr _StartTextPtr;
-	Render::TextPtr _LoseTitlePtr;
-	Render::TextPtr _LoseTextPtr;
-	Render::TextPtr _WinTitlePtr;
-	Render::TextPtr _WinTextPtr;
+	Render::TextPtr _startTitlePtr;
+	Render::TextPtr _startTextPtr;
+	Render::TextPtr _loseTitlePtr;
+	Render::TextPtr _loseTextPtr;
+	Render::TextPtr _winTitlePtr;
+	Render::TextPtr _winTextPtr;
 };

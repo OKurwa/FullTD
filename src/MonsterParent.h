@@ -19,9 +19,9 @@ public:
 		int					 _healPerSecond;
 	};
 
-
-	MonsterParent();
 	
+	MonsterParent();
+	MonsterParent(const MonsterInfo& inf);
 	virtual ~MonsterParent();
 
 	virtual void Draw();
@@ -113,7 +113,7 @@ class BossMonster : public MonsterParent
 public:
 	BossMonster();
 	BossMonster(BossMonster& proto);
-	BossMonster(MonsterParent::MonsterInfo);
+	BossMonster(const MonsterInfo& inf);
 	~BossMonster();
 	MonsterParent::Ptr Clone() {
 
@@ -131,7 +131,7 @@ class ImmuneMonster : public MonsterParent
 public:
 	ImmuneMonster();
 	ImmuneMonster(ImmuneMonster& proto);
-	ImmuneMonster(MonsterParent::MonsterInfo);
+	ImmuneMonster(const MonsterInfo& inf);
 	~ImmuneMonster();
 	MonsterParent::Ptr Clone() {
 
@@ -150,7 +150,7 @@ class HealingMonster :public MonsterParent
 public:
 	HealingMonster();
 	HealingMonster(HealingMonster& proto);
-	HealingMonster(MonsterParent::MonsterInfo);
+	HealingMonster(const MonsterInfo& inf);
 	~HealingMonster();
 	MonsterParent::Ptr Clone() {
 
@@ -167,7 +167,7 @@ class NormalMonster :public MonsterParent
 public:
 	NormalMonster();
 	NormalMonster(NormalMonster& proto);
-	NormalMonster(MonsterParent::MonsterInfo);
+	NormalMonster(const MonsterInfo& inf);
 	~NormalMonster();
 	MonsterParent::Ptr Clone() {
 

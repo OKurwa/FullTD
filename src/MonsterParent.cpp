@@ -38,19 +38,39 @@ MonsterParent::MonsterParent() {
 	_dieSound = "Die";
 	_meatFlyTimer = 0;
 	_dieAnimEnd = false;
-	
-	//_stunEff = _Cont.AddEffect("Stun");
-	//_stunEff->Pause();
-	//_stunEff->Reset();
-	//_coldEff = _Cont.AddEffect("Cold");
-	//_coldEff->Pause();
-	//_coldEff->Reset();
-	//_poisonEff = _Cont.AddEffect("Poison");
-	//_poisonEff->Pause();
-	//_poisonEff->Reset();
 	_curWaySplineX.Clear();
 	_curWaySplineY.Clear();
-};
+}
+MonsterParent::MonsterParent(const MonsterInfo & inf)
+{
+	
+	_dieAnimEnd = false;
+	_lastAngle = 20;
+	_curWayDistance = 0;
+	_moveTimer = 0;
+	_meatFlyTimer = 0;
+	_empty = false;
+	_dead = false;
+	_dying = false;
+	_finish = false;
+	_runAnimAngles = RUN_ANGLES;
+	_idleAnimAngles = MOB_IDL_ANGLES;
+	_dieAnimAngles = DIE_ANGLES;
+	_position = inf._position;
+	_modSpeed = inf._modSpeed;
+	_map = inf._map;
+	_hp = inf._hp;
+	_maxHp = _hp;
+	_runAnim = inf._runAnim;
+	_idleAnim = inf._idleAnim;
+	_dieAnim = inf._dieAnim;
+	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
+	_dieSound = inf._dieSound;
+	_meatCont = inf._meat;
+	_curWaySplineX.Clear();
+	_curWaySplineY.Clear();
+}
+;
 
 MonsterParent::~MonsterParent() {};
 
@@ -70,8 +90,6 @@ void MonsterParent::Draw() {
 				else {
 					_runAnim->Draw(pos);
 				}
-
-
 			}
 			else {
 				_dieAnim->Draw(pos);
@@ -164,7 +182,7 @@ void MonsterParent::Update(float dt) {
 	
 	if (_dying && !_dieAnim->IsPlaying() && !_dieAnimEnd) {
 		_dieAnim->setPlayback(true);
-		_dieAnimEnd = true;
+		_dieAnimEnd = true;	
 	}
 	float edt = dt;
 	edt *= (1 - _slow.value)*(1 - _bash.value);
@@ -216,11 +234,6 @@ void MonsterParent::Update(float dt) {
 		_poisonEff->posY = _position.y + _runAnim->getFrameHeight() / 4;
 	}
 
-
-	
-	
-	
-
 	//Включение эффектов
 	_effectColor = Color(255, 255, 255, 255);
 	if (_slow.value > 0 && _decay.value> 0) {
@@ -244,7 +257,6 @@ void MonsterParent::Update(float dt) {
 
 	//Выключение эффектов
 	if (_slow.value == 0 && _coldEff) {
-		
 		_coldEff->Finish();
 	}
 	if (_bash.value == 0 && _stunEff) {
@@ -266,11 +278,12 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 		if (dt == 0)
 			angle = _lastAngle;
 		if (_idleAnim && _runAnim && _dieAnim) {
-
+			
 			
 			if (angle > angle225.angleStart && angle <= angle225.angleFinish) {
 
 				if (_lastAngle != -135) {
+					
 					_runAnim->setLoop(false);
 					_runAnim->setPlayback(false);
 
@@ -287,18 +300,19 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 					_dieAnim->setLastPlayedFrame(_dieAnimAngles._a315.y);
 					_dieAnim->setCurrentFrame(0);
 					
-
 					_runAnim->setLoop(true);
 					_runAnim->setPlayback(true);
 
-					
+
 					_idleAnim->setLoop(true);
 					_idleAnim->setPlayback(true);
+					
 
 				}
 				
 				_lastAngle = -135;
 			}
+			
 
 			if (angle > angle270.angleStart && angle <= angle270.angleFinish) {
 				if (_lastAngle != -90) {
@@ -503,6 +517,7 @@ void MonsterParent::UpdateAnimAngle(float dt) {
 		}
 	
 }
+
 
 bool MonsterParent::FindAWay() {
 
@@ -776,18 +791,8 @@ NormalMonster::NormalMonster(NormalMonster& proto) {
 		this->_poisonEff = proto._poisonEff->Clone();
 };
 
-NormalMonster::NormalMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
-	_position =inf._position;
-	_modSpeed = inf._modSpeed;
-	_map = inf._map;
-	_hp = inf._hp;
-	_maxHp = _hp;
-	_runAnim = inf._runAnim;
-	_idleAnim = inf._idleAnim;
-	_dieAnim = inf._dieAnim;
-	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
-	_dieSound = inf._dieSound;
-	_meatCont = inf._meat;
+NormalMonster::NormalMonster(const MonsterInfo& inf) : MonsterParent(inf) {
+	_damage = 1;
 };
 
 NormalMonster::~NormalMonster() {
@@ -838,20 +843,9 @@ BossMonster::BossMonster(BossMonster& proto) {
 		this->_poisonEff = proto._poisonEff->Clone();
 };
 
-BossMonster::BossMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
-	_map = inf._map;
-	_hp = inf._hp;
-	_maxHp = _hp;
+BossMonster::BossMonster(const MonsterInfo& inf) : MonsterParent(inf) {
 	_reduceDamage = inf._reduceDamage;
-	_runAnim = inf._runAnim;
-	_idleAnim = inf._idleAnim;
-	_dieAnim = inf._dieAnim;
-	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
 	_damage = 5;
-	_dieSound = inf._dieSound;
-	_meatCont = inf._meat;
 };
 
 BossMonster::~BossMonster() {
@@ -867,9 +861,6 @@ void BossMonster::TakeDamage(TowerType effType, AttackEffect values, float damag
 		_decay.value = 4 * values.value;
 		_decay.length = 4 * values.length;
 	}
-		
-	
-
 	if (_hp > 0) {
 		_hp -= damage * (1 - _reduceDamage);
 	}
@@ -901,27 +892,14 @@ ImmuneMonster::ImmuneMonster(ImmuneMonster& proto) {
 		this->_poisonEff = proto._poisonEff->Clone();
 };
 
-ImmuneMonster::ImmuneMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
-	_map = inf._map;
-	_hp = inf._hp;
-	_maxHp = _hp;
-	_runAnim = inf._runAnim;
-	_idleAnim = inf._idleAnim;
-	_dieAnim = inf._dieAnim;
-	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
-	_dieSound = inf._dieSound;
-	_meatCont = inf._meat;
+ImmuneMonster::ImmuneMonster(const MonsterInfo& inf) : MonsterParent(inf) {
+	_damage = 1;
 };
 
 ImmuneMonster::~ImmuneMonster() {
 };
 
 void ImmuneMonster::TakeDamage(TowerType effType, AttackEffect values, float damage) {
-	
-	
-	
 	if (effType == TowerType::DECAY)
 		_decay = values;
 	if (effType == TowerType::BASH) {
@@ -966,20 +944,10 @@ HealingMonster::HealingMonster(HealingMonster& proto) {
 		this->_poisonEff = proto._poisonEff->Clone();
 };
 
-HealingMonster::HealingMonster(MonsterParent::MonsterInfo inf) : MonsterParent() {
-	_position = inf._position;
-	_modSpeed = inf._modSpeed;
-	_map = inf._map;
-	_hp = inf._hp;
-	_maxHp = _hp;
+HealingMonster::HealingMonster(const MonsterInfo& inf) : MonsterParent(inf) {
 	_healPerSecond = inf._healPerSecond;
-	_runAnim = inf._runAnim;
-	_idleAnim = inf._idleAnim;
-	_dieAnim = inf._dieAnim;
-	_meat = Core::resourceManager.Get<Render::Texture>("Meat");
 	_damage = 1;
-	_dieSound = inf._dieSound;
-	_meatCont = inf._meat;
+	
 };
 
 HealingMonster::~HealingMonster() {

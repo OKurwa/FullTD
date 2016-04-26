@@ -150,10 +150,11 @@ void TowerParent::UpgradeDraw() {
 };
 
 void TowerParent::Update(float dt) {
-	if (_idleAnim  && _atkAnim->IsFinished()) {
-		_idleAnim->Update(dt);
-	}
+	
 	if (_atkAnim) {
+		if (_idleAnim  && _atkAnim->IsFinished()) {
+			_idleAnim->Update(dt);
+		}
 		_atkAnim->Update(dt);
 	}
 	if (_reloadTimer > 0)
@@ -260,19 +261,10 @@ IPoint TowerParent::Cell() {
 
 void TowerParent::SetPosition(FPoint pos) {
 	_position = pos;
-
-	IPoint buttonPos = IPoint(_position.x, _position.y + 32);
-	int width = 100;
-	int height = 100;
-	if (_position.y + height + _cellSize.y / 2 > Render::device.Height()) {
-		buttonPos.y = _position.y - height - _cellSize.y / 2;
+	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
+		_missilesPrototypes[i]._position = pos;
 	}
-	if (_position.x + width > Render::device.Height()) {
-		buttonPos.x = Render::device.Height() - width;
-	}
-	if (_position.x < 0) {
-		buttonPos.x = 0;
-	}
+	SetUButtonPosition();
 	
 };
 
@@ -319,8 +311,36 @@ void TowerParent::Upgrade() {
 		_upEff->Reset();
 		
 	}
-};
+}
+int TowerParent::UpgradePrice()
+{
+	if (_lvl < _lvlCount - 1) {
+		return _missilesPrototypes[_lvl + 1]._price;
+	}
+	else {
+		return -1;
+	};
+}
+;
 
+
+void TowerParent::TakeTarget(std::vector<MonsterParent::Ptr>& monsters, FireParent::Ptr mis)
+{
+	MonsterParent::Ptr t;
+
+	t = mis->TakeAim(monsters, _target, _range).get();
+
+	_target = t;
+
+	if (_target) {
+
+		UpdateAnimAngle(_target);
+
+		_missiles.push_back(mis);
+		_reloadTimer = _reloadTime;
+		MM::manager.PlaySample("Shoot");
+	}
+}
 
 int	 TowerParent::Price() {
 	return _price;
@@ -417,44 +437,14 @@ NormalTower::~NormalTower() {
 void NormalTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 	
 	if (_reloadTimer == 0) {
-		FireParent::Ptr mis = new NormalMissile(_missilesPrototypes[_lvl]);
-		MonsterParent::Ptr t;
-
-		t = mis->TakeAim(monsters, _target, _range).get();
-
-		_target = t;
-		
-		if (_target) {
-
-			UpdateAnimAngle(_target);
-			
-			_missiles.push_back(mis);
-			_reloadTimer = _reloadTime;
-			MM::manager.PlaySample("Shoot");
-		}
+		FireParent::Ptr mis = new NormalMissile(_missilesPrototypes[_lvl], monsters);
+		TakeTarget(monsters, mis);
 
 	}
 	
 
 }
 
-
-void NormalTower::SetPosition(FPoint pos) {
-	_position = pos;
-	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
-		_missilesPrototypes[i]._position = pos;
-	}
-	SetUButtonPosition();
-};
-
-int  NormalTower::UpgradePrice() {
-	if (_lvl < _lvlCount - 1) {
-		return _missilesPrototypes[_lvl + 1]._price;
-	}
-	else {
-		return -1;
-	}
-};
 
 void NormalTower::DrawHintText(IRect rect) {
 
@@ -496,17 +486,7 @@ void SlowTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new SlowMissile(_missilesPrototypes[_lvl], monsters);
-		MonsterParent::Ptr t;
-
-		t = mis->TakeAim(monsters, _target, _range).get();
-
-		_target = t;
-		if (_target) {
-			UpdateAnimAngle(_target);
-			_missiles.push_back(mis);
-			_reloadTimer = _reloadTime;
-			MM::manager.PlaySample("Shoot");
-		}
+		TakeTarget(monsters, mis);
 
 	}
 
@@ -514,22 +494,6 @@ void SlowTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 }
 
 
-void SlowTower::SetPosition(FPoint pos) {
-	_position = pos;
-	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
-		_missilesPrototypes[i]._position = pos;
-	}
-	SetUButtonPosition();
-};
-
-int  SlowTower::UpgradePrice() {
-	if (_lvl < _lvlCount - 1) {
-		return _missilesPrototypes[_lvl + 1]._price;
-	}
-	else {
-		return -1;
-	}
-};
 
 void SlowTower::DrawHintText(IRect rect) {
 
@@ -573,41 +537,14 @@ DecayTower::~DecayTower() {};
 void DecayTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
-		FireParent::Ptr mis = new DecayMissile(_missilesPrototypes[_lvl]);
-		MonsterParent::Ptr t;
-
-		t = mis->TakeAim(monsters, _target, _range).get();
-
-		_target = t;
-		if (_target) {
-			UpdateAnimAngle(_target);
-			_missiles.push_back(mis);
-			_reloadTimer = _reloadTime;
-			MM::manager.PlaySample("Shoot");
-		}
+		FireParent::Ptr mis = new DecayMissile(_missilesPrototypes[_lvl], monsters);
+		TakeTarget(monsters, mis);
 
 	}
 
 
 }
 
-
-void DecayTower::SetPosition(FPoint pos) {
-	_position = pos;
-	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
-		_missilesPrototypes[i]._position = pos;
-	}
-	SetUButtonPosition();
-};
-
-int  DecayTower::UpgradePrice() {
-	if (_lvl < _lvlCount - 1) {
-		return _missilesPrototypes[_lvl + 1]._price;
-	}
-	else {
-		return -1;
-	}
-};
 
 void DecayTower::DrawHintText(IRect rect) {
 
@@ -649,43 +586,14 @@ BashTower::~BashTower() {};
 void BashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
-		FireParent::Ptr mis = new BashMissile(_missilesPrototypes[_lvl]);
-		MonsterParent::Ptr t;
-
-		t = mis->TakeAim(monsters, _target, _range).get();
-			
-		_target = t;
-			
-		if (_target) {
-			UpdateAnimAngle(_target);
-			_missiles.push_back(mis);
-			_reloadTimer = _reloadTime;
-			MM::manager.PlaySample("Shoot");
-		}
+		FireParent::Ptr mis = new BashMissile(_missilesPrototypes[_lvl], monsters);
+		TakeTarget(monsters, mis);
 
 	}
 
 
 }
 
-
-
-void BashTower::SetPosition(FPoint pos) {
-	_position = pos;
-	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
-		_missilesPrototypes[i]._position = pos;
-	}
-	SetUButtonPosition();
-};
-
-int  BashTower::UpgradePrice() {
-	if (_lvl < _lvlCount - 1) {
-		return _missilesPrototypes[_lvl + 1]._price;
-	}
-	else {
-		return -1;
-	}
-};
 
 void BashTower::DrawHintText(IRect rect) {
 
@@ -729,18 +637,7 @@ void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 
 	if (_reloadTimer == 0) {
 		FireParent::Ptr mis = new SplashMissile(_missilesPrototypes[_lvl],monsters);
-		MonsterParent::Ptr t;
-
-		t = mis->TakeAim(monsters, _target, _range).get();
-
-		_target = t;
-		if (_target) {
-			UpdateAnimAngle(_target);
-			_missiles.push_back(mis);
-			_reloadTimer = _reloadTime;
-			MM::manager.PlaySample("Shoot");
-
-		}
+		TakeTarget(monsters, mis);
 
 	}
 
@@ -748,22 +645,6 @@ void SplashTower::TryShoot(std::vector<MonsterParent::Ptr> & monsters) {
 }
 
 
-void SplashTower::SetPosition(FPoint pos) {
-	_position = pos;
-	for (unsigned int i = 0; i < _missilesPrototypes.size(); i++) {
-		_missilesPrototypes[i]._position = pos;
-	}
-	SetUButtonPosition();
-};
-
-int  SplashTower::UpgradePrice() {
-	if (_lvl < _lvlCount - 1) {
-		return _missilesPrototypes[_lvl + 1]._price;
-	}
-	else {
-		return -1;
-	}
-};
 
 void SplashTower::DrawHintText(IRect rect) {
 

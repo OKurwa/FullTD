@@ -9,7 +9,7 @@ using namespace rapidxml;
 
 // Магазин башен
 // Хранит информацию о ценах башен, типах и задает соответствие между типами башен и кнопок интерфейса 
-void TowerShop::LoadFromXml(std::string filename)
+void TowerShop::LoadFromXml(std::string & filename)
 {
 	try {
 		file<> file(filename.c_str());

@@ -31,8 +31,9 @@ public:
 	void SetUpgradeButton(bool);
 	IRect UpgradeIRect();
 	void Upgrade();
-	virtual int UpgradePrice() = 0 ;
+	int UpgradePrice();
 	virtual void TryShoot(std::vector<MonsterParent::Ptr> & monsters) = 0;
+	void TakeTarget(std::vector<MonsterParent::Ptr> & monsters, FireParent::Ptr mis);
 	int Price();
 	void SetCurGold(int);
 	void SetHint(IPoint);
@@ -101,8 +102,6 @@ public:
 
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
 	
-	void SetPosition(FPoint);
-	int  UpgradePrice();
 	void DrawHintText(IRect);
 	
 };
@@ -128,9 +127,6 @@ public:
 		
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
 	
-	
-	void SetPosition(FPoint);
-	int  UpgradePrice();
 	void DrawHintText(IRect);
 	
 private:
@@ -158,13 +154,8 @@ public:
 		return new DecayTower(*this);
 	}
 
-	
-
-	
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
 	
-	void SetPosition(FPoint);
-	int  UpgradePrice();
 	void DrawHintText(IRect);
 	
 private:
@@ -193,8 +184,6 @@ public:
 		
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters);
 	
-	void SetPosition(FPoint);
-	int  UpgradePrice();
 	void DrawHintText(IRect);
 private:
 	FPoint _bash;
@@ -221,9 +210,6 @@ public:
 
 	void TryShoot(std::vector<MonsterParent::Ptr> & monsters) ;
 	
-	
-	void SetPosition(FPoint);
-	int  UpgradePrice();
 	void DrawHintText(IRect);
 private:
 	int    _splashRange;

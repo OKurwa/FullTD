@@ -24,7 +24,8 @@ TestWidget::TestWidget(const std::string& name, rapidxml::xml_node<>* elem)
 void TestWidget::Init()
 {
 	//_fieldMap.LoadFromFile("loadMap.txt");
-	_fieldMap.LoadFromXml("NewMap.xml");
+	std::string mapFile = "NewMap.xml";
+	_fieldMap.LoadFromXml(mapFile);
 
 	IPoint curCell;
 	for (int i = 0; i < _fieldMap.Size().x; i++) {
@@ -38,25 +39,17 @@ void TestWidget::Init()
 	_texButtons = Core::resourceManager.Get<Render::Texture>("Towers");
 	_buildCursor = Core::resourceManager.Get<Render::Texture>("Ghost");
 	_towerFactory.Init("Towers.xml");
-	//_towerPs.push_back(_towerFactory.createTower(NORMAL));
-	//_towerPs.push_back(_towerFactory.createTower(SPLASH));
-	//_towerPs.push_back(_towerFactory.createTower(SLOW));
-	//_towerPs.push_back(_towerFactory.createTower(DECAY));
-	//_towerPs.push_back(_towerFactory.createTower(BASH));
 	_enableBuildCursor = false;
-	
 	_selectedTower = nullptr;
-	//_tryMenu = new Menu;
-	//_tryMenu->LoadFromXml("Menu.xml");
 	_startButton = new Menu;
 	_startButton->LoadFromXml("WaveButton.xml");
 	IPoint cellPos = _fieldMap.GetSpawnCell();
 	IPoint cellSize = _fieldMap.CellSize();
 	_startButton->MoveTo(IPoint(cellPos.x*cellSize.x, cellPos.y*cellSize.y));
-	col = false;
+	
 	_menuBG = Core::resourceManager.Get<Render::Texture>("MenuBG");
-	_collector.SetTexSizes(IPoint(10, 10), IPoint(33, 33));
-	_collector.SetDestinationPoint(FPoint(807, 295));
+	//_collector.SetTexSizes(IPoint(10, 10), IPoint(33, 33));
+	//_collector.SetDestinationPoint(FPoint(807, 295));
 }
 
 void TestWidget::Draw()
@@ -100,9 +93,11 @@ void TestWidget::Update(float dt)
 
 	//_newMenu->Update(dt);
 	//anim->Update(dt*0.5);
-	if (World::Instance().State() == LOSE || World::Instance().State() == WIN)
+	if (World::Instance().State() == LOSE || World::Instance().State() == WIN) {
 		Core::mainScreen.pushLayer("StartLayer");
-	//dt *= 0.5;
+		dt *= 0;
+	}
+		
 	_fieldMap.Update(dt);
 
 
@@ -145,7 +140,7 @@ void TestWidget::Update(float dt)
 		_startButton->Buttons()[0][0]->SetCornerText("");
 	}
 	
-	_collector.Update(dt);
+	//_collector.Update(dt);
 }
 
 bool TestWidget::MouseDown(const IPoint &mouse_pos)
@@ -249,8 +244,9 @@ void TestWidget::AcceptMessage(const Message& message)
 			_fieldMap.Reset();
 			_towers.clear();
 			_monsters.clear();
+			std::string mapFile = "NewMap.xml";
 			//_monsterAttack.LoadFromFile("loadMob.txt");
-			_monsterAttack.LoadFromXml("NewMap.xml");
+			_monsterAttack.LoadFromXml(mapFile);
 			_spawnTimer = 0;
 			_spawnTime = 0.7;
 			_curMonsterAttack = 0;
@@ -394,7 +390,7 @@ void TestWidget::TryTakeMonsterGold(MonsterParent::Ptr monster)
 {
 	if (monster->Dying()) {
 		if (!monster->isEmpty()) {
-			_collector.AddMeat(monster->GetPoisition());
+			//_collector.AddMeat(monster->GetPoisition());
 			World::Instance().GoldAdd(monster->TakeMonsterMeat());
 		}
 	}

@@ -21,12 +21,12 @@ void StartWidget::Init()
 	_win_w = Core::resourceManager.Get<Render::Texture>("WinWindow");
 	_startMenu = new Menu;
 	_startMenu->LoadFromXml("StartMenu.xml");
-	_StartTitlePtr = Core::resourceManager.Get<Render::Text>("StartPanelTitle");
-	_StartTextPtr = Core::resourceManager.Get<Render::Text>("StartPanelText");
-	_LoseTitlePtr = Core::resourceManager.Get<Render::Text>("LosePanelTitle");
-	_LoseTextPtr = Core::resourceManager.Get<Render::Text>("LosePanelText");
-	_WinTitlePtr = Core::resourceManager.Get<Render::Text>("WinPanelTitle");
-	_WinTextPtr = Core::resourceManager.Get<Render::Text>("WinPanelText");
+	_startTitlePtr = Core::resourceManager.Get<Render::Text>("StartPanelTitle");
+	_startTextPtr = Core::resourceManager.Get<Render::Text>("StartPanelText");
+	_loseTitlePtr = Core::resourceManager.Get<Render::Text>("LosePanelTitle");
+	_loseTextPtr = Core::resourceManager.Get<Render::Text>("LosePanelText");
+	_winTitlePtr = Core::resourceManager.Get<Render::Text>("WinPanelTitle");
+	_winTextPtr = Core::resourceManager.Get<Render::Text>("WinPanelText");
 }
 
 void StartWidget::Draw()
@@ -47,20 +47,20 @@ void StartWidget::Draw()
 	case START:
 		Render::device.SetTexturing(true);
 		_start_w->Draw(FPoint(110, 180));
-		_TitlePtr = _StartTitlePtr;
-		_TextPtr = _StartTextPtr;
+		_TitlePtr = _startTitlePtr;
+		_TextPtr = _startTextPtr;
 
 		break;
 	case WIN:
 		_win_w->Draw(FPoint(110, 180));
-		_TitlePtr = _WinTitlePtr;
-		_TextPtr =_WinTextPtr;
+		_TitlePtr = _winTitlePtr;
+		_TextPtr =_winTextPtr;
 
 		break;
 	case LOSE:
 		_lose_w->Draw(FPoint(110, 180));
-		_TitlePtr = _LoseTitlePtr;
-		_TextPtr = _LoseTextPtr;
+		_TitlePtr = _loseTitlePtr;
+		_TextPtr = _loseTextPtr;
 		break;
 	}
 

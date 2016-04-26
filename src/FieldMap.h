@@ -70,7 +70,7 @@ public:
 	FieldMap() ;
 	~FieldMap();
 	
-	void LoadFromXml(std::string);
+	void LoadFromXml(std::string &);
 	void Draw();
 	void Update(float dt);
 	bool AddTower(IPoint);

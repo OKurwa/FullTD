@@ -310,7 +310,7 @@ IPoint FieldMap::GetSpawnCell()
 
 
 
-void FieldMap::LoadFromXml(std::string filename) {
+void FieldMap::LoadFromXml(std::string & filename) {
 	
 	for (unsigned int i = 0; i < _cells.size(); i++) {
 		_cells[i].clear();

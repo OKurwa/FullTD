@@ -59,22 +59,10 @@ private:
 	World();
 	World(const World& root);
 	World& operator =(const World&);
-	
-	TowerType _towerType;
-	
-	int _gold;
-	int _attacksRemaining;
+	WorldInfo _info;
 	int _nextAttackMonstersCount;
 	int _monstersRemaining;
-	int _lives;
-	int _curAttackIndex;
 	TowerType _curTowerType;
-	int _maxHP;
-	int _speed;
-	int _gpm;
-	std::string _curAttackName;
-	std::string _curAttackType;
-	float _delayTimer;
 	GameState _state;
 	TowerShop _shop;
 	//MonsterAttack _attacks;
